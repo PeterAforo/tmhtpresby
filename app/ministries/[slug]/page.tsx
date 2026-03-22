@@ -5,6 +5,7 @@ import Image from "next/image";
 import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { MinistryExecutives } from "@/components/ministry/MinistryExecutives";
 import { MinistryCalendar } from "@/components/ministry/MinistryCalendar";
+import { MinistryGallery } from "@/components/ministry/MinistryGallery";
 import { Users, Heart, Music, BookOpen, HandHelping, Baby, Clock, MapPin, ArrowLeft } from "lucide-react";
 
 const MINISTRIES_DATA: Record<string, {
@@ -458,7 +459,12 @@ export default async function MinistryDetailPage({ params }: Props) {
               </div>
 
               {/* Ministry Calendar */}
-              <MinistryCalendar ministrySlug={slug} ministryName={ministry.name} />
+              <div className="mb-10">
+                <MinistryCalendar ministrySlug={slug} ministryName={ministry.name} />
+              </div>
+
+              {/* Ministry Gallery */}
+              <MinistryGallery ministrySlug={slug} ministryName={ministry.name} />
             </div>
 
             {/* Sidebar */}
