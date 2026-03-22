@@ -1773,6 +1773,10 @@
     border-color: var(--color-purple-100);
   }
 
+  .border-red-500 {
+    border-color: var(--color-red-500);
+  }
+
   .border-white {
     border-color: var(--color-white);
   }
@@ -1940,6 +1944,10 @@
     background-color: var(--nav-bg);
   }
 
+  .bg-\[var\(--primary\)\] {
+    background-color: var(--primary);
+  }
+
   .bg-\[var\(--primary\)\]\/5 {
     background-color: var(--primary);
   }
@@ -1958,6 +1966,10 @@
     .bg-\[var\(--primary\)\]\/10 {
       background-color: color-mix(in oklab, var(--primary) 10%, transparent);
     }
+  }
+
+  .bg-\[var\(--secondary\)\] {
+    background-color: var(--secondary);
   }
 
   .bg-\[var\(--text-muted\)\]\/10 {
@@ -3273,6 +3285,10 @@
 
   .capitalize {
     text-transform: capitalize;
+  }
+
+  .lowercase {
+    text-transform: lowercase;
   }
 
   .uppercase {
