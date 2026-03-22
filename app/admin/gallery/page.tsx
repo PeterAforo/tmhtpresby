@@ -155,7 +155,7 @@ export default function AdminGalleryPage() {
               <div className="p-4">
                 <div className="flex items-center justify-between mb-1">
                   <h3 className="text-sm font-semibold text-[var(--text)]">{album.title}</h3>
-                  <span className={cn("px-2 py-0.5 rounded-full text-xs font-semibold", album.published ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-500")}>
+                  <span className={cn("px-2 py-0.5 rounded-full text-xs font-semibold", album.published ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400")}>
                     {album.published ? "Published" : "Draft"}
                   </span>
                 </div>

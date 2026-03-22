@@ -475,3 +475,22 @@ model LeadershipMember {
   @@index([startDate(sort: Desc)])
   @@map("leadership_members")
 }
+
+// =============================================================================
+// Page Hero Settings
+// =============================================================================
+
+model PageHero {
+  id            String   @id @default(cuid())
+  pageSlug      String   @unique // e.g., "about", "about/church", "sermons", "contact"
+  title         String?  // Optional override for page title
+  subtitle      String?  // Optional override for subtitle
+  backgroundUrl String?  // Background image URL
+  overlayColor  String?  @default("rgba(12, 21, 41, 0.85)") // Dark overlay for text readability
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([pageSlug])
+  @@map("page_heroes")
+}

@@ -341,7 +341,7 @@ export default function AdminSermonsPage() {
                         "inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium",
                         sermon.published
                           ? "bg-green-500/10 text-green-600"
-                          : "bg-gray-500/10 text-gray-500"
+                          : "bg-gray-500/10 text-gray-500 dark:text-gray-400"
                       )}
                     >
                       {sermon.published ? <Eye size={12} /> : <EyeOff size={12} />}

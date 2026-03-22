@@ -13,7 +13,7 @@ const categoryColors: Record<string, string> = {
   outreach: "bg-amber-500/10 text-amber-600",
   worship: "bg-purple-500/10 text-purple-600",
   culture: "bg-blue-500/10 text-blue-600",
-  general: "bg-gray-100 text-gray-600",
+  general: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
 };
 
 function formatDate(date: Date): string {
@@ -78,7 +78,7 @@ export default async function BlogPostPage({ params }: Props) {
 
           {/* Meta bar */}
           <div className="flex flex-wrap items-center gap-4 mb-8 text-sm text-[var(--text-muted)]">
-            <span className={cn("px-2.5 py-1 rounded-full text-xs font-semibold capitalize", categoryColors[post.category] || "bg-gray-100 text-gray-600")}>
+            <span className={cn("px-2.5 py-1 rounded-full text-xs font-semibold capitalize", categoryColors[post.category] || "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400")}>
               {post.category.replace("-", " ")}
             </span>
             <span className="flex items-center gap-1">
@@ -116,7 +116,7 @@ export default async function BlogPostPage({ params }: Props) {
                     href={`/blog/${r.slug}`}
                     className="rounded-xl bg-[var(--bg-card)] border border-[var(--border)] p-4 hover:border-[var(--accent)]/40 hover:shadow-md transition-all duration-200"
                   >
-                    <span className={cn("inline-block px-2 py-0.5 rounded-full text-xs font-semibold capitalize mb-2", categoryColors[r.category] || "bg-gray-100 text-gray-600")}>
+                    <span className={cn("inline-block px-2 py-0.5 rounded-full text-xs font-semibold capitalize mb-2", categoryColors[r.category] || "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400")}>
                       {r.category.replace("-", " ")}
                     </span>
                     <h3 className="text-sm font-semibold text-[var(--text)] line-clamp-2 mb-1">

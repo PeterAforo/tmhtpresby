@@ -3,15 +3,26 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface PageHeroProps {
   title: string;
   subtitle?: string;
   /** Optional breadcrumb-style overline, e.g. "About" */
   overline?: string;
+  /** Background image URL */
+  backgroundImage?: string;
+  /** Overlay color for text readability */
+  overlayColor?: string;
 }
 
-export function PageHero({ title, subtitle, overline }: PageHeroProps) {
+export function PageHero({ 
+  title, 
+  subtitle, 
+  overline,
+  backgroundImage,
+  overlayColor = "rgba(12, 21, 41, 0.85)"
+}: PageHeroProps) {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -36,9 +47,29 @@ export function PageHero({ title, subtitle, overline }: PageHeroProps) {
       ref={ref}
       className={cn(
         "relative pt-28 pb-16 lg:pt-36 lg:pb-20 overflow-hidden",
-        "bg-gradient-to-br from-[#0C1529] via-[#152040] to-[#0C1529]"
+        !backgroundImage && "bg-gradient-to-br from-[#0C1529] via-[#152040] to-[#0C1529]"
       )}
     >
+      {/* Background Image */}
+      {backgroundImage && (
+        <>
+          <Image
+            src={backgroundImage}
+            alt=""
+            fill
+            className="object-cover"
+            priority
+            aria-hidden="true"
+          />
+          {/* Overlay for text readability */}
+          <div 
+            className="absolute inset-0"
+            style={{ backgroundColor: overlayColor }}
+            aria-hidden="true"
+          />
+        </>
+      )}
+
       {/* Accent glow */}
       <div
         className="absolute top-0 right-1/4 w-96 h-96 rounded-full opacity-15 blur-3xl"

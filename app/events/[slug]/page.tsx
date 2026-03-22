@@ -79,7 +79,7 @@ export default async function EventDetailPage({ params }: Props) {
                   <span
                     className={cn(
                       "px-3 py-1 rounded-full text-xs font-semibold",
-                      categoryColors[event.category] || "bg-gray-100 text-gray-600"
+                      categoryColors[event.category] || "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
                     )}
                   >
                     {event.category}
@@ -90,7 +90,7 @@ export default async function EventDetailPage({ params }: Props) {
                     </span>
                   )}
                   {isPast && (
-                    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-200 text-gray-600">
+                    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300">
                       Past Event
                     </span>
                   )}

@@ -17,7 +17,7 @@ const categoryColors: Record<string, string> = {
   outreach: "bg-amber-500/10 text-amber-600",
   worship: "bg-purple-500/10 text-purple-600",
   culture: "bg-blue-500/10 text-blue-600",
-  general: "bg-gray-100 text-gray-600",
+  general: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
 };
 
 function formatDate(date: Date): string {
@@ -62,7 +62,7 @@ export default async function BlogPage() {
 
                 <div className="flex flex-col flex-1 p-5">
                   <div className="flex items-center gap-2 mb-3">
-                    <span className={cn("px-2 py-0.5 rounded-full text-xs font-semibold capitalize", categoryColors[post.category] || "bg-gray-100 text-gray-600")}>
+                    <span className={cn("px-2 py-0.5 rounded-full text-xs font-semibold capitalize", categoryColors[post.category] || "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400")}>
                       {post.category.replace("-", " ")}
                     </span>
                     {post.readTime && (

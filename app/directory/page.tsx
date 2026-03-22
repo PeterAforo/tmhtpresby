@@ -18,7 +18,7 @@ const roleBadges: Record<string, string> = {
   pastor: "bg-[var(--accent)]/10 text-[var(--accent)]",
   ministry_leader: "bg-purple-100 text-purple-700",
   member: "bg-emerald-100 text-emerald-700",
-  visitor: "bg-gray-100 text-gray-600",
+  visitor: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
 };
 
 const groupLabels: Record<string, string> = {
@@ -111,7 +111,7 @@ export default async function DirectoryPage() {
                           <p className="text-sm font-semibold text-[var(--text)] truncate">
                             {member.firstName} {member.lastName}
                           </p>
-                          <span className={cn("px-1.5 py-0.5 rounded text-[10px] font-semibold shrink-0", roleBadges[member.role] || "bg-gray-100 text-gray-600")}>
+                          <span className={cn("px-1.5 py-0.5 rounded text-[10px] font-semibold shrink-0", roleBadges[member.role] || "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400")}>
                             {roleLabels[member.role] || member.role}
                           </span>
                         </div>

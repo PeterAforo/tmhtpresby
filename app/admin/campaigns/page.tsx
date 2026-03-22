@@ -25,7 +25,7 @@ const channelIcons: Record<string, React.ReactNode> = {
 };
 
 const statusBadges: Record<string, string> = {
-  draft: "bg-gray-100 text-gray-600",
+  draft: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
   scheduled: "bg-blue-100 text-blue-700",
   sent: "bg-emerald-100 text-emerald-700",
   failed: "bg-red-100 text-red-700",

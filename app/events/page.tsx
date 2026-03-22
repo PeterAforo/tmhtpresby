@@ -65,7 +65,7 @@ export default async function EventsPage() {
                   <div className="h-2 bg-gradient-to-r from-[var(--accent)] to-[var(--primary)]" />
                   <div className="p-6">
                     <div className="flex items-center gap-3 mb-3">
-                      <span className={cn("px-2.5 py-1 rounded-full text-xs font-semibold", categoryColors[event.category] || "bg-gray-100 text-gray-600")}>
+                      <span className={cn("px-2.5 py-1 rounded-full text-xs font-semibold", categoryColors[event.category] || "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400")}>
                         {event.category}
                       </span>
                       <span className="text-xs text-[var(--accent)] font-semibold uppercase tracking-wider">Featured</span>
@@ -105,7 +105,7 @@ export default async function EventsPage() {
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <span className={cn("inline-block px-2 py-0.5 rounded-full text-xs font-semibold mb-1", categoryColors[event.category] || "bg-gray-100 text-gray-600")}>
+                      <span className={cn("inline-block px-2 py-0.5 rounded-full text-xs font-semibold mb-1", categoryColors[event.category] || "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400")}>
                         {event.category}
                       </span>
                       <h3 className="text-base font-semibold text-[var(--text)] mb-1">{event.title}</h3>

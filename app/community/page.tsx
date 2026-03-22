@@ -34,7 +34,7 @@ const categories = [
 ];
 
 const categoryBadges: Record<string, string> = {
-  general: "bg-gray-100 text-gray-600",
+  general: "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
   prayer: "bg-emerald-100 text-emerald-700",
   testimony: "bg-amber-100 text-amber-700",
   question: "bg-blue-100 text-blue-700",
@@ -209,7 +209,7 @@ export default function CommunityPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
                       {post.isPinned && <Pin size={12} className="text-[var(--accent)]" />}
-                      <span className={cn("px-2 py-0.5 rounded-full text-[10px] font-semibold capitalize", categoryBadges[post.category] || "bg-gray-100 text-gray-600")}>
+                      <span className={cn("px-2 py-0.5 rounded-full text-[10px] font-semibold capitalize", categoryBadges[post.category] || "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400")}>
                         {post.category}
                       </span>
                     </div>

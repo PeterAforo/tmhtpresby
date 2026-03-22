@@ -69,6 +69,12 @@ export default function AdminLayout({
             >
               Analytics
             </a>
+            <a
+              href="/admin/page-heroes"
+              className="text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors whitespace-nowrap"
+            >
+              Page Heroes
+            </a>
             <span className="w-px h-4 bg-[var(--border)]" />
             <a
               href="/"
