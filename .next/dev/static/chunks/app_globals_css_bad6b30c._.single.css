@@ -78,6 +78,7 @@
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --color-red-50: #fef2f2;
     --color-red-100: #ffe2e2;
+    --color-red-300: #ffa3a3;
     --color-red-400: #ff6568;
     --color-red-500: #fb2c36;
     --color-red-600: #e40014;
@@ -87,6 +88,7 @@
     --color-amber-500: #f99c00;
     --color-amber-600: #dd7400;
     --color-amber-700: #b75000;
+    --color-green-300: #7bf1a8;
     --color-green-500: #00c758;
     --color-green-600: #00a544;
     --color-emerald-50: #ecfdf5;
@@ -190,6 +192,7 @@
     :root, :host {
       --color-red-50: lab(96.5005% 4.18511 1.52329);
       --color-red-100: lab(92.243% 10.2865 3.83865);
+      --color-red-300: lab(76.5514% 36.4219 15.5335);
       --color-red-400: lab(63.7053% 60.7449 31.3109);
       --color-red-500: lab(55.4814% 75.0732 48.8528);
       --color-red-600: lab(48.4493% 77.4328 61.5452);
@@ -199,6 +202,7 @@
       --color-amber-500: lab(72.7183% 31.8672 97.9407);
       --color-amber-600: lab(60.3514% 40.5624 87.1228);
       --color-amber-700: lab(47.2709% 42.9082 69.2966);
+      --color-green-300: lab(86.9953% -47.2691 25.0054);
       --color-green-500: lab(70.5521% -66.5147 45.8072);
       --color-green-600: lab(59.0978% -58.6621 41.2579);
       --color-emerald-50: lab(97.8462% -6.94963 1.85487);
@@ -543,10 +547,6 @@
 
   .top-4 {
     top: calc(var(--spacing) * 4);
-  }
-
-  .top-8 {
-    top: calc(var(--spacing) * 8);
   }
 
   .top-16 {
@@ -979,10 +979,6 @@
     height: calc(var(--spacing) * 24);
   }
 
-  .h-36 {
-    height: calc(var(--spacing) * 36);
-  }
-
   .h-40 {
     height: calc(var(--spacing) * 40);
   }
@@ -1105,10 +1101,6 @@
 
   .w-32 {
     width: calc(var(--spacing) * 32);
-  }
-
-  .w-36 {
-    width: calc(var(--spacing) * 36);
   }
 
   .w-40 {
@@ -1283,10 +1275,6 @@
 
   .items-center {
     align-items: center;
-  }
-
-  .items-end {
-    align-items: flex-end;
   }
 
   .items-start {
@@ -1714,11 +1702,6 @@
   .bg-\[\#E31B23\]\/5 {
     background-color: #e31b230d;
     background-color: lab(49.4699% 71.5835 51.5755 / .05);
-  }
-
-  .bg-\[\#E31B23\]\/10 {
-    background-color: #e31b231a;
-    background-color: lab(49.4699% 71.5835 51.5755 / .1);
   }
 
   .bg-\[var\(--accent\)\] {
@@ -2948,6 +2931,10 @@
     color: var(--color-gray-900);
   }
 
+  .text-green-300 {
+    color: var(--color-green-300);
+  }
+
   .text-green-500 {
     color: var(--color-green-500);
   }
@@ -2974,6 +2961,10 @@
 
   .text-purple-700 {
     color: var(--color-purple-700);
+  }
+
+  .text-red-300 {
+    color: var(--color-red-300);
   }
 
   .text-red-400 {
@@ -3148,10 +3139,6 @@
 
   .opacity-90 {
     opacity: .9;
-  }
-
-  .opacity-100 {
-    opacity: 1;
   }
 
   .opacity-\[0\.03\] {

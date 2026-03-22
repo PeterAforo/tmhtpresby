@@ -1,5 +1,8 @@
 {
+  "/(auth)/login/page": "app/(auth)/login/page.js",
   "/_not-found/page": "app/_not-found/page.js",
   "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/page": "app/page.js"
+  "/ministries/page": "app/ministries/page.js",
+  "/page": "app/page.js",
+  "/sermons/page": "app/sermons/page.js"
 }

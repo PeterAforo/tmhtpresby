@@ -426,26 +426,29 @@ export default function ContactPage() {
                 </p>
               </div>
 
-              {/* Map placeholder */}
-              <div className="rounded-xl overflow-hidden border border-[var(--border)] aspect-video bg-[var(--bg-card)] flex items-center justify-center">
-                <div className="text-center px-4">
-                  <MapPin
-                    size={32}
-                    className="mx-auto mb-2 text-[var(--accent)] opacity-40"
-                  />
-                  <p className="text-xs text-[var(--text-muted)]">
-                    Google Maps embed will go here
-                  </p>
-                  <a
-                    href={CHURCH_INFO.address.mapUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block mt-2 text-xs font-medium text-[var(--accent)] hover:underline"
-                  >
-                    Open in Google Maps
-                  </a>
-                </div>
+              {/* Google Maps embed */}
+              <div className="rounded-xl overflow-hidden border border-[var(--border)] aspect-video">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.9661!2d-0.0456!3d5.6037!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sLashibi%2C%20Accra%2C%20Ghana!5e0!3m2!1sen!2sgh!4v1234567890"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Church Location Map"
+                  className="w-full h-full"
+                />
               </div>
+              <a
+                href={CHURCH_INFO.address.mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 mt-3 text-sm font-medium text-[var(--accent)] hover:underline"
+              >
+                <MapPin size={14} />
+                Get Directions
+              </a>
             </div>
 
             {/* Contact form */}

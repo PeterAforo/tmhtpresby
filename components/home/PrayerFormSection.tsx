@@ -18,10 +18,35 @@ export function PrayerFormSection() {
     message: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log("Prayer request submitted:", formData);
+    setSubmitting(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/prayer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        setError(data.error || "Something went wrong.");
+        return;
+      }
+
+      setSubmitted(true);
+      setFormData({ firstName: "", lastName: "", subject: "", email: "", message: "" });
+    } catch {
+      setError("Network error. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -134,12 +159,23 @@ export function PrayerFormSection() {
                 className="w-full px-4 py-3 bg-white/10 border border-white/20 text-white placeholder-white/50 rounded focus:outline-none focus:border-white/40 resize-none"
               />
 
+              {/* Error message */}
+              {error && (
+                <p className="text-red-300 text-sm text-center">{error}</p>
+              )}
+
+              {/* Success message */}
+              {submitted && (
+                <p className="text-green-300 text-sm text-center">Thank you! Your prayer request has been submitted.</p>
+              )}
+
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-[#E31B23] text-white font-semibold rounded hover:bg-[#c91720] transition-colors"
+                disabled={submitting}
+                className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-[#E31B23] text-white font-semibold rounded hover:bg-[#c91720] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Pray with Me
+                {submitting ? "Submitting..." : "Pray with Me"}
                 <Send size={18} />
               </button>
             </form>
