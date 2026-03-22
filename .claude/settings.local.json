@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/peter/AppData/Roaming/Claude/local-agent-mode-sessions/skills-plugin/cfcdb317-8900-4dcc-9066-2e7e1d68c545/fc6524a9-fb61-4a3e-ba5f-c894e444afc9/skills/docx/**)",
+      "Bash(pandoc \"C:\\\\Users\\\\peter\\\\Downloads\\\\church-platform-master-plan.docx\" -o output.md)",
+      "Bash(python scripts/office/unpack.py \"C:\\\\Users\\\\peter\\\\Downloads\\\\church-platform-master-plan.docx\" unpacked/)",
+      "Bash(pip install:*)",
+      "Read(//d/xampp/htdocs/**)",
+      "Bash(npx create-next-app@latest churchweb --typescript --tailwind --eslint --app --src-dir=false --import-alias=\"@/*\" --use-npm)",
+      "Bash(npm init:*)",
+      "Bash(npm install:*)",
+      "Bash(npx next:*)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(ls D:/xampp/htdocs/churchweb/node_modules/.bin/next*)",
+      "Bash(grep -r \"supabase\\\\|resend\\\\|prisma\" /d/xampp/htdocs/churchweb --include=*.ts --include=*.tsx --include=*.json)",
+      "Bash(xargs grep:*)",
+      "Bash(grep -r \"aria-\\\\|semantic\\\\|role=\" /d/xampp/htdocs/churchweb/app /d/xampp/htdocs/churchweb/components --include=*.tsx)",
+      "Bash(npx prisma:*)",
+      "Bash(node -e \":*)",
+      "Bash(ls D:/xampp/htdocs/churchweb/lib/generated/prisma/index* D:/xampp/htdocs/churchweb/lib/generated/prisma/package.json)",
+      "WebSearch",
+      "Bash(npx tsx:*)",
+      "Bash(ls \"D:\\\\xampp\\\\htdocs\\\\churchweb\\\\app\\\\events\\\\[slug]\"\" 2>/dev/null; ls \"D:xampphtdocschurchwebcomponentsevents\"\")",
+      "Bash(npm run:*)",
+      "Bash(find /d/xampp/htdocs/churchweb/app/admin -type f -name *.tsx -o -name *.ts)",
+      "Bash(find D:xampphtdocschurchweb -type f -name *.json -o -name *.ts -o -name *.tsx -o -name *.js -o -name *.jsx)",
+      "Bash(find D:xampphtdocschurchwebcomponents -type f -name *.tsx)",
+      "Bash(npx auth:*)",
+      "Bash(node -e \"console.log\\(require\\(''crypto''\\).randomBytes\\(32\\).toString\\(''hex''\\)\\)\")",
+      "Bash(ls -la \"D:\\\\xampp\\\\htdocs\\\\churchweb\\\\app\\\\admin\\\\analytics\"\" 2>/dev/null || echo \"MISSING \")",
+      "Bash(echo \"exit: $?\")",
+      "Bash(ls \"D:/xampp/htdocs/churchweb/prisma/seed\"*)",
+      "Bash(ls \"D:/xampp/htdocs/churchweb/seed\"*)"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'>
+    <rect width='512' height='512' fill='#1a3c34' rx='76.8'/>
+    <text x='50%' y='42%' text-anchor='middle' dominant-baseline='middle' fill='#c8a961' font-family='serif' font-weight='bold' font-size='76.8'>MOST HOLY</text>
+    <text x='50%' y='58%' text-anchor='middle' dominant-baseline='middle' fill='#c8a961' font-family='serif' font-weight='bold' font-size='76.8'>TRINITY</text>
+    <line x1='256' y1='76.8' x2='256' y2='153.6' stroke='#c8a961' stroke-width='15.36'/>
+    <line x1='215.04' y1='112.64' x2='296.96' y2='112.64' stroke='#c8a961' stroke-width='15.36'/>
+  </svg>
