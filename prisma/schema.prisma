@@ -413,3 +413,65 @@ model PageView {
   @@index([createdAt(sort: Desc)])
   @@map("page_views")
 }
+
+// ─── Leadership Groups ─────────────────────────────────────────
+// Groups: session, ministers, agents, administration, ministries, departments, committees
+model LeadershipGroup {
+  id          String               @id @default(cuid())
+  name        String               // e.g. "Church Session", "Men's Ministry", "Finance Committee"
+  slug        String               @unique
+  type        String               // session, ministers, agents, administration, ministry, department, committee
+  description String?
+  imageUrl    String?
+  order       Int                  @default(0)
+  isActive    Boolean              @default(true)
+  positions   LeadershipPosition[]
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  @@index([type])
+  @@index([isActive])
+  @@map("leadership_groups")
+}
+
+// ─── Leadership Positions ──────────────────────────────────────
+// Defines positions within a group (e.g. "Chairman", "Secretary", "Treasurer")
+model LeadershipPosition {
+  id          String             @id @default(cuid())
+  title       String             // e.g. "Chairman", "Secretary", "Youth Pastor"
+  description String?
+  order       Int                @default(0)
+  groupId     String
+  group       LeadershipGroup    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  members     LeadershipMember[]
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  @@index([groupId])
+  @@map("leadership_positions")
+}
+
+// ─── Leadership Members ────────────────────────────────────────
+// Tracks current and past members in leadership positions
+model LeadershipMember {
+  id          String             @id @default(cuid())
+  firstName   String
+  lastName    String
+  title       String?            // e.g. "Elder", "Rev.", "Deaconess"
+  email       String?
+  phone       String?
+  imageUrl    String?
+  bio         String?
+  startDate   DateTime           // When they started in this position
+  endDate     DateTime?          // Null if currently serving
+  isCurrent   Boolean            @default(true)
+  positionId  String
+  position    LeadershipPosition @relation(fields: [positionId], references: [id], onDelete: Cascade)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  @@index([positionId])
+  @@index([isCurrent])
+  @@index([startDate(sort: Desc)])
+  @@map("leadership_members")
+}
