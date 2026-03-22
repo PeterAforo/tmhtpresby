@@ -26,13 +26,22 @@ function formatDate(date: Date): string {
   return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" }).format(date);
 }
 
+async function getEvents() {
+  try {
+    const now = new Date();
+    return await prisma.event.findMany({
+      where: { published: true, startDate: { gte: now } },
+      orderBy: { startDate: "asc" },
+      include: { _count: { select: { rsvps: true } } },
+    });
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    return [];
+  }
+}
+
 export default async function EventsPage() {
-  const now = new Date();
-  const events = await prisma.event.findMany({
-    where: { published: true, startDate: { gte: now } },
-    orderBy: { startDate: "asc" },
-    include: { _count: { select: { rsvps: true } } },
-  });
+  const events = await getEvents();
 
   const featured = events.filter((e) => e.isFeatured);
   const upcoming = events.filter((e) => !e.isFeatured);

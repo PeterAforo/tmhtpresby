@@ -20,12 +20,21 @@ const gradients = [
   "from-amber-500/15 to-[var(--accent)]/15",
 ];
 
+async function getAlbums() {
+  try {
+    return await prisma.galleryAlbum.findMany({
+      where: { published: true },
+      include: { _count: { select: { images: true } } },
+      orderBy: { createdAt: "desc" },
+    });
+  } catch (error) {
+    console.error("Error fetching albums:", error);
+    return [];
+  }
+}
+
 export default async function GalleryPage() {
-  const albums = await prisma.galleryAlbum.findMany({
-    where: { published: true },
-    include: { _count: { select: { images: true } } },
-    orderBy: { createdAt: "desc" },
-  });
+  const albums = await getAlbums();
 
   return (
     <>

@@ -9,12 +9,21 @@ export const metadata = {
   description: "Daily devotional messages to inspire and guide your spiritual journey.",
 };
 
+async function getDevotionals() {
+  try {
+    return await prisma.devotional.findMany({
+      where: { published: true },
+      orderBy: { publishDate: "desc" },
+      take: 30,
+    });
+  } catch (error) {
+    console.error("Error fetching devotionals:", error);
+    return [];
+  }
+}
+
 export default async function DailyWordPage() {
-  const devotionals = await prisma.devotional.findMany({
-    where: { published: true },
-    orderBy: { publishDate: "desc" },
-    take: 30,
-  });
+  const devotionals = await getDevotionals();
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);

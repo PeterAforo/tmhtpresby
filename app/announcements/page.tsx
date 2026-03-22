@@ -8,15 +8,25 @@ export const metadata = {
   description: "Stay updated with the latest church announcements and news.",
 };
 
+async function getAnnouncements() {
+  try {
+    const announcements = await prisma.blogPost.findMany({
+      where: { 
+        published: true,
+        category: "announcement",
+      },
+      orderBy: { publishedAt: "desc" },
+      take: 20,
+    });
+    return announcements;
+  } catch (error) {
+    console.error("Error fetching announcements:", error);
+    return [];
+  }
+}
+
 export default async function AnnouncementsPage() {
-  const announcements = await prisma.blogPost.findMany({
-    where: { 
-      published: true,
-      category: "announcement",
-    },
-    orderBy: { publishedAt: "desc" },
-    take: 20,
-  });
+  const announcements = await getAnnouncements();
 
   return (
     <>

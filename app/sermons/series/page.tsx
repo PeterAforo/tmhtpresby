@@ -9,19 +9,28 @@ export const metadata: Metadata = {
   description: "Browse sermon series from The Most Holy Trinity Presbyterian Church.",
 };
 
-export default async function SermonSeriesListPage() {
-  const allSeries = await prisma.sermonSeries.findMany({
-    include: {
-      _count: { select: { sermons: true } },
-      sermons: {
-        where: { published: true },
-        orderBy: { date: "desc" },
-        take: 1,
-        select: { date: true },
+async function getSeries() {
+  try {
+    return await prisma.sermonSeries.findMany({
+      include: {
+        _count: { select: { sermons: true } },
+        sermons: {
+          where: { published: true },
+          orderBy: { date: "desc" },
+          take: 1,
+          select: { date: true },
+        },
       },
-    },
-    orderBy: { createdAt: "desc" },
-  });
+      orderBy: { createdAt: "desc" },
+    });
+  } catch (error) {
+    console.error("Error fetching sermon series:", error);
+    return [];
+  }
+}
+
+export default async function SermonSeriesListPage() {
+  const allSeries = await getSeries();
 
   return (
     <>

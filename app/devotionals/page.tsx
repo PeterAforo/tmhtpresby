@@ -12,15 +12,23 @@ function formatDate(date: Date): string {
   return new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" }).format(date);
 }
 
-export default async function DevotionalsPage() {
-  const today = new Date();
-  today.setHours(23, 59, 59, 999);
+async function getDevotionals() {
+  try {
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+    return await prisma.devotional.findMany({
+      where: { published: true, publishDate: { lte: today } },
+      orderBy: { publishDate: "desc" },
+      take: 30,
+    });
+  } catch (error) {
+    console.error("Error fetching devotionals:", error);
+    return [];
+  }
+}
 
-  const devotionals = await prisma.devotional.findMany({
-    where: { published: true, publishDate: { lte: today } },
-    orderBy: { publishDate: "desc" },
-    take: 30,
-  });
+export default async function DevotionalsPage() {
+  const devotionals = await getDevotionals();
 
   const todayDevo = devotionals.length > 0 ? devotionals[0] : null;
   const past = devotionals.slice(1);

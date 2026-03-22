@@ -29,24 +29,33 @@ const groupLabels: Record<string, string> = {
   senior: "Seniors",
 };
 
+async function getMembers() {
+  try {
+    return await prisma.user.findMany({
+      where: { isActive: true },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        image: true,
+        role: true,
+        ministryGroup: true,
+        bio: true,
+      },
+      orderBy: [{ role: "asc" }, { firstName: "asc" }],
+    });
+  } catch (error) {
+    console.error("Error fetching members:", error);
+    return [];
+  }
+}
+
 export default async function DirectoryPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
-  const members = await prisma.user.findMany({
-    where: { isActive: true },
-    select: {
-      id: true,
-      firstName: true,
-      lastName: true,
-      email: true,
-      image: true,
-      role: true,
-      ministryGroup: true,
-      bio: true,
-    },
-    orderBy: [{ role: "asc" }, { firstName: "asc" }],
-  });
+  const members = await getMembers();
 
   // Group by ministry
   const grouped = members.reduce<Record<string, typeof members>>((acc, member) => {
