@@ -11,7 +11,7 @@ export const metadata = {
 export default async function AnnouncementsPage() {
   const announcements = await prisma.blogPost.findMany({
     where: { 
-      isPublished: true,
+      published: true,
       category: "announcement",
     },
     orderBy: { publishedAt: "desc" },
