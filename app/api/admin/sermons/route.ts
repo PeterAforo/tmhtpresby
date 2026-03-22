@@ -36,11 +36,14 @@ export async function POST(req: NextRequest) {
       title,
       scripture,
       description,
+      content,
       date,
       duration,
+      mediaType,
       videoUrl,
       audioUrl,
       youtubeId,
+      documentUrl,
       speakerId,
       seriesId,
       published,
@@ -66,11 +69,14 @@ export async function POST(req: NextRequest) {
         slug,
         scripture: scripture || null,
         description: description || null,
+        content: content || null,
         date: new Date(date),
         duration: duration ? parseInt(duration, 10) : null,
+        mediaType: mediaType || "video",
         videoUrl: videoUrl || null,
         audioUrl: audioUrl || null,
         youtubeId: youtubeId || null,
+        documentUrl: documentUrl || null,
         speakerId,
         seriesId: seriesId || null,
         published: published !== false,
@@ -103,7 +109,7 @@ export async function PUT(req: NextRequest) {
     if (data.duration) data.duration = parseInt(data.duration, 10);
 
     // Nullify empty strings
-    for (const key of ["scripture", "description", "videoUrl", "audioUrl", "youtubeId", "seriesId"]) {
+    for (const key of ["scripture", "description", "content", "videoUrl", "audioUrl", "youtubeId", "documentUrl", "seriesId"]) {
       if (data[key] === "") data[key] = null;
     }
 

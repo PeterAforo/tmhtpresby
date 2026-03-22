@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { SermonPlayer } from "@/components/media/SermonPlayer";
-import { Calendar, Clock, BookOpen, User, ChevronLeft, Share2, Eye } from "lucide-react";
+import { Calendar, Clock, BookOpen, User, ChevronLeft, Share2, Eye, Video, Headphones, FileText, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -76,17 +76,38 @@ export default async function SermonDetailPage({ params }: Props) {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
             {/* Main content */}
             <div className="lg:col-span-2">
-              {/* Player */}
-              <SermonPlayer
-                videoUrl={sermon.videoUrl}
-                audioUrl={sermon.audioUrl}
-                youtubeId={sermon.youtubeId}
-                title={sermon.title}
-                thumbnailUrl={sermon.thumbnailUrl}
-              />
+              {/* Media type badge */}
+              <div className="flex items-center gap-2 mb-4">
+                {sermon.mediaType === "video" && (
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--accent)]/10 text-[var(--accent)] text-xs font-semibold">
+                    <Video size={14} /> Video Sermon
+                  </span>
+                )}
+                {sermon.mediaType === "audio" && (
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/10 text-purple-600 text-xs font-semibold">
+                    <Headphones size={14} /> Audio Sermon
+                  </span>
+                )}
+                {sermon.mediaType === "text" && (
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 text-xs font-semibold">
+                    <FileText size={14} /> Written Sermon
+                  </span>
+                )}
+              </div>
+
+              {/* Player - only show for video/audio */}
+              {(sermon.mediaType === "video" || sermon.mediaType === "audio") && (
+                <SermonPlayer
+                  videoUrl={sermon.videoUrl}
+                  audioUrl={sermon.audioUrl}
+                  youtubeId={sermon.youtubeId}
+                  title={sermon.title}
+                  thumbnailUrl={sermon.thumbnailUrl}
+                />
+              )}
 
               {/* Title + Meta */}
-              <div className="mt-6">
+              <div className={sermon.mediaType === "text" ? "" : "mt-6"}>
                 {sermon.series && (
                   <Link
                     href={`/sermons/series/${sermon.series.slug}`}
@@ -127,8 +148,40 @@ export default async function SermonDetailPage({ params }: Props) {
                 </div>
 
                 {sermon.description && (
-                  <div className="prose prose-sm max-w-none text-[var(--text-muted)] leading-relaxed">
+                  <div className="prose prose-sm max-w-none text-[var(--text-muted)] leading-relaxed mb-6">
                     <p>{sermon.description}</p>
+                  </div>
+                )}
+
+                {/* Document download link */}
+                {sermon.documentUrl && (
+                  <a
+                    href={sermon.documentUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--accent)] text-white text-sm font-semibold hover:opacity-90 transition-opacity mb-6"
+                  >
+                    <Download size={16} />
+                    Download Sermon PDF
+                  </a>
+                )}
+
+                {/* Full sermon text content */}
+                {sermon.content && (
+                  <div className="mt-6 p-6 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]">
+                    <h2 className="font-[family-name:var(--font-heading)] text-lg font-bold text-[var(--text)] mb-4 flex items-center gap-2">
+                      <FileText size={18} className="text-[var(--accent)]" />
+                      {sermon.mediaType === "text" ? "Sermon Message" : "Sermon Transcript"}
+                    </h2>
+                    <div 
+                      className="prose prose-sm max-w-none text-[var(--text-muted)] leading-relaxed
+                        prose-headings:text-[var(--text)] prose-headings:font-[family-name:var(--font-heading)]
+                        prose-p:text-[var(--text-muted)]
+                        prose-strong:text-[var(--text)]
+                        prose-a:text-[var(--accent)] prose-a:no-underline hover:prose-a:underline
+                        prose-blockquote:border-l-[var(--accent)] prose-blockquote:text-[var(--text-muted)] prose-blockquote:italic"
+                      dangerouslySetInnerHTML={{ __html: sermon.content }}
+                    />
                   </div>
                 )}
               </div>

@@ -169,12 +169,15 @@ model Sermon {
   slug         String        @unique
   scripture    String?
   description  String?
+  content      String?       // Full sermon text/transcript for reading
   date         DateTime
   duration     Int?          // duration in seconds
+  mediaType    String        @default("video") // video, audio, text
   videoUrl     String?
   audioUrl     String?
   thumbnailUrl String?
   youtubeId    String?
+  documentUrl  String?       // PDF or document download link
   published    Boolean       @default(true)
   viewCount    Int           @default(0)
   speakerId    String
@@ -187,6 +190,7 @@ model Sermon {
   @@index([speakerId])
   @@index([seriesId])
   @@index([date(sort: Desc)])
+  @@index([mediaType])
   @@map("sermons")
 }
 

@@ -2,13 +2,20 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Search, Filter, X, ChevronDown } from "lucide-react";
+import { Search, Filter, X, ChevronDown, Video, Headphones, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SermonSearchProps {
   series: { slug: string; title: string; count: number }[];
   speakers: { id: string; name: string }[];
 }
+
+const MEDIA_TYPES = [
+  { value: "", label: "All Formats", icon: null },
+  { value: "video", label: "Video", icon: Video },
+  { value: "audio", label: "Audio", icon: Headphones },
+  { value: "text", label: "Written", icon: FileText },
+];
 
 export function SermonSearch({ series, speakers }: SermonSearchProps) {
   const router = useRouter();
@@ -17,12 +24,14 @@ export function SermonSearch({ series, speakers }: SermonSearchProps) {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedSeries, setSelectedSeries] = useState(searchParams.get("series") || "");
   const [selectedSpeaker, setSelectedSpeaker] = useState(searchParams.get("speaker") || "");
+  const [selectedMediaType, setSelectedMediaType] = useState(searchParams.get("type") || "");
 
   const applyFilters = () => {
     const params = new URLSearchParams();
     if (query) params.set("q", query);
     if (selectedSeries) params.set("series", selectedSeries);
     if (selectedSpeaker) params.set("speaker", selectedSpeaker);
+    if (selectedMediaType) params.set("type", selectedMediaType);
     router.push(`/sermons${params.toString() ? `?${params}` : ""}`);
   };
 
@@ -30,10 +39,11 @@ export function SermonSearch({ series, speakers }: SermonSearchProps) {
     setQuery("");
     setSelectedSeries("");
     setSelectedSpeaker("");
+    setSelectedMediaType("");
     router.push("/sermons");
   };
 
-  const hasActiveFilters = query || selectedSeries || selectedSpeaker;
+  const hasActiveFilters = query || selectedSeries || selectedSpeaker || selectedMediaType;
 
   return (
     <div className="mb-10">
@@ -79,6 +89,37 @@ export function SermonSearch({ series, speakers }: SermonSearchProps) {
             className={cn("transition-transform", showFilters && "rotate-180")}
           />
         </button>
+      </div>
+
+      {/* Media type tabs */}
+      <div className="mt-6 flex flex-wrap gap-2">
+        {MEDIA_TYPES.map((type) => {
+          const Icon = type.icon;
+          const isActive = selectedMediaType === type.value;
+          return (
+            <button
+              key={type.value}
+              onClick={() => {
+                setSelectedMediaType(type.value);
+                const params = new URLSearchParams();
+                if (query) params.set("q", query);
+                if (selectedSeries) params.set("series", selectedSeries);
+                if (selectedSpeaker) params.set("speaker", selectedSpeaker);
+                if (type.value) params.set("type", type.value);
+                router.push(`/sermons${params.toString() ? `?${params}` : ""}`);
+              }}
+              className={cn(
+                "inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all",
+                isActive
+                  ? "bg-[var(--accent)] text-white"
+                  : "bg-[var(--bg-card)] text-[var(--text-muted)] border border-[var(--border)] hover:border-[var(--accent)]/40 hover:text-[var(--text)]"
+              )}
+            >
+              {Icon && <Icon size={16} />}
+              {type.label}
+            </button>
+          );
+        })}
       </div>
 
       {/* Filter panel */}
