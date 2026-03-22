@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
+import { MinistryExecutives } from "@/components/ministry/MinistryExecutives";
 import { Users, Heart, Music, BookOpen, HandHelping, Baby, Clock, MapPin, ArrowLeft } from "lucide-react";
 
 const MINISTRIES_DATA: Record<string, {
@@ -433,7 +434,7 @@ export default async function MinistryDetailPage({ params }: Props) {
               </div>
 
               {/* Activities */}
-              <div>
+              <div className="mb-10">
                 <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold text-[var(--text)] mb-4">
                   What We Do
                 </h2>
@@ -449,6 +450,9 @@ export default async function MinistryDetailPage({ params }: Props) {
                   ))}
                 </div>
               </div>
+
+              {/* Ministry Executives */}
+              <MinistryExecutives ministrySlug={slug} ministryName={ministry.name} />
             </div>
 
             {/* Sidebar */}
