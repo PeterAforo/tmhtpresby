@@ -35,7 +35,7 @@ export const fieldInputStyles = cn(
   // Layout
   "block w-full rounded-lg",
   "px-4 py-2.5",
-  "text-sm text-[var(--text)]",
+  "text-base text-[var(--text)]",
   // Background & border — light mode
   "bg-white border border-[var(--border)]",
   // Dark mode

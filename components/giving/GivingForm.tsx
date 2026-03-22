@@ -84,7 +84,7 @@ export function GivingForm() {
   };
 
   const inputClasses = cn(
-    "w-full px-4 py-3 rounded-lg text-sm",
+    "w-full px-4 py-3 rounded-lg text-base",
     "bg-[var(--bg)] text-[var(--text)] border border-[var(--border)]",
     "placeholder:text-[var(--text-muted)]",
     "focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent"

@@ -121,7 +121,7 @@ export function HeroSection() {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
               >
-                <h1 className="font-[family-name:var(--font-heading)] text-4xl sm:text-5xl md:text-6xl font-bold text-white leading-[1.15] mb-4">
+                <h1 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.15] mb-4">
                   {HERO_SLIDES[currentSlide].headline}
                 </h1>
                 <p className="text-xl text-white/90">

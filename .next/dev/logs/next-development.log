@@ -88,3 +88,8 @@ See https://www.postgresql.org/docs/current/libpq-ssl.html for libpq SSL mode de
 [00:40:53.215] Browser WARN    Image with src "/img/pictures/2/070.jpg" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
 [00:40:53.215] Browser WARN    Image with src "/img/pictures/2/072.jpg" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
 [00:40:53.215] Browser WARN    Image with src "/img/pictures/2/074.jpg" has "fill" but is missing "sizes" prop. Please add it to improve page performance. Read more: https://nextjs.org/docs/api-reference/next/image#sizes
+[01:05:46.901] Server  LOG     ✓ Compiled in 367ms
+[01:06:10.670] Server  LOG     ✓ Compiled in 240ms
+[01:06:13.425] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:06:24.430] Server  LOG     ✓ Compiled in 2s
+[01:07:03.438] Server  LOG     ✓ Compiled in 493ms

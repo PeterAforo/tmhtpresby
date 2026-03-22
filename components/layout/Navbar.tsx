@@ -334,7 +334,7 @@ function MobileNavLink({
         <Link
           href={item.href}
           className={cn(
-            "flex-1 px-3 py-3 text-base font-medium rounded-md transition-colors",
+            "flex-1 px-3 py-3 text-base font-medium rounded-md transition-colors min-h-[44px] flex items-center",
             isActive
               ? "text-[var(--accent)] bg-[var(--accent)]/10"
               : "text-[var(--text)] hover:bg-[var(--text)]/5"

@@ -101,7 +101,7 @@ export function TestimonialsSection() {
         {/* Testimonials Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
           {currentTestimonials.map((testimonial, index) => (
-            <div key={index} className="flex gap-6">
+            <div key={index} className="flex flex-col sm:flex-row gap-4 sm:gap-6">
               {/* Image with quote icon */}
               <div className="relative shrink-0">
                 <div className="w-24 h-24 rounded-full overflow-hidden">
@@ -155,14 +155,14 @@ export function TestimonialsSection() {
         <div className="flex items-center justify-center gap-2">
           <button
             onClick={prev}
-            className="w-10 h-10 border border-gray-300 rounded flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors"
+            className="w-11 h-11 border border-gray-300 rounded flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors"
             aria-label="Previous testimonials"
           >
             <ChevronLeft size={20} />
           </button>
           <button
             onClick={next}
-            className="w-10 h-10 border border-gray-300 rounded flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors"
+            className="w-11 h-11 border border-gray-300 rounded flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors"
             aria-label="Next testimonials"
           >
             <ChevronRight size={20} />

@@ -68,6 +68,8 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        {/* Viewport with safe area support for notched devices */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         {/* Favicon */}
         <link rel="icon" type="image/png" href="/favicon.png" />
         {/* PWA */}
