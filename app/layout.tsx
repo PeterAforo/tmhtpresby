@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import { SplashScreen } from "@/components/animations/SplashScreen";
 import { SessionProvider } from "@/components/providers/SessionProvider";
 import { ThemeScript } from "@/components/providers/ThemeScript";
+import { PWAProvider } from "@/components/pwa/PWAProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -78,18 +79,23 @@ export default async function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="MHTPC" />
-        <link rel="apple-touch-icon" href="/icons/icon-192.svg" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-180x180.png" />
+        <link rel="apple-touch-icon" sizes="167x167" href="/icons/icon-167x167.png" />
       </head>
       <body className="font-body min-h-screen" suppressHydrationWarning>
         <ThemeScript />
         <SessionProvider>
-          <a href="#main-content" className="skip-to-content">
-            Skip to main content
-          </a>
-          <SplashScreen />
-          <Navbar />
-          <main id="main-content">{children}</main>
-          <Footer />
+          <PWAProvider>
+            <a href="#main-content" className="skip-to-content">
+              Skip to main content
+            </a>
+            <SplashScreen />
+            <Navbar />
+            <main id="main-content">{children}</main>
+            <Footer />
+          </PWAProvider>
         </SessionProvider>
       </body>
     </html>

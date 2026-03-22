@@ -1,28 +1,124 @@
 {
   "name": "The Most Holy Trinity Presbyterian Church",
   "short_name": "MHTPC",
-  "description": "A Christ-centred, Bible-believing Presbyterian church in the heart of Accra, Ghana.",
-  "start_url": "/",
+  "description": "Welcome to The Most Holy Trinity Presbyterian Church in Lashibi, Accra. Join us for worship, community, and spiritual growth.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1a3c34",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "background_color": "#FFFFFF",
+  "theme_color": "#3D4DB7",
   "orientation": "portrait-primary",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["religion", "community", "lifestyle"],
   "icons": [
     {
-      "src": "/icons/icon-192.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml",
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-512.svg",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
-  "categories": [
-    "religion",
-    "community"
-  ]
+  "shortcuts": [
+    {
+      "name": "Watch Sermons",
+      "short_name": "Sermons",
+      "description": "Watch and listen to our messages",
+      "url": "/sermons?source=pwa",
+      "icons": [{ "src": "/icons/shortcut-sermons.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Upcoming Events",
+      "short_name": "Events",
+      "description": "View upcoming church events",
+      "url": "/events?source=pwa",
+      "icons": [{ "src": "/icons/shortcut-events.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Give Online",
+      "short_name": "Give",
+      "description": "Make a donation",
+      "url": "/give?source=pwa",
+      "icons": [{ "src": "/icons/shortcut-give.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Live Stream",
+      "short_name": "Live",
+      "description": "Watch live services",
+      "url": "/live?source=pwa",
+      "icons": [{ "src": "/icons/shortcut-live.png", "sizes": "96x96" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "MHTPC on mobile"
+    },
+    {
+      "src": "/screenshots/screenshot-desktop.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "MHTPC on desktop"
+    }
+  ],
+  "prefer_related_applications": false
 }
