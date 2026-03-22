@@ -1,11 +1,1 @@
-{
-  "version": 4,
-  "routes": {},
-  "dynamicRoutes": {},
-  "notFoundRoutes": [],
-  "preview": {
-    "previewModeId": "8aea09b6dc1e7bb25b43a1310c6f0e1b",
-    "previewModeSigningKey": "00484a838d309232ca7323d2f9d6914d4a8b8ed724a0b2d044ad96ecaa5f5831",
-    "previewModeEncryptionKey": "a22cdded6595477b7b2e8018287588c8b9566e2555f1e8b6355be42ddca327c1"
-  }
-}
+{"version":4,"routes":{"/ministries/children":{},"/ministries/youth":{},"/ministries/women":{},"/ministries/men":{},"/ministries/worship":{},"/ministries/outreach":{}},"dynamicRoutes":{"/ministries/[slug]":{"dataRoute":null,"dataRouteRegex":null,"fallback":null,"fallbackRevalidate":false,"fallbackSourceRoute":"/ministries/[slug]","routeRegex":"^\\/ministries\\/([^/]+?)(?:\\/)?$","allowHeader":[]}},"notFoundRoutes":[],"preview":{"previewModeId":"8aea09b6dc1e7bb25b43a1310c6f0e1b","previewModeSigningKey":"00484a838d309232ca7323d2f9d6914d4a8b8ed724a0b2d044ad96ecaa5f5831","previewModeEncryptionKey":"a22cdded6595477b7b2e8018287588c8b9566e2555f1e8b6355be42ddca327c1"}}
