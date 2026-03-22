@@ -2,9 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Users, Heart, Music, BookOpen, HandHelping, Baby } from "lucide-react";
+import { Users, Heart, Music, BookOpen, HandHelping, Baby, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -12,39 +13,45 @@ gsap.registerPlugin(ScrollTrigger);
 const FEATURED_MINISTRIES = [
   {
     icon: Baby,
-    name: "Children",
+    name: "Children's Ministry",
     tagline: "Nurturing young hearts in God's word",
     href: "/ministries/children",
+    image: "/img/pictures/2/010.jpg",
   },
   {
     icon: Users,
-    name: "Youth",
+    name: "Youth Ministry",
     tagline: "Empowering the next generation",
     href: "/ministries/youth",
+    image: "/img/pictures/2/020.jpg",
   },
   {
     icon: Heart,
-    name: "Women",
+    name: "Women's Ministry",
     tagline: "Growing together in grace and purpose",
     href: "/ministries/women",
+    image: "/img/pictures/2/030.jpg",
   },
   {
     icon: BookOpen,
-    name: "Men",
+    name: "Men's Ministry",
     tagline: "Iron sharpens iron in fellowship",
     href: "/ministries/men",
+    image: "/img/pictures/2/040.jpg",
   },
   {
     icon: Music,
-    name: "Worship",
+    name: "Worship Ministry",
     tagline: "Leading God's people in praise",
     href: "/ministries/worship",
+    image: "/img/pictures/2/050.jpg",
   },
   {
     icon: HandHelping,
-    name: "Outreach",
+    name: "Outreach Ministry",
     tagline: "Serving our community with love",
     href: "/ministries/outreach",
+    image: "/img/pictures/2/060.jpg",
   },
 ];
 
@@ -98,7 +105,7 @@ export function MinistriesPreviewSection() {
         </div>
 
         {/* Ministry cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {FEATURED_MINISTRIES.map((ministry) => {
             const Icon = ministry.icon;
             return (
@@ -107,22 +114,43 @@ export function MinistriesPreviewSection() {
                 href={ministry.href}
                 className={cn(
                   "ministry-card opacity-0",
-                  "group flex items-start gap-4 p-6 rounded-xl",
-                  "bg-[var(--bg-card)] border border-[var(--border)]",
-                  "hover:border-[var(--accent)]/40 hover:shadow-md hover:-translate-y-1",
-                  "transition-all duration-200"
+                  "group relative overflow-hidden rounded-2xl",
+                  "aspect-[4/3] sm:aspect-[3/2]",
+                  "hover:-translate-y-2 hover:shadow-2xl",
+                  "transition-all duration-300"
                 )}
               >
-                <div className="shrink-0 p-3 rounded-lg bg-[var(--accent)]/10 text-[var(--accent)] group-hover:bg-[var(--accent)] group-hover:text-white transition-colors duration-200">
-                  <Icon size={24} />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">
-                    {ministry.name}
-                  </h3>
-                  <p className="text-sm text-[var(--text-muted)] mt-1">
-                    {ministry.tagline}
-                  </p>
+                {/* Background Image */}
+                <Image
+                  src={ministry.image}
+                  alt={ministry.name}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20 group-hover:from-black/95 group-hover:via-black/60 transition-colors duration-300" />
+                
+                {/* Content */}
+                <div className="absolute inset-0 p-6 flex flex-col justify-end">
+                  {/* Icon */}
+                  <div className="absolute top-5 right-5 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white group-hover:bg-[var(--accent)] transition-colors duration-300">
+                    <Icon size={22} />
+                  </div>
+                  
+                  {/* Text */}
+                  <div>
+                    <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold text-white mb-2 group-hover:text-[var(--accent)] transition-colors">
+                      {ministry.name}
+                    </h3>
+                    <p className="text-sm text-white/80 leading-relaxed mb-3">
+                      {ministry.tagline}
+                    </p>
+                    <span className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      Learn More
+                      <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                    </span>
+                  </div>
                 </div>
               </Link>
             );
