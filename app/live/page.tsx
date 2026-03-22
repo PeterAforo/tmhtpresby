@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { Radio, Clock, Calendar, Bell, Youtube, Wifi } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -18,7 +18,8 @@ const SERVICE_SCHEDULE = [
 export default function LivePage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="live"
         overline="Watch Online"
         title="Live Stream"
         subtitle="Join us for worship from wherever you are."

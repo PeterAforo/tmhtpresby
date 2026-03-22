@@ -1,4 +1,4 @@
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { ShoppingBag } from "lucide-react";
 
 export const metadata = {
@@ -9,7 +9,8 @@ export const metadata = {
 export default function ShopPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="shop"
         overline="Store"
         title="Church Shop"
         subtitle="Browse our merchandise and resources"

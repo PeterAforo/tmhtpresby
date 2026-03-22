@@ -1,4 +1,4 @@
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { User, Mail, Phone } from "lucide-react";
 
 export const metadata = {
@@ -9,7 +9,8 @@ export const metadata = {
 export default function CatechistPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="about-catechist"
         title="The Catechist"
         subtitle="Meet our catechist"
       />

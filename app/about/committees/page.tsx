@@ -1,4 +1,4 @@
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { LeadershipDisplay } from "@/components/leadership";
 
 export const metadata = {
@@ -9,7 +9,8 @@ export const metadata = {
 export default function CommitteesPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="about-committees"
         overline="About Us"
         title="Church Committees"
         subtitle="Dedicated teams serving our congregation"

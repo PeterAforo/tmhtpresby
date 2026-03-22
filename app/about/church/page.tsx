@@ -1,4 +1,4 @@
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { Church, MapPin, Clock, Phone } from "lucide-react";
 import { CHURCH_INFO } from "@/lib/constants";
 
@@ -10,7 +10,8 @@ export const metadata = {
 export default function AboutChurchPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="about-church"
         title="About The Church"
         subtitle="Welcome to The Most Holy Trinity Presbyterian Church"
       />

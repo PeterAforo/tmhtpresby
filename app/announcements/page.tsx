@@ -1,4 +1,4 @@
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { prisma } from "@/lib/db";
 import { formatShortDate } from "@/lib/utils";
 import { Bell, Calendar } from "lucide-react";
@@ -30,7 +30,8 @@ export default async function AnnouncementsPage() {
 
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="announcements"
         title="Announcements"
         subtitle="Stay updated with the latest church news and announcements"
       />

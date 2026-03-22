@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { SermonSearch } from "@/components/media/SermonSearch";
 import { Play, Clock, User } from "lucide-react";
 
@@ -48,7 +48,8 @@ export default async function SermonsPage() {
 
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="sermons"
         overline="Media"
         title="Sermons"
         subtitle="Watch, listen, and be transformed by the Word of God."

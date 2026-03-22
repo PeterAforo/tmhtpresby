@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth, signOut } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import Link from "next/link";
 import { User, Mail, Phone, Calendar, Shield, Users, LogOut, MessageSquare, BookOpen } from "lucide-react";
 
@@ -43,7 +43,8 @@ export default async function ProfilePage() {
 
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="profile"
         overline="My Account"
         title={`${user.firstName} ${user.lastName}`}
         subtitle={roleLabels[user.role] || "Member"}

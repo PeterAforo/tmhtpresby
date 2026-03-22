@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import {
   MapPin,
   Phone,
@@ -319,7 +319,8 @@ function ContactForm() {
 export default function ContactPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="contact"
         overline="Get in Touch"
         title="Contact Us"
         subtitle="We'd love to hear from you. Reach out with questions, prayer requests, or just to say hello."

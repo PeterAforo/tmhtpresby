@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { Calendar, User, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -42,7 +42,8 @@ export default async function BlogPage() {
 
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="blog"
         overline="Resources"
         title="Blog"
         subtitle="Articles, devotionals, and reflections to nourish your faith journey."

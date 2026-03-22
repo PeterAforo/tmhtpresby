@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { Users, Heart, Music, BookOpen, HandHelping, Baby, Clock, MapPin, ArrowLeft } from "lucide-react";
 
 const MINISTRIES_DATA: Record<string, {
@@ -391,7 +391,8 @@ export default async function MinistryDetailPage({ params }: Props) {
 
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug={`ministries-${slug}`}
         overline="Ministries"
         title={ministry.name}
         subtitle={ministry.tagline}

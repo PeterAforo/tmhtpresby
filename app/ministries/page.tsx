@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { Users, Heart, Music, BookOpen, HandHelping, Baby, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -87,10 +87,11 @@ const MINISTRIES = [
 export default function MinistriesPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="ministries"
         overline="Get Involved"
         title="Our Ministries"
-        subtitle="There\u2019s a place for everyone at Most Holy Trinity. Find your community and serve with purpose."
+        subtitle="There's a place for everyone at Most Holy Trinity. Find your community and serve with purpose."
       />
 
       <section className="py-16 lg:py-24 bg-[var(--bg)]">

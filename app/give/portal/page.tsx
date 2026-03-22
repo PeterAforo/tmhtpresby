@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { Search, Receipt, Calendar, Loader2, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -72,7 +72,8 @@ export default function DonorPortalPage() {
 
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="give-portal"
         overline="Your Giving"
         title="Donor Portal"
         subtitle="View your donation history and download receipts."

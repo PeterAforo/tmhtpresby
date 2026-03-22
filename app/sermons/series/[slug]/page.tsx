@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { Play, Clock, User } from "lucide-react";
 
 interface Props {
@@ -53,7 +53,8 @@ export default async function SeriesDetailPage({ params }: Props) {
 
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug={`sermons-series-${series.slug}`}
         overline="Sermon Series"
         title={series.title}
         subtitle={series.description || `${series.sermons.length} sermons in this series.`}

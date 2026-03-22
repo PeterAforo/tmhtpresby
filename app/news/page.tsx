@@ -1,4 +1,4 @@
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -10,7 +10,8 @@ export const metadata = {
 export default function NewsPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="news"
         overline="Stay Updated"
         title="Church News"
         subtitle="Latest updates and happenings from our community"

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { Target, Eye, Compass, Gem } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -34,7 +34,8 @@ const VALUES = [
 export default function VisionPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="about-vision"
         overline="About"
         title="Vision & Mission"
         subtitle="The purpose that drives everything we do."

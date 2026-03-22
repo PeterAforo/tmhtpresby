@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { RsvpForm } from "@/components/events/RsvpForm";
 import { Calendar, MapPin, Clock, Users, ArrowLeft, Share2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -53,7 +53,8 @@ export default async function EventDetailPage({ params }: Props) {
 
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug={`events-${event.slug}`}
         overline={event.category.charAt(0).toUpperCase() + event.category.slice(1)}
         title={event.title}
         subtitle={event.description || undefined}

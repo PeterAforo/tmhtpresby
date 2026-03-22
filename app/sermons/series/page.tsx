@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { BookOpen, ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -34,7 +34,8 @@ export default async function SermonSeriesListPage() {
 
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="sermons-series"
         overline="Media"
         title="Sermon Series"
         subtitle="Explore our teaching series for deeper study and growth."

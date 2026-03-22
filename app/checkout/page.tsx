@@ -1,4 +1,4 @@
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 
@@ -10,7 +10,8 @@ export const metadata = {
 export default function CheckoutPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="checkout"
         overline="Store"
         title="Checkout"
         subtitle="Complete your purchase"

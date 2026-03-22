@@ -1,4 +1,4 @@
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import Link from "next/link";
 import { Bell, Camera, Video, Calendar, BookOpen, Heart } from "lucide-react";
 
@@ -49,7 +49,8 @@ const MEDIA_SECTIONS = [
 export default function MediaPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="media"
         overline="Explore"
         title="Media Center"
         subtitle="Access all our media resources in one place"

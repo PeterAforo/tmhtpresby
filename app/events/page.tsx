@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { Calendar, MapPin, Clock, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -48,7 +48,8 @@ export default async function EventsPage() {
 
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="events"
         overline="What's Happening"
         title="Upcoming Events"
         subtitle="There's always something happening at Most Holy Trinity. Come be a part of it."

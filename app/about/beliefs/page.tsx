@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { BookOpen, Heart, Users, Shield, Cross, Flame } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -56,7 +56,8 @@ const BELIEFS = [
 export default function BeliefsPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="about-beliefs"
         overline="About"
         title="What We Believe"
         subtitle="The doctrinal foundation we stand on — rooted in Scripture, expressed in love."

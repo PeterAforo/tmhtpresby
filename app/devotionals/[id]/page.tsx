@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { BookOpen, Calendar, User, ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Props {
@@ -76,7 +76,8 @@ export default async function DevotionalDetailPage({ params }: Props) {
 
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug={`devotionals-${devotional.id}`}
         overline="Daily Word"
         title={devotional.title}
         subtitle={devotional.scripture}

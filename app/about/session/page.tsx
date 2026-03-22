@@ -1,4 +1,4 @@
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { LeadershipDisplay } from "@/components/leadership";
 
 export const metadata = {
@@ -9,7 +9,8 @@ export const metadata = {
 export default function SessionPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="about-session"
         title="The Session"
         subtitle="The governing body of our congregation"
       />

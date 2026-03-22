@@ -1,4 +1,4 @@
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { LeadershipDisplay } from "@/components/leadership";
 
 export const metadata = {
@@ -9,7 +9,8 @@ export const metadata = {
 export default function AgentsPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="about-agents"
         title="Our Agents"
         subtitle="Church agents serving our community"
       />

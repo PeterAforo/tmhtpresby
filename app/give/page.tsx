@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { GivingForm } from "@/components/giving/GivingForm";
 import { Shield, RefreshCw, CreditCard } from "lucide-react";
 
@@ -12,7 +12,8 @@ export const metadata: Metadata = {
 export default function GivePage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="give"
         overline="Support the Mission"
         title="Give Online"
         subtitle="Every gift makes a difference. Your generosity fuels the work of the Gospel in Accra and beyond."

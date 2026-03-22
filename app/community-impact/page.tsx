@@ -1,4 +1,4 @@
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { Heart, Users, Home, BookOpen } from "lucide-react";
 
 export const metadata = {
@@ -32,7 +32,8 @@ const impactAreas = [
 export default function CommunityImpactPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="community-impact"
         title="Community Impact"
         subtitle="Making a difference in our community through love and service"
       />

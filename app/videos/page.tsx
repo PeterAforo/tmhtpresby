@@ -1,4 +1,4 @@
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { Video, Play } from "lucide-react";
 import Link from "next/link";
 
@@ -10,7 +10,8 @@ export const metadata = {
 export default function VideosPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="videos"
         title="Video Gallery"
         subtitle="Watch sermons, events, and special moments from our church"
       />

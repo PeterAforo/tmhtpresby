@@ -1,4 +1,4 @@
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import Link from "next/link";
 import { Heart, Users, Music, Baby, HandHelping, Mic } from "lucide-react";
 
@@ -49,7 +49,8 @@ const VOLUNTEER_AREAS = [
 export default function VolunteersPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="volunteers"
         overline="Get Involved"
         title="Volunteer With Us"
         subtitle="Use your gifts to serve God and others"

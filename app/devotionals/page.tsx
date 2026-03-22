@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { prisma } from "@/lib/db";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { BookOpen, Calendar, User } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -35,7 +35,8 @@ export default async function DevotionalsPage() {
 
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="devotionals"
         overline="Daily Word"
         title="Devotionals"
         subtitle="Start each day with scripture, reflection, and prayer."

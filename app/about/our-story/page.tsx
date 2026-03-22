@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 
 export const metadata: Metadata = {
   title: "Our Story",
@@ -10,7 +10,8 @@ export const metadata: Metadata = {
 export default function OurStoryPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="about-our-story"
         overline="About"
         title="Our Story"
         subtitle="How we started and where we are going — a journey of faith rooted in Accra."

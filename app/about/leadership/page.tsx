@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { Mail } from "lucide-react";
 import type { LeadershipMember } from "@/types";
 
@@ -64,7 +64,8 @@ const LEADERS: LeadershipMember[] = [
 export default function LeadershipPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="about-leadership"
         overline="About"
         title="Our Leadership"
         subtitle="Meet the pastors and elders who shepherd our church family with love and integrity."

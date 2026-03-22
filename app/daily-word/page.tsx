@@ -1,4 +1,4 @@
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { prisma } from "@/lib/db";
 import Link from "next/link";
 import { formatShortDate } from "@/lib/utils";
@@ -36,7 +36,8 @@ export default async function DailyWordPage() {
 
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="daily-word"
         title="Daily Word"
         subtitle="Daily devotional messages to inspire and guide your spiritual journey"
       />

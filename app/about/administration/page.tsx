@@ -1,4 +1,4 @@
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { LeadershipDisplay } from "@/components/leadership";
 
 export const metadata = {
@@ -9,7 +9,8 @@ export const metadata = {
 export default function AdministrationPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="about-administration"
         title="Administration"
         subtitle="Our administrative team"
       />

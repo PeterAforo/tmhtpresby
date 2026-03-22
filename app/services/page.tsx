@@ -1,4 +1,4 @@
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { Clock, MapPin, Calendar } from "lucide-react";
 import { CHURCH_INFO } from "@/lib/constants";
 
@@ -48,7 +48,8 @@ const SERVICES = [
 export default function ServicesPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="services"
         overline="Join Us"
         title="Worship Services"
         subtitle="Experience God's presence with us"

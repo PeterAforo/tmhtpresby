@@ -1,4 +1,4 @@
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { FileText, Download, BookOpen, Music, Video } from "lucide-react";
 import Link from "next/link";
 
@@ -37,7 +37,8 @@ const resourceCategories = [
 export default function ResourcesPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="resources"
         title="Resources"
         subtitle="Access church resources to support your spiritual growth"
       />

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { StaggerChildren } from "@/components/animations/StaggerChildren";
 import { BookOpen, Users, Eye, ArrowRight } from "lucide-react";
 
@@ -39,7 +39,8 @@ const ABOUT_LINKS = [
 export default function AboutIndexPage() {
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="about"
         overline="Who We Are"
         title="About Us"
         subtitle="A Christ-centred, Bible-believing community rooted in the Reformed tradition and committed to God\u2019s glory."

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { Camera } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -38,7 +38,8 @@ export default async function GalleryPage() {
 
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="gallery"
         overline="Memories"
         title="Photo Gallery"
         subtitle="A glimpse into the life, worship, and community of Most Holy Trinity."

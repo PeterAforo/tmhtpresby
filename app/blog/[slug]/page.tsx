@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { Calendar, User, Clock, ArrowLeft, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -59,7 +59,8 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug={`blog-${post.slug}`}
         overline={post.category.replace("-", " ").replace(/\b\w/g, (c) => c.toUpperCase())}
         title={post.title}
         subtitle={post.excerpt || undefined}

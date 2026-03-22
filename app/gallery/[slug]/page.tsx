@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/db";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { ArrowLeft, ImageIcon } from "lucide-react";
 
 interface Props {
@@ -33,7 +33,8 @@ export default async function GalleryAlbumPage({ params }: Props) {
 
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug={`gallery-${album.slug}`}
         overline="Gallery"
         title={album.title}
         subtitle={album.description || undefined}

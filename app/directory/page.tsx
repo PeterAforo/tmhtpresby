@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
-import { PageHero } from "@/components/layout/PageHero";
+import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { User, Mail, Shield, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -69,7 +69,8 @@ export default async function DirectoryPage() {
 
   return (
     <>
-      <PageHero
+      <PageHeroWithBackground
+        pageSlug="directory"
         overline="Community"
         title="Member Directory"
         subtitle="Connect with your church family."
