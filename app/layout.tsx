@@ -24,7 +24,7 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: {
     default: "The Most Holy Trinity Presbyterian Church",
-    template: "%s | Most Holy Trinity Presbyterian Church",
+    template: "%s | The Most Holy Trinity Presbyterian Church",
   },
   description:
     "Welcome to The Most Holy Trinity Presbyterian Church in Lashibi, Accra. Join us for worship, community, and spiritual growth. That They All May Be One.",

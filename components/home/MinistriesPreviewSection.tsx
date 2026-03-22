@@ -93,7 +93,7 @@ export function MinistriesPreviewSection() {
           />
           <p className="mt-4 text-[var(--text-muted)] text-base sm:text-lg max-w-2xl mx-auto">
             From children to seniors, there&apos;s a ministry for everyone at
-            Most Holy Trinity.
+            The Most Holy Trinity.
           </p>
         </div>
 

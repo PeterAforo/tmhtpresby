@@ -187,7 +187,7 @@ export function LiveStreamSection() {
                   <div className="text-white">
                     <p className="text-[10px] lg:text-xs mb-2 flex items-center gap-1 lg:gap-2">
                       <Image src="/logo.png" alt="PCG" width={16} height={20} className="lg:w-5 lg:h-6" />
-                      <span className="leading-tight">MOST HOLY TRINITY CONGREGATION<br />PRESBYTERIAN CHURCH OF GHANA</span>
+                      <span className="leading-tight">THE MOST HOLY TRINITY CONGREGATION<br />PRESBYTERIAN CHURCH OF GHANA</span>
                     </p>
                     <h3 className="font-[family-name:var(--font-heading)] text-xl lg:text-3xl italic mb-1">
                       Preparing

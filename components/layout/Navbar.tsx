@@ -104,7 +104,7 @@ export function Navbar() {
                   isOverHero ? "text-white" : "text-[var(--nav-text)]"
                 )}
               >
-                Most Holy Trinity
+                The Most Holy Trinity
               </span>
               <span
                 className={cn(

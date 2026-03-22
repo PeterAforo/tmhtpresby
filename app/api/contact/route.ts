@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
         resend.emails.send({
           from: FROM_EMAIL,
           to: email.trim().toLowerCase(),
-          subject: "We received your message — Most Holy Trinity",
+          subject: "We received your message — The Most Holy Trinity",
           html: contactConfirmationEmail(firstName.trim()),
         }),
         resend.emails.send({

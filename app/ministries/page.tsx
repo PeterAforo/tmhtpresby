@@ -91,7 +91,7 @@ export default function MinistriesPage() {
         pageSlug="ministries"
         overline="Get Involved"
         title="Our Ministries"
-        subtitle="There's a place for everyone at Most Holy Trinity. Find your community and serve with purpose."
+        subtitle="There's a place for everyone at The Most Holy Trinity. Find your community and serve with purpose."
       />
 
       <section className="py-16 lg:py-24 bg-[var(--bg)]">

@@ -4,7 +4,7 @@ import { Heart, Users, Music, Baby, HandHelping, Mic } from "lucide-react";
 
 export const metadata = {
   title: "Volunteers",
-  description: "Join our team of volunteers and serve in various ministries at Most Holy Trinity Presbyterian Church.",
+  description: "Join our team of volunteers and serve in various ministries at The Most Holy Trinity Presbyterian Church.",
 };
 
 const VOLUNTEER_AREAS = [

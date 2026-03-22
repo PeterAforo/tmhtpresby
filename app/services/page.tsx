@@ -4,7 +4,7 @@ import { CHURCH_INFO } from "@/lib/constants";
 
 export const metadata = {
   title: "Services",
-  description: "Join us for worship services throughout the week at Most Holy Trinity Presbyterian Church.",
+  description: "Join us for worship services throughout the week at The Most Holy Trinity Presbyterian Church.",
 };
 
 const SERVICES = [

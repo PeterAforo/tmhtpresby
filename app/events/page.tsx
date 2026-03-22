@@ -52,7 +52,7 @@ export default async function EventsPage() {
         pageSlug="events"
         overline="What's Happening"
         title="Upcoming Events"
-        subtitle="There's always something happening at Most Holy Trinity. Come be a part of it."
+        subtitle="There's always something happening at The Most Holy Trinity. Come be a part of it."
       />
 
       <section className="py-16 lg:py-24 bg-[var(--bg)]">

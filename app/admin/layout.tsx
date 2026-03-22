@@ -23,7 +23,7 @@ export default function AdminLayout({
               Admin
             </span>
             <span className="font-[family-name:var(--font-heading)] text-sm font-semibold text-[var(--text)]">
-              Most Holy Trinity
+              The Most Holy Trinity
             </span>
           </div>
           <nav className="flex items-center gap-4 text-sm overflow-x-auto">

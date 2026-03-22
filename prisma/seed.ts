@@ -19,7 +19,7 @@ async function main() {
       id: "spk_adjei",
       name: "Rev. Dr. Emmanuel Adjei",
       title: "Senior Pastor",
-      bio: "Rev. Dr. Emmanuel Adjei has served as Senior Pastor of Most Holy Trinity Presbyterian Church for over 15 years. He holds a Doctor of Ministry from Trinity Theological Seminary and is passionate about expository preaching and discipleship.",
+      bio: "Rev. Dr. Emmanuel Adjei has served as Senior Pastor of The Most Holy Trinity Presbyterian Church for over 15 years. He holds a Doctor of Ministry from Trinity Theological Seminary and is passionate about expository preaching and discipleship.",
     },
   });
 
@@ -227,7 +227,7 @@ async function main() {
     {
       title: "Women's Prayer Breakfast",
       slug: "womens-prayer-breakfast-march",
-      description: "A morning of fellowship, prayer, and encouragement for the women of Most Holy Trinity. Enjoy a delicious breakfast while we share testimonies and lift one another up in prayer.",
+      description: "A morning of fellowship, prayer, and encouragement for the women of The Most Holy Trinity. Enjoy a delicious breakfast while we share testimonies and lift one another up in prayer.",
       location: "Fellowship Hall",
       category: "women",
       startDate: new Date("2026-03-22"),
@@ -353,7 +353,7 @@ async function main() {
       title: "Serving Beyond the Church Walls",
       slug: "serving-beyond-the-church-walls",
       excerpt: "How our outreach ministry is making a tangible impact in communities across Greater Accra — and how you can get involved.",
-      content: "<p>The church exists not just for those within its walls but for the world outside. At Most Holy Trinity, our outreach ministry has been at the forefront of community transformation.</p><h3>Recent Initiatives</h3><p>Over the past year, our outreach teams have served in Teshie, Nungua, and La communities — providing food packages to over 500 families, offering free health screenings, and running after-school programmes for children.</p><h3>How You Can Help</h3><p>There are many ways to get involved: join a Saturday outreach team, donate supplies, sponsor a child's education, or simply pray for our communities. Every act of service, no matter how small, reflects the love of Christ.</p><p>Contact the outreach coordinator to learn more about upcoming opportunities.</p>",
+      content: "<p>The church exists not just for those within its walls but for the world outside. At The Most Holy Trinity, our outreach ministry has been at the forefront of community transformation.</p><h3>Recent Initiatives</h3><p>Over the past year, our outreach teams have served in Teshie, Nungua, and La communities — providing food packages to over 500 families, offering free health screenings, and running after-school programmes for children.</p><h3>How You Can Help</h3><p>There are many ways to get involved: join a Saturday outreach team, donate supplies, sponsor a child's education, or simply pray for our communities. Every act of service, no matter how small, reflects the love of Christ.</p><p>Contact the outreach coordinator to learn more about upcoming opportunities.</p>",
       author: "Deaconess Grace Amponsah",
       category: "outreach",
       readTime: 6,
@@ -419,7 +419,7 @@ async function main() {
     {
       title: "Christmas Celebration",
       slug: "christmas-celebration",
-      description: "The joy of the season at Most Holy Trinity.",
+      description: "The joy of the season at The Most Holy Trinity.",
     },
     {
       title: "Children's Ministry",
@@ -501,7 +501,7 @@ async function main() {
       role: "super_admin",
       ministryGroup: "adult",
       dateOfBirth: new Date("1975-04-12"),
-      bio: "Senior Pastor & Administrator of Most Holy Trinity Presbyterian Church.",
+      bio: "Senior Pastor & Administrator of The Most Holy Trinity Presbyterian Church.",
     },
   });
 
@@ -612,7 +612,7 @@ async function main() {
     create: {
       id: "campaign_easter_2026",
       title: "Easter Conference 2026 — Save the Date!",
-      subject: "You're Invited: Easter Conference 2026 at Most Holy Trinity",
+      subject: "You're Invited: Easter Conference 2026 at The Most Holy Trinity",
       content: "Dear church family,\n\nWe are excited to announce our Easter Conference 2026, taking place April 3-5 at the Main Sanctuary. This year's theme is 'Risen in Power' and features guest speakers, worship concerts, and special children's programmes.\n\nMark your calendars and invite your friends and neighbours. Registration opens soon!\n\nIn Christ,\nThe Most Holy Trinity Team",
       channel: "email",
       audience: "all",

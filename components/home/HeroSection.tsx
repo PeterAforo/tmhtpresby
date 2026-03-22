@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const HERO_SLIDES = [
   {
     image: "/img/pictures/2/001.jpg",
-    headline: "Welcome to Most Holy Trinity",
+    headline: "Welcome to The Most Holy Trinity",
     subline: "Presbyterian Church of Ghana - Lashibi",
   },
   {

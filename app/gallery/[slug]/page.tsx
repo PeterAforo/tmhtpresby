@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!album) return { title: "Album Not Found" };
   return {
     title: `${album.title} — Gallery`,
-    description: album.description || `Browse photos from "${album.title}" at Most Holy Trinity Presbyterian Church.`,
+    description: album.description || `Browse photos from "${album.title}" at The Most Holy Trinity Presbyterian Church.`,
   };
 }
 

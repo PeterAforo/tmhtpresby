@@ -89,7 +89,7 @@ export default function RegisterPage() {
         <div className="text-center mb-8">
           <Link href="/" className="inline-block mb-4">
             <span className="font-[family-name:var(--font-heading)] text-xl font-bold text-[var(--text)]">
-              Most Holy Trinity
+              The Most Holy Trinity
             </span>
           </Link>
           <h1 className="font-[family-name:var(--font-heading)] text-2xl font-bold text-[var(--text)]">

@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!event) return { title: "Event Not Found" };
   return {
     title: event.title,
-    description: event.description || `Join us for ${event.title} at Most Holy Trinity Presbyterian Church.`,
+    description: event.description || `Join us for ${event.title} at The Most Holy Trinity Presbyterian Church.`,
   };
 }
 

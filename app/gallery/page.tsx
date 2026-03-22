@@ -42,7 +42,7 @@ export default async function GalleryPage() {
         pageSlug="gallery"
         overline="Memories"
         title="Photo Gallery"
-        subtitle="A glimpse into the life, worship, and community of Most Holy Trinity."
+        subtitle="A glimpse into the life, worship, and community of The Most Holy Trinity."
       />
 
       <section className="py-16 lg:py-24 bg-[var(--bg)]">

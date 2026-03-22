@@ -236,7 +236,7 @@ export function AboutSection() {
               variants={itemVariants}
               className="text-charcoal/70 text-base sm:text-lg leading-relaxed mb-6 sm:mb-8 max-w-xl"
             >
-              At Most Holy Trinity Presbyterian Church, we believe in the transformative power of 
+              At The Most Holy Trinity Presbyterian Church, we believe in the transformative power of 
               God&apos;s love. For over 25 years, we&apos;ve been nurturing faith, building community, 
               and serving Lashibi and beyond with compassion and purpose.
             </motion.p>

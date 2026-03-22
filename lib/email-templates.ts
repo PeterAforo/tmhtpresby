@@ -9,7 +9,7 @@ const baseWrapper = (content: string) => `
     <tr>
       <td style="background:#1a3c34;padding:28px 32px;text-align:center;">
         <h1 style="margin:0;color:#ffffff;font-size:20px;font-weight:700;letter-spacing:0.5px;">
-          Most Holy Trinity Presbyterian Church
+          The Most Holy Trinity Presbyterian Church
         </h1>
       </td>
     </tr>

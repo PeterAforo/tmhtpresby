@@ -13,7 +13,7 @@ const ABOUT_LINKS = [
   {
     icon: BookOpen,
     title: "Our Story",
-    description: "How Most Holy Trinity began and the journey that has shaped who we are today.",
+    description: "How The Most Holy Trinity began and the journey that has shaped who we are today.",
     href: "/about/our-story",
   },
   {

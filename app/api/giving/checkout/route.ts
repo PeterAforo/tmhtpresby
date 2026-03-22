@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
               recurring: { interval: "month" },
               product_data: {
                 name: `Monthly Giving — ${fundLabel}`,
-                description: `Monthly donation to ${fundLabel} at Most Holy Trinity Presbyterian Church`,
+                description: `Monthly donation to ${fundLabel} at The Most Holy Trinity Presbyterian Church`,
               },
             },
             quantity: 1,
@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
               unit_amount: amountInPesewas,
               product_data: {
                 name: `Donation — ${fundLabel}`,
-                description: `One-time donation to ${fundLabel} at Most Holy Trinity Presbyterian Church`,
+                description: `One-time donation to ${fundLabel} at The Most Holy Trinity Presbyterian Church`,
               },
             },
             quantity: 1,
