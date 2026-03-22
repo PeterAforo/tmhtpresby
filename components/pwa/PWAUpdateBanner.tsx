@@ -24,7 +24,7 @@ export function PWAUpdateBanner() {
               Update Available
             </h3>
             <p className="text-xs text-[var(--text-muted)] mt-0.5">
-              A new version of MHTPC is ready to install.
+              A new version of TMHT Presby is ready to install.
             </p>
             <div className="flex gap-2 mt-3">
               <button

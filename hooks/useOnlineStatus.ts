@@ -8,7 +8,7 @@ interface UseOnlineStatusReturn {
   lastOnlineAt: Date | null;
 }
 
-const LAST_ONLINE_KEY = "mhtpc-last-online";
+const LAST_ONLINE_KEY = "tmhtpresby-last-online";
 
 export function useOnlineStatus(): UseOnlineStatusReturn {
   const [isOnline, setIsOnline] = useState(true);

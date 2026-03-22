@@ -49,7 +49,7 @@ describe("useOnlineStatus", () => {
       window.dispatchEvent(new Event("online"));
     });
 
-    const stored = localStorage.getItem("mhtpc-last-online");
+    const stored = localStorage.getItem("tmhtpresby-last-online");
     expect(stored).toBeTruthy();
     expect(result.current.lastOnlineAt).toBeInstanceOf(Date);
   });

@@ -9,7 +9,7 @@ if (!process.env.RESEND_API_KEY) {
 export const resend = new Resend(process.env.RESEND_API_KEY || "re_placeholder");
 
 export const FROM_EMAIL =
-  process.env.RESEND_FROM_EMAIL || "noreply@mhtpcaccra.org";
+  process.env.RESEND_FROM_EMAIL || "noreply@tmhtpresby.org";
 
 export const ADMIN_EMAIL =
-  process.env.ADMIN_EMAIL || "admin@mhtpcaccra.org";
+  process.env.ADMIN_EMAIL || "admin@tmhtpresby.org";

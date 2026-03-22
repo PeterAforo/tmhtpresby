@@ -1,6 +1,6 @@
 {
   "name": "The Most Holy Trinity Presbyterian Church",
-  "short_name": "MHTPC",
+  "short_name": "TMHT Presby",
   "description": "Welcome to The Most Holy Trinity Presbyterian Church in Lashibi, Accra. Join us for worship, community, and spiritual growth.",
   "start_url": "/?source=pwa",
   "scope": "/",
@@ -110,14 +110,14 @@
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "MHTPC on mobile"
+      "label": "TMHT Presby on mobile"
     },
     {
       "src": "/screenshots/screenshot-desktop.png",
       "sizes": "1280x800",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "MHTPC on desktop"
+      "label": "TMHT Presby on desktop"
     }
   ],
   "prefer_related_applications": false

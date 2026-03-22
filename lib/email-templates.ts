@@ -24,7 +24,7 @@ const baseWrapper = (content: string) => `
       <td style="padding:20px 32px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center;">
         <p style="margin:0;color:#6b7280;font-size:12px;line-height:1.6;">
           14 Liberation Road, Accra, Greater Accra Region, Ghana<br/>
-          <a href="https://mhtpcaccra.org" style="color:#c8a961;text-decoration:none;">mhtpcaccra.org</a>
+          <a href="https://tmhtpresby.org" style="color:#c8a961;text-decoration:none;">tmhtpresby.org</a>
         </p>
       </td>
     </tr>
@@ -101,7 +101,7 @@ export function newsletterWelcomeEmail() {
       <strong style="color:#1a3c34;">The Most Holy Trinity Presbyterian Church</strong>
     </p>
     <p style="margin:24px 0 0;text-align:center;">
-      <a href="https://mhtpcaccra.org" style="display:inline-block;padding:12px 28px;background:#c8a961;color:#ffffff;text-decoration:none;border-radius:6px;font-size:14px;font-weight:600;">
+      <a href="https://tmhtpresby.org" style="display:inline-block;padding:12px 28px;background:#c8a961;color:#ffffff;text-decoration:none;border-radius:6px;font-size:14px;font-weight:600;">
         Visit Our Website
       </a>
     </p>
@@ -157,7 +157,7 @@ export function donationReceiptEmail(data: {
 
     <p style="color:#6b7280;font-size:13px;line-height:1.6;margin:0 0 16px;">
       Please keep this email as your donation receipt. If you have any questions about your donation, contact us at
-      <a href="mailto:finance@mhtpcaccra.org" style="color:#c8a961;">finance@mhtpcaccra.org</a>.
+      <a href="mailto:finance@tmhtpresby.org" style="color:#c8a961;">finance@tmhtpresby.org</a>.
     </p>
 
     <p style="color:#6b7280;font-size:14px;line-height:1.6;margin:16px 0 0;">

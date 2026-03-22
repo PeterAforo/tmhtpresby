@@ -39,7 +39,7 @@ export default function MinisterPage() {
                   <div className="space-y-2">
                     <div className="flex items-center gap-3 text-sm text-[var(--text-muted)]">
                       <Mail className="w-4 h-4" />
-                      <span>minister@mhtpcaccra.org</span>
+                      <span>minister@tmhtpresby.org</span>
                     </div>
                     <div className="flex items-center gap-3 text-sm text-[var(--text-muted)]">
                       <Phone className="w-4 h-4" />

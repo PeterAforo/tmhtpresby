@@ -15,7 +15,7 @@ interface UsePWAInstallReturn {
   dismissInstall: () => void;
 }
 
-const DISMISS_KEY = "mhtpc-install-dismissed";
+const DISMISS_KEY = "tmhtpresby-install-dismissed";
 const DISMISS_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 export function usePWAInstall(): UsePWAInstallReturn {

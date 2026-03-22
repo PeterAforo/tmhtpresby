@@ -12,7 +12,7 @@ interface UsePushNotificationsReturn {
   requestPermission: () => Promise<NotificationPermission>;
 }
 
-const SUBSCRIPTION_KEY = "mhtpc-push-subscription";
+const SUBSCRIPTION_KEY = "tmhtpresby-push-subscription";
 
 function urlBase64ToUint8Array(base64String: string): Uint8Array {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);

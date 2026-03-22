@@ -22,7 +22,7 @@ export function PWAProvider({ children }: { children: React.ReactNode }) {
       onOnline: () => {
         console.log("App is back online");
         // Update last online timestamp
-        localStorage.setItem("mhtpc-last-online", new Date().toISOString());
+        localStorage.setItem("tmhtpresby-last-online", new Date().toISOString());
       },
     });
   }, []);

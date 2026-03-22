@@ -67,7 +67,7 @@ export default function VideosPage() {
                 We&apos;re working on adding more video content. Check back soon!
               </p>
               <a
-                href="https://youtube.com/@mhtpcaccra"
+                href="https://youtube.com/@TMHTPresby"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors"

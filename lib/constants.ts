@@ -241,7 +241,7 @@ export interface ChurchInfo {
 
 export const CHURCH_INFO: ChurchInfo = {
   name: "The Most Holy Trinity Presbyterian Church",
-  shortName: "MHTPC",
+  shortName: "TMHT Presby",
   tagline: "That They All May Be One",
   address: {
     street: "MW2F+87R",
@@ -254,9 +254,9 @@ export const CHURCH_INFO: ChurchInfo = {
   },
   phone: "+233 30 266 1788",
   whatsapp: "233302661788",
-  email: "info@mhtpcaccra.org",
-  generalEmail: "hello@mhtpcaccra.org",
-  website: "https://mhtpcaccra.org",
+  email: "info@tmhtpresby.org",
+  generalEmail: "hello@tmhtpresby.org",
+  website: "https://tmhtpresby.org",
   serviceTimes: [
     {
       day: "Sunday",

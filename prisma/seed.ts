@@ -491,12 +491,12 @@ async function main() {
   const demoPassword = await hash("Church2026!", 12);
 
   const userAdmin = await prisma.user.upsert({
-    where: { email: "admin@mhtpc.org" },
+    where: { email: "admin@tmhtpresby.org" },
     update: {},
     create: {
       firstName: "Emmanuel",
       lastName: "Adjei",
-      email: "admin@mhtpc.org",
+      email: "admin@tmhtpresby.org",
       hashedPassword: demoPassword,
       role: "super_admin",
       ministryGroup: "adult",
@@ -506,12 +506,12 @@ async function main() {
   });
 
   const userPastor = await prisma.user.upsert({
-    where: { email: "abena.mensah@mhtpc.org" },
+    where: { email: "abena.mensah@tmhtpresby.org" },
     update: {},
     create: {
       firstName: "Abena",
       lastName: "Mensah",
-      email: "abena.mensah@mhtpc.org",
+      email: "abena.mensah@tmhtpresby.org",
       hashedPassword: demoPassword,
       role: "pastor",
       ministryGroup: "adult",
@@ -521,12 +521,12 @@ async function main() {
   });
 
   const userLeader = await prisma.user.upsert({
-    where: { email: "kwame.boateng@mhtpc.org" },
+    where: { email: "kwame.boateng@tmhtpresby.org" },
     update: {},
     create: {
       firstName: "Kwame",
       lastName: "Boateng",
-      email: "kwame.boateng@mhtpc.org",
+      email: "kwame.boateng@tmhtpresby.org",
       hashedPassword: demoPassword,
       role: "ministry_leader",
       ministryGroup: "young_adult",

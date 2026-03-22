@@ -21,7 +21,7 @@ export function PWAInstallButton() {
           <div className="p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-[var(--text)]">
-                Install MHTPC
+                Install TMHT Presby
               </h3>
               <button
                 onClick={() => setShowIOSInstructions(false)}
@@ -105,7 +105,7 @@ export function PWAInstallButton() {
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="font-semibold text-[var(--text)]">
-              Install MHTPC
+              Install TMHT Presby
             </h3>
             <p className="text-sm text-[var(--text-muted)] mt-0.5">
               Add to your home screen for quick access to sermons, events, and more.
