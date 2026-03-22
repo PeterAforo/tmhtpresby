@@ -1,11 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Image from "next/image";
-import { User, Mail, FileText, Send } from "lucide-react";
+import { User, Mail, FileText, Send, HandHeart } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { motion } from "framer-motion";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -78,22 +76,11 @@ export function PrayerFormSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative py-20 overflow-hidden">
-      {/* Background image with overlay */}
-      <div className="absolute inset-0">
-        <Image
-          src="/img/pictures/2/055.jpg"
-          alt="Church background"
-          fill
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-[#0F172A]/80" />
-      </div>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <section ref={sectionRef} className="py-20 lg:py-28 bg-[#0C1529]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Form */}
-          <div className="prayer-form">
+          <div className="prayer-form order-2 lg:order-1">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* First Name */}
@@ -105,7 +92,8 @@ export function PrayerFormSection() {
                     placeholder="First Name"
                     value={formData.firstName}
                     onChange={handleChange}
-                    className="w-full pl-12 pr-4 py-3 bg-white/10 border border-white/20 text-white placeholder-white/50 rounded focus:outline-none focus:border-white/40"
+                    required
+                    className="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/20 text-white placeholder-white/50 rounded-lg focus:outline-none focus:border-[var(--accent)] focus:bg-white/10 transition-colors"
                   />
                 </div>
 
@@ -118,7 +106,8 @@ export function PrayerFormSection() {
                     placeholder="Last Name"
                     value={formData.lastName}
                     onChange={handleChange}
-                    className="w-full pl-12 pr-4 py-3 bg-white/10 border border-white/20 text-white placeholder-white/50 rounded focus:outline-none focus:border-white/40"
+                    required
+                    className="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/20 text-white placeholder-white/50 rounded-lg focus:outline-none focus:border-[var(--accent)] focus:bg-white/10 transition-colors"
                   />
                 </div>
 
@@ -131,7 +120,7 @@ export function PrayerFormSection() {
                     placeholder="Subject"
                     value={formData.subject}
                     onChange={handleChange}
-                    className="w-full pl-12 pr-4 py-3 bg-white/10 border border-white/20 text-white placeholder-white/50 rounded focus:outline-none focus:border-white/40"
+                    className="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/20 text-white placeholder-white/50 rounded-lg focus:outline-none focus:border-[var(--accent)] focus:bg-white/10 transition-colors"
                   />
                 </div>
 
@@ -144,7 +133,8 @@ export function PrayerFormSection() {
                     placeholder="Email Address"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full pl-12 pr-4 py-3 bg-white/10 border border-white/20 text-white placeholder-white/50 rounded focus:outline-none focus:border-white/40"
+                    required
+                    className="w-full pl-12 pr-4 py-3.5 bg-white/5 border border-white/20 text-white placeholder-white/50 rounded-lg focus:outline-none focus:border-[var(--accent)] focus:bg-white/10 transition-colors"
                   />
                 </div>
               </div>
@@ -152,38 +142,74 @@ export function PrayerFormSection() {
               {/* Message */}
               <textarea
                 name="message"
-                placeholder="Enter Message"
-                rows={4}
+                placeholder="Share your prayer request with us..."
+                rows={5}
                 value={formData.message}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 text-white placeholder-white/50 rounded focus:outline-none focus:border-white/40 resize-none"
+                required
+                className="w-full px-4 py-3.5 bg-white/5 border border-white/20 text-white placeholder-white/50 rounded-lg focus:outline-none focus:border-[var(--accent)] focus:bg-white/10 transition-colors resize-none"
               />
 
               {/* Error message */}
               {error && (
-                <p className="text-red-300 text-sm text-center">{error}</p>
+                <p className="text-red-400 text-sm text-center bg-red-500/10 py-2 rounded-lg">{error}</p>
               )}
 
               {/* Success message */}
               {submitted && (
-                <p className="text-green-300 text-sm text-center">Thank you! Your prayer request has been submitted.</p>
+                <p className="text-green-400 text-sm text-center bg-green-500/10 py-2 rounded-lg">
+                  Thank you! Your prayer request has been submitted. Our prayer team will lift you up in prayer.
+                </p>
               )}
 
               {/* Submit Button */}
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-[#E31B23] text-white font-semibold rounded hover:bg-[#c91720] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-[var(--accent)] text-white font-semibold rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {submitting ? "Submitting..." : "Pray with Me"}
+                {submitting ? "Submitting..." : "Submit Prayer Request"}
                 <Send size={18} />
               </button>
             </form>
           </div>
 
-          {/* Right side - can be empty or add content */}
-          <div className="hidden lg:block">
-            {/* Placeholder for any additional content */}
+          {/* Right side - Descriptive text with praying hands icon */}
+          <div className="prayer-info order-1 lg:order-2 text-center lg:text-left">
+            {/* Large praying hands icon */}
+            <div className="inline-flex items-center justify-center w-24 h-24 lg:w-32 lg:h-32 rounded-full bg-[var(--accent)]/20 mb-6">
+              <HandHeart size={48} className="text-[var(--accent)] lg:w-16 lg:h-16" />
+            </div>
+            
+            <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+              Prayer Request
+            </h2>
+            
+            <div className="w-16 h-1 bg-[var(--accent)] rounded-full mb-6 mx-auto lg:mx-0" />
+            
+            <p className="text-white/80 text-base lg:text-lg leading-relaxed mb-6">
+              &ldquo;Therefore I tell you, whatever you ask for in prayer, believe that you have received it, and it will be yours.&rdquo;
+              <span className="block mt-2 text-[var(--accent)] font-semibold text-sm">— Mark 11:24</span>
+            </p>
+            
+            <p className="text-white/70 text-sm lg:text-base leading-relaxed mb-6">
+              We believe in the power of prayer. Share your prayer requests with us, and our dedicated prayer team will intercede on your behalf. Whether you&apos;re facing challenges, seeking guidance, or simply need spiritual support, we&apos;re here to pray with you.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start text-sm text-white/60">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-[var(--accent)]" />
+                <span>Confidential & Private</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-[var(--accent)]" />
+                <span>Prayed Over Weekly</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-[var(--accent)]" />
+                <span>24/7 Support</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
