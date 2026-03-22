@@ -34,9 +34,7 @@ export async function GET(request: NextRequest, { params }: Props) {
     return NextResponse.json(groups);
   } catch (error) {
     console.error("Error fetching leadership:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch leadership" },
-      { status: 500 }
-    );
+    // Return empty array if table doesn't exist or other DB error
+    return NextResponse.json([]);
   }
 }
