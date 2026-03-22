@@ -20,11 +20,8 @@ export function Navbar() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const dropdownTimeout = useRef<ReturnType<typeof setTimeout>>(null);
 
-  // Is the page one where the hero occupies the top?
-  const isHeroPage = pathname === "/";
-
-  // When not scrolled on a hero page, text should be white
-  const isOverHero = isHeroPage && !scrolled;
+  // Navbar always has white background now - no transparent state
+  const isOverHero = false; // Always use solid background styling
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -73,9 +70,8 @@ export function Navbar() {
     <header
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        scrolled
-          ? "bg-[var(--nav-bg)] backdrop-blur-md shadow-sm border-b border-[var(--border)]"
-          : "bg-transparent"
+        "bg-white dark:bg-[var(--nav-bg)] border-b border-[var(--border)]",
+        scrolled && "shadow-sm"
       )}
     >
       <nav

@@ -105,7 +105,6 @@ export function HeroSection() {
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-black/50" />
         </motion.div>
       </AnimatePresence>
 
@@ -120,13 +119,17 @@ export function HeroSection() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
+                className="inline-block"
               >
-                <h1 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.15] mb-4">
-                  {HERO_SLIDES[currentSlide].headline}
-                </h1>
-                <p className="text-xl text-white/90">
-                  {HERO_SLIDES[currentSlide].subline}
-                </p>
+                {/* Text with background color for readability */}
+                <div className="bg-[#0c1529]/85 backdrop-blur-sm rounded-xl px-6 py-5 sm:px-8 sm:py-6">
+                  <h1 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.15] mb-3">
+                    {HERO_SLIDES[currentSlide].headline}
+                  </h1>
+                  <p className="text-lg sm:text-xl text-white/90">
+                    {HERO_SLIDES[currentSlide].subline}
+                  </p>
+                </div>
               </motion.div>
             </AnimatePresence>
           </div>

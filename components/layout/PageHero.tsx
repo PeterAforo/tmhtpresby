@@ -50,24 +50,16 @@ export function PageHero({
         !backgroundImage && "bg-gradient-to-br from-[#0C1529] via-[#152040] to-[#0C1529]"
       )}
     >
-      {/* Background Image */}
+      {/* Background Image - no overlay */}
       {backgroundImage && (
-        <>
-          <Image
-            src={backgroundImage}
-            alt=""
-            fill
-            className="object-cover"
-            priority
-            aria-hidden="true"
-          />
-          {/* Overlay for text readability */}
-          <div 
-            className="absolute inset-0"
-            style={{ backgroundColor: overlayColor }}
-            aria-hidden="true"
-          />
-        </>
+        <Image
+          src={backgroundImage}
+          alt=""
+          fill
+          className="object-cover"
+          priority
+          aria-hidden="true"
+        />
       )}
 
       {/* Accent glow */}
@@ -78,23 +70,29 @@ export function PageHero({
       />
 
       <div className="page-hero-content relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
-        {overline && (
-          <p className="text-[#3DA066] text-sm font-semibold uppercase tracking-[0.2em] mb-3">
-            {overline}
-          </p>
-        )}
-        <h1 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight tracking-tight">
-          {title}
-        </h1>
-        {subtitle && (
-          <p className="mt-4 text-white/65 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-            {subtitle}
-          </p>
-        )}
-        <div
-          aria-hidden="true"
-          className="mx-auto mt-6 h-1 w-16 rounded-full bg-[#3DA066]"
-        />
+        {/* Text container with background for readability */}
+        <div 
+          className="inline-block rounded-xl px-8 py-6 sm:px-10 sm:py-8"
+          style={{ backgroundColor: overlayColor }}
+        >
+          {overline && (
+            <p className="text-[#3DA066] text-sm font-semibold uppercase tracking-[0.2em] mb-3">
+              {overline}
+            </p>
+          )}
+          <h1 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight tracking-tight">
+            {title}
+          </h1>
+          {subtitle && (
+            <p className="mt-4 text-white/80 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+              {subtitle}
+            </p>
+          )}
+          <div
+            aria-hidden="true"
+            className="mx-auto mt-6 h-1 w-16 rounded-full bg-[#3DA066]"
+          />
+        </div>
       </div>
 
       {/* Bottom fade */}
