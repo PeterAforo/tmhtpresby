@@ -6,7 +6,7 @@ import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackgrou
 import { MinistryExecutives } from "@/components/ministry/MinistryExecutives";
 import { MinistryCalendar } from "@/components/ministry/MinistryCalendar";
 import { MinistryGallery } from "@/components/ministry/MinistryGallery";
-import { Users, Heart, Music, BookOpen, HandHelping, Baby, Clock, MapPin, ArrowLeft } from "lucide-react";
+import { Users, Heart, Music, BookOpen, HandHelping, Baby, Clock, MapPin, ArrowLeft, MessageSquare } from "lucide-react";
 
 const MINISTRIES_DATA: Record<string, {
   name: string;
@@ -523,6 +523,27 @@ export default async function MinistryDetailPage({ params }: Props) {
                   className="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-lg bg-[var(--accent)] text-white text-sm font-semibold hover:opacity-90 transition-opacity"
                 >
                   Contact Us
+                </Link>
+              </div>
+
+              {/* Community Hub */}
+              <div className="p-6 rounded-xl bg-[var(--bg-card)] border border-[var(--border)]">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-lg bg-[var(--primary)]/10 flex items-center justify-center">
+                    <MessageSquare size={20} className="text-[var(--primary)]" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-[var(--text)]">
+                    Community Hub
+                  </h3>
+                </div>
+                <p className="text-sm text-[var(--text-muted)] mb-4">
+                  Connect with fellow members, share testimonies, ask questions, and participate in discussions.
+                </p>
+                <Link
+                  href="/community"
+                  className="inline-flex items-center justify-center w-full px-4 py-2.5 rounded-lg border border-[var(--primary)] text-[var(--primary)] text-sm font-semibold hover:bg-[var(--primary)] hover:text-white transition-colors"
+                >
+                  Join Discussion
                 </Link>
               </div>
             </div>

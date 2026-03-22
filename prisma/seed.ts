@@ -810,6 +810,381 @@ Phase 4 (Completion): July - December 2027</p>
   }
 
   console.log(`✅ Seeded ${projects.length} projects`);
+
+  // ── Ministry Leadership Groups ──────────────────────────────────
+  const ministryLeadershipGroups = [
+    {
+      id: "lg_aged",
+      name: "The Aged Ministry",
+      slug: "aged",
+      type: "ministry",
+      description: "Leadership of The Aged Ministry",
+      order: 1,
+    },
+    {
+      id: "lg_men",
+      name: "Men's Fellowship (PMF)",
+      slug: "men",
+      type: "ministry",
+      description: "Leadership of the Presby Men's Fellowship",
+      order: 2,
+    },
+    {
+      id: "lg_women",
+      name: "Women's Fellowship (PWF)",
+      slug: "women",
+      type: "ministry",
+      description: "Leadership of the Presbyterian Women's Fellowship",
+      order: 3,
+    },
+    {
+      id: "lg_ypg",
+      name: "Young People's Guild (Y.P.G.)",
+      slug: "ypg",
+      type: "ministry",
+      description: "Leadership of the Young People's Guild",
+      order: 4,
+    },
+    {
+      id: "lg_choir",
+      name: "Choir Ministry",
+      slug: "choir",
+      type: "ministry",
+      description: "Leadership of the Church Choir",
+      order: 5,
+    },
+  ];
+
+  for (const group of ministryLeadershipGroups) {
+    await prisma.leadershipGroup.upsert({
+      where: { id: group.id },
+      update: {},
+      create: group,
+    });
+  }
+
+  // ── Leadership Positions ────────────────────────────────────────
+  const leadershipPositions = [
+    // Aged Ministry
+    { id: "pos_aged_president", title: "President", groupId: "lg_aged", order: 1 },
+    { id: "pos_aged_vice", title: "Vice President", groupId: "lg_aged", order: 2 },
+    { id: "pos_aged_secretary", title: "Secretary", groupId: "lg_aged", order: 3 },
+    { id: "pos_aged_treasurer", title: "Treasurer", groupId: "lg_aged", order: 4 },
+    // Men's Fellowship
+    { id: "pos_men_president", title: "President", groupId: "lg_men", order: 1 },
+    { id: "pos_men_vice", title: "Vice President", groupId: "lg_men", order: 2 },
+    { id: "pos_men_secretary", title: "Secretary", groupId: "lg_men", order: 3 },
+    { id: "pos_men_treasurer", title: "Treasurer", groupId: "lg_men", order: 4 },
+    // Women's Fellowship
+    { id: "pos_women_president", title: "President", groupId: "lg_women", order: 1 },
+    { id: "pos_women_vice", title: "Vice President", groupId: "lg_women", order: 2 },
+    { id: "pos_women_secretary", title: "Secretary", groupId: "lg_women", order: 3 },
+    { id: "pos_women_treasurer", title: "Treasurer", groupId: "lg_women", order: 4 },
+    // YPG
+    { id: "pos_ypg_president", title: "President", groupId: "lg_ypg", order: 1 },
+    { id: "pos_ypg_vice", title: "Vice President", groupId: "lg_ypg", order: 2 },
+    { id: "pos_ypg_secretary", title: "Secretary", groupId: "lg_ypg", order: 3 },
+    { id: "pos_ypg_treasurer", title: "Treasurer", groupId: "lg_ypg", order: 4 },
+    // Choir
+    { id: "pos_choir_master", title: "Choirmaster", groupId: "lg_choir", order: 1 },
+    { id: "pos_choir_asst", title: "Assistant Choirmaster", groupId: "lg_choir", order: 2 },
+    { id: "pos_choir_secretary", title: "Secretary", groupId: "lg_choir", order: 3 },
+    { id: "pos_choir_organist", title: "Organist", groupId: "lg_choir", order: 4 },
+  ];
+
+  for (const position of leadershipPositions) {
+    await prisma.leadershipPosition.upsert({
+      where: { id: position.id },
+      update: {},
+      create: position,
+    });
+  }
+
+  // ── Leadership Members ──────────────────────────────────────────
+  const leadershipMembers = [
+    // Aged Ministry - Current
+    { id: "lm_aged_1", firstName: "Kofi", lastName: "Asante", title: "Elder", positionId: "pos_aged_president", startDate: new Date("2023-01-01"), isCurrent: true, imageUrl: "/img/pictures/2/001.jpg" },
+    { id: "lm_aged_2", firstName: "Akua", lastName: "Mensah", title: "Mrs.", positionId: "pos_aged_vice", startDate: new Date("2023-01-01"), isCurrent: true, imageUrl: "/img/pictures/2/002.jpg" },
+    { id: "lm_aged_3", firstName: "Kwame", lastName: "Owusu", title: "Elder", positionId: "pos_aged_secretary", startDate: new Date("2023-01-01"), isCurrent: true },
+    { id: "lm_aged_4", firstName: "Ama", lastName: "Darko", title: "Mrs.", positionId: "pos_aged_treasurer", startDate: new Date("2023-01-01"), isCurrent: true },
+    // Aged Ministry - Past
+    { id: "lm_aged_5", firstName: "Samuel", lastName: "Boateng", title: "Elder", positionId: "pos_aged_president", startDate: new Date("2019-01-01"), endDate: new Date("2022-12-31"), isCurrent: false },
+    { id: "lm_aged_6", firstName: "Grace", lastName: "Amponsah", title: "Mrs.", positionId: "pos_aged_vice", startDate: new Date("2019-01-01"), endDate: new Date("2022-12-31"), isCurrent: false },
+    
+    // Men's Fellowship - Current
+    { id: "lm_men_1", firstName: "James", lastName: "Owusu", title: "Elder", positionId: "pos_men_president", startDate: new Date("2024-01-01"), isCurrent: true, imageUrl: "/img/pictures/2/020.jpg" },
+    { id: "lm_men_2", firstName: "Daniel", lastName: "Adjei", title: "Mr.", positionId: "pos_men_vice", startDate: new Date("2024-01-01"), isCurrent: true, imageUrl: "/img/pictures/2/021.jpg" },
+    { id: "lm_men_3", firstName: "Emmanuel", lastName: "Tetteh", title: "Mr.", positionId: "pos_men_secretary", startDate: new Date("2024-01-01"), isCurrent: true },
+    { id: "lm_men_4", firstName: "Joseph", lastName: "Ankrah", title: "Mr.", positionId: "pos_men_treasurer", startDate: new Date("2024-01-01"), isCurrent: true },
+    
+    // Women's Fellowship - Current
+    { id: "lm_women_1", firstName: "Abena", lastName: "Mensah", title: "Rev. Mrs.", positionId: "pos_women_president", startDate: new Date("2023-06-01"), isCurrent: true, imageUrl: "/img/pictures/2/010.jpg" },
+    { id: "lm_women_2", firstName: "Comfort", lastName: "Asare", title: "Mrs.", positionId: "pos_women_vice", startDate: new Date("2023-06-01"), isCurrent: true, imageUrl: "/img/pictures/2/011.jpg" },
+    { id: "lm_women_3", firstName: "Patience", lastName: "Osei", title: "Mrs.", positionId: "pos_women_secretary", startDate: new Date("2023-06-01"), isCurrent: true },
+    { id: "lm_women_4", firstName: "Felicia", lastName: "Boadu", title: "Mrs.", positionId: "pos_women_treasurer", startDate: new Date("2023-06-01"), isCurrent: true },
+    
+    // YPG - Current
+    { id: "lm_ypg_1", firstName: "Kwame", lastName: "Boateng", title: "Pastor", positionId: "pos_ypg_president", startDate: new Date("2024-01-01"), isCurrent: true, imageUrl: "/img/pictures/2/050.jpg" },
+    { id: "lm_ypg_2", firstName: "Nana", lastName: "Agyemang", title: "Mr.", positionId: "pos_ypg_vice", startDate: new Date("2024-01-01"), isCurrent: true, imageUrl: "/img/pictures/2/051.jpg" },
+    { id: "lm_ypg_3", firstName: "Priscilla", lastName: "Amoah", title: "Miss", positionId: "pos_ypg_secretary", startDate: new Date("2024-01-01"), isCurrent: true },
+    { id: "lm_ypg_4", firstName: "Michael", lastName: "Asiedu", title: "Mr.", positionId: "pos_ypg_treasurer", startDate: new Date("2024-01-01"), isCurrent: true },
+    
+    // Choir - Current
+    { id: "lm_choir_1", firstName: "Daniel", lastName: "Adjei", title: "Mr.", positionId: "pos_choir_master", startDate: new Date("2022-01-01"), isCurrent: true, imageUrl: "/img/pictures/2/030.jpg" },
+    { id: "lm_choir_2", firstName: "Esther", lastName: "Nyarko", title: "Miss", positionId: "pos_choir_asst", startDate: new Date("2022-01-01"), isCurrent: true, imageUrl: "/img/pictures/2/031.jpg" },
+    { id: "lm_choir_3", firstName: "Benjamin", lastName: "Kumi", title: "Mr.", positionId: "pos_choir_secretary", startDate: new Date("2022-01-01"), isCurrent: true },
+    { id: "lm_choir_4", firstName: "Victoria", lastName: "Ofosu", title: "Miss", positionId: "pos_choir_organist", startDate: new Date("2022-01-01"), isCurrent: true },
+  ];
+
+  for (const member of leadershipMembers) {
+    await prisma.leadershipMember.upsert({
+      where: { id: member.id },
+      update: {},
+      create: member,
+    });
+  }
+
+  console.log(`✅ Seeded ${ministryLeadershipGroups.length} ministry leadership groups with ${leadershipMembers.length} members`);
+
+  // ── Ministry Gallery Albums ─────────────────────────────────────
+  const ministryAlbums = [
+    {
+      id: "album_aged_fellowship",
+      title: "Aged Ministry Fellowship 2024",
+      slug: "aged-ministry-fellowship-2024",
+      description: "Photos from our monthly fellowship meetings and special events",
+      published: true,
+    },
+    {
+      id: "album_aged_thanksgiving",
+      title: "Aged Ministry Thanksgiving Service",
+      slug: "aged-thanksgiving-service",
+      description: "Annual thanksgiving celebration with our senior members",
+      published: true,
+    },
+    {
+      id: "album_men_retreat",
+      title: "Men's Fellowship Retreat 2024",
+      slug: "men-fellowship-retreat-2024",
+      description: "Photos from our annual men's retreat at Cape Coast",
+      published: true,
+    },
+    {
+      id: "album_women_conference",
+      title: "Women's Fellowship Conference",
+      slug: "women-fellowship-conference",
+      description: "Highlights from the Presbyterian Women's Fellowship conference",
+      published: true,
+    },
+    {
+      id: "album_ypg_camp",
+      title: "YPG Youth Camp 2024",
+      slug: "ypg-youth-camp-2024",
+      description: "Exciting moments from our annual youth camp",
+      published: true,
+    },
+    {
+      id: "album_choir_concert",
+      title: "Choir Christmas Concert",
+      slug: "choir-christmas-concert",
+      description: "Photos from our annual Christmas cantata and concert",
+      published: true,
+    },
+  ];
+
+  for (const album of ministryAlbums) {
+    await prisma.galleryAlbum.upsert({
+      where: { id: album.id },
+      update: {},
+      create: album,
+    });
+  }
+
+  // ── Gallery Images ──────────────────────────────────────────────
+  const galleryImages = [
+    // Aged Ministry Fellowship
+    { id: "img_aged_1", albumId: "album_aged_fellowship", url: "/img/pictures/2/001.jpg", caption: "Fellowship meeting opening prayer", order: 1 },
+    { id: "img_aged_2", albumId: "album_aged_fellowship", url: "/img/pictures/2/002.jpg", caption: "Bible study session", order: 2 },
+    { id: "img_aged_3", albumId: "album_aged_fellowship", url: "/img/pictures/2/003.jpg", caption: "Group photo of members", order: 3 },
+    { id: "img_aged_4", albumId: "album_aged_fellowship", url: "/img/pictures/2/004.jpg", caption: "Refreshments and fellowship", order: 4 },
+    // Aged Thanksgiving
+    { id: "img_aged_5", albumId: "album_aged_thanksgiving", url: "/img/pictures/2/005.jpg", caption: "Thanksgiving service worship", order: 1 },
+    { id: "img_aged_6", albumId: "album_aged_thanksgiving", url: "/img/pictures/2/006.jpg", caption: "Special recognition ceremony", order: 2 },
+    { id: "img_aged_7", albumId: "album_aged_thanksgiving", url: "/img/pictures/2/007.jpg", caption: "Cutting the anniversary cake", order: 3 },
+    // Men's Retreat
+    { id: "img_men_1", albumId: "album_men_retreat", url: "/img/pictures/2/020.jpg", caption: "Opening session at the retreat center", order: 1 },
+    { id: "img_men_2", albumId: "album_men_retreat", url: "/img/pictures/2/021.jpg", caption: "Group discussion time", order: 2 },
+    { id: "img_men_3", albumId: "album_men_retreat", url: "/img/pictures/2/022.jpg", caption: "Team building activities", order: 3 },
+    { id: "img_men_4", albumId: "album_men_retreat", url: "/img/pictures/2/023.jpg", caption: "Evening devotion", order: 4 },
+    { id: "img_men_5", albumId: "album_men_retreat", url: "/img/pictures/2/024.jpg", caption: "Group photo at the beach", order: 5 },
+    // Women's Conference
+    { id: "img_women_1", albumId: "album_women_conference", url: "/img/pictures/2/010.jpg", caption: "Conference opening ceremony", order: 1 },
+    { id: "img_women_2", albumId: "album_women_conference", url: "/img/pictures/2/011.jpg", caption: "Keynote speaker address", order: 2 },
+    { id: "img_women_3", albumId: "album_women_conference", url: "/img/pictures/2/012.jpg", caption: "Workshop session", order: 3 },
+    { id: "img_women_4", albumId: "album_women_conference", url: "/img/pictures/2/013.jpg", caption: "Prayer and intercession", order: 4 },
+    // YPG Camp
+    { id: "img_ypg_1", albumId: "album_ypg_camp", url: "/img/pictures/2/050.jpg", caption: "Camp registration", order: 1 },
+    { id: "img_ypg_2", albumId: "album_ypg_camp", url: "/img/pictures/2/051.jpg", caption: "Praise and worship session", order: 2 },
+    { id: "img_ypg_3", albumId: "album_ypg_camp", url: "/img/pictures/2/052.jpg", caption: "Bible quiz competition", order: 3 },
+    { id: "img_ypg_4", albumId: "album_ypg_camp", url: "/img/pictures/2/053.jpg", caption: "Sports activities", order: 4 },
+    { id: "img_ypg_5", albumId: "album_ypg_camp", url: "/img/pictures/2/054.jpg", caption: "Bonfire night", order: 5 },
+    { id: "img_ypg_6", albumId: "album_ypg_camp", url: "/img/pictures/2/055.jpg", caption: "Closing ceremony", order: 6 },
+    // Choir Concert
+    { id: "img_choir_1", albumId: "album_choir_concert", url: "/img/pictures/2/030.jpg", caption: "Choir in full regalia", order: 1 },
+    { id: "img_choir_2", albumId: "album_choir_concert", url: "/img/pictures/2/031.jpg", caption: "Solo performance", order: 2 },
+    { id: "img_choir_3", albumId: "album_choir_concert", url: "/img/pictures/2/032.jpg", caption: "Orchestra accompaniment", order: 3 },
+    { id: "img_choir_4", albumId: "album_choir_concert", url: "/img/pictures/2/033.jpg", caption: "Standing ovation", order: 4 },
+  ];
+
+  for (const image of galleryImages) {
+    await prisma.galleryImage.upsert({
+      where: { id: image.id },
+      update: {},
+      create: image,
+    });
+  }
+
+  console.log(`✅ Seeded ${ministryAlbums.length} ministry albums with ${galleryImages.length} images`);
+
+  // ── Ministry Events ─────────────────────────────────────────────
+  const ministryEvents = [
+    // Aged Ministry Events
+    {
+      id: "evt_aged_fellowship",
+      title: "Aged Ministry Monthly Fellowship",
+      slug: "aged-monthly-fellowship-april",
+      description: "Join us for our monthly fellowship meeting with Bible study, prayer, and refreshments.",
+      category: "aged",
+      startDate: new Date("2026-04-05"),
+      startTime: "10:00",
+      endTime: "13:00",
+      location: "Fellowship Hall",
+      published: true,
+    },
+    {
+      id: "evt_aged_health",
+      title: "Health Screening for Seniors",
+      slug: "aged-health-screening",
+      description: "Free health screening including blood pressure, blood sugar, and general checkup for our senior members.",
+      category: "aged",
+      startDate: new Date("2026-04-20"),
+      startTime: "09:00",
+      endTime: "14:00",
+      location: "Church Premises",
+      published: true,
+    },
+    // Men's Fellowship Events
+    {
+      id: "evt_men_bible",
+      title: "Men's Bible Study",
+      slug: "men-bible-study-april",
+      description: "Weekly Bible study focusing on 'Men of Valor' series. All men are welcome.",
+      category: "men",
+      startDate: new Date("2026-04-12"),
+      startTime: "07:00",
+      endTime: "09:00",
+      location: "Conference Room",
+      published: true,
+    },
+    {
+      id: "evt_men_retreat",
+      title: "Annual Men's Retreat",
+      slug: "men-annual-retreat-2026",
+      description: "A weekend of spiritual renewal, fellowship, and team building at Akosombo.",
+      category: "men",
+      startDate: new Date("2026-05-15"),
+      endDate: new Date("2026-05-17"),
+      startTime: "06:00",
+      endTime: "18:00",
+      location: "Akosombo Continental Hotel",
+      published: true,
+    },
+    // Women's Fellowship Events
+    {
+      id: "evt_women_prayer",
+      title: "Women's Prayer Breakfast",
+      slug: "women-prayer-breakfast-april",
+      description: "Monthly prayer breakfast with a focus on family and community intercession.",
+      category: "women",
+      startDate: new Date("2026-04-18"),
+      startTime: "06:30",
+      endTime: "09:00",
+      location: "Fellowship Hall",
+      published: true,
+    },
+    {
+      id: "evt_women_seminar",
+      title: "Marriage Enrichment Seminar",
+      slug: "women-marriage-seminar",
+      description: "A special seminar for couples on building stronger marriages. Facilitated by Rev. Mrs. Abena Mensah.",
+      category: "women",
+      startDate: new Date("2026-04-26"),
+      startTime: "14:00",
+      endTime: "17:00",
+      location: "Main Auditorium",
+      published: true,
+    },
+    // YPG Events
+    {
+      id: "evt_ypg_fellowship",
+      title: "YPG Sunday Fellowship",
+      slug: "ypg-sunday-fellowship-april",
+      description: "Weekly youth fellowship with praise, worship, Bible study, and discussions on relevant topics.",
+      category: "ypg",
+      startDate: new Date("2026-04-06"),
+      startTime: "15:00",
+      endTime: "17:30",
+      location: "Youth Hall",
+      published: true,
+    },
+    {
+      id: "evt_ypg_career",
+      title: "Career Mentorship Programme",
+      slug: "ypg-career-mentorship",
+      description: "Connect with professionals in various fields for career guidance and mentorship.",
+      category: "ypg",
+      startDate: new Date("2026-04-27"),
+      startTime: "14:00",
+      endTime: "17:00",
+      location: "Conference Room",
+      published: true,
+    },
+    // Choir Events
+    {
+      id: "evt_choir_rehearsal",
+      title: "Choir Weekly Rehearsal",
+      slug: "choir-rehearsal-april",
+      description: "Regular choir rehearsal. All choir members are expected to attend.",
+      category: "choir",
+      startDate: new Date("2026-04-10"),
+      startTime: "18:00",
+      endTime: "20:00",
+      location: "Main Sanctuary",
+      published: true,
+    },
+    {
+      id: "evt_choir_workshop",
+      title: "Vocal Training Workshop",
+      slug: "choir-vocal-workshop",
+      description: "Special vocal training session with guest instructor from the National Symphony Orchestra.",
+      category: "choir",
+      startDate: new Date("2026-04-24"),
+      startTime: "14:00",
+      endTime: "17:00",
+      location: "Main Sanctuary",
+      published: true,
+    },
+  ];
+
+  for (const event of ministryEvents) {
+    await prisma.event.upsert({
+      where: { id: event.id },
+      update: {},
+      create: event,
+    });
+  }
+
+  console.log(`✅ Seeded ${ministryEvents.length} ministry events`);
 }
 
 main()
