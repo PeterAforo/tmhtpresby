@@ -30,6 +30,10 @@ model User {
   replies           DiscussionReply[]
   notifications     Notification[]
   pushSubscriptions PushSubscription[]
+  conversationParticipants ConversationParticipant[]
+  messages          Message[]
+  ministryGroupMemberships MinistryGroupMember[]
+  hostedMeetings    VideoMeeting[]
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
@@ -497,4 +501,111 @@ model PageHero {
 
   @@index([pageSlug])
   @@map("page_heroes")
+}
+
+// =============================================================================
+// Social/Community Features
+// =============================================================================
+
+// ─── Direct Messages ────────────────────────────────────────────────
+model Conversation {
+  id           String    @id @default(cuid())
+  type         String    @default("direct") // direct, group
+  name         String?   // For group conversations
+  imageUrl     String?   // For group avatar
+  participants ConversationParticipant[]
+  messages     Message[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("conversations")
+}
+
+model ConversationParticipant {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           String       @default("member") // admin, member
+  joinedAt       DateTime     @default(now())
+  lastReadAt     DateTime     @default(now())
+  isMuted        Boolean      @default(false)
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+  @@map("conversation_participants")
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  content        String
+  type           String       @default("text") // text, image, file, system
+  fileUrl        String?
+  fileName       String?
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  isEdited       Boolean      @default(false)
+  isDeleted      Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([conversationId])
+  @@index([senderId])
+  @@index([createdAt(sort: Desc)])
+  @@map("messages")
+}
+
+// ─── Ministry Groups (for group messaging) ──────────────────────────
+model MinistryGroup {
+  id          String              @id @default(cuid())
+  name        String
+  slug        String              @unique
+  description String?
+  imageUrl    String?
+  isPrivate   Boolean             @default(false)
+  members     MinistryGroupMember[]
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  @@map("ministry_groups")
+}
+
+model MinistryGroupMember {
+  id        String        @id @default(cuid())
+  groupId   String
+  group     MinistryGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      String        @default("member") // admin, moderator, member
+  joinedAt  DateTime      @default(now())
+
+  @@unique([groupId, userId])
+  @@index([userId])
+  @@map("ministry_group_members")
+}
+
+// ─── Video Conferencing ─────────────────────────────────────────────
+model VideoMeeting {
+  id           String    @id @default(cuid())
+  title        String
+  description  String?
+  roomId       String    @unique // External meeting room ID (e.g., Daily.co, Jitsi)
+  hostId       String
+  host         User      @relation(fields: [hostId], references: [id])
+  scheduledAt  DateTime?
+  startedAt    DateTime?
+  endedAt      DateTime?
+  isRecurring  Boolean   @default(false)
+  maxParticipants Int?
+  isPublic     Boolean   @default(false)
+  ministrySlug String?   // Link to ministry if applicable
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([hostId])
+  @@index([scheduledAt])
+  @@map("video_meetings")
 }
