@@ -621,6 +621,195 @@ async function main() {
   });
 
   console.log("✅ Seeded 1 campaign draft");
+
+  // ── Projects ─────────────────────────────────────────────────────
+  const projects = [
+    {
+      id: "proj_church_building",
+      title: "New Church Building Project",
+      slug: "new-church-building",
+      description: "Help us build a new sanctuary to accommodate our growing congregation and serve the community better.",
+      content: `<h2>About This Project</h2>
+<p>Our congregation has grown significantly over the past decade, and our current facility can no longer accommodate everyone comfortably during Sunday services. We are embarking on an ambitious project to build a new, modern sanctuary that will serve our community for generations to come.</p>
+
+<h3>Project Goals</h3>
+<ul>
+<li>Build a 2,000-seat main sanctuary with modern acoustics</li>
+<li>Create dedicated children's ministry wing</li>
+<li>Construct multipurpose fellowship hall</li>
+<li>Install state-of-the-art audio/visual systems</li>
+<li>Develop parking facilities for 500+ vehicles</li>
+</ul>
+
+<h3>Timeline</h3>
+<p>Phase 1 (Foundation): January - June 2026<br/>
+Phase 2 (Structure): July - December 2026<br/>
+Phase 3 (Interior): January - June 2027<br/>
+Phase 4 (Completion): July - December 2027</p>
+
+<p>Your generous donations will help make this vision a reality. Every contribution, no matter the size, brings us closer to our goal.</p>`,
+      imageUrl: "/img/pictures/2/001.jpg",
+      goalAmount: 500000,
+      raisedAmount: 125750,
+      startDate: new Date("2025-01-15"),
+      endDate: new Date("2027-12-31"),
+      status: "ongoing",
+      category: "building",
+      isFeatured: true,
+      isPublished: true,
+    },
+    {
+      id: "proj_school_support",
+      title: "Community School Support Program",
+      slug: "community-school-support",
+      description: "Providing educational materials, scholarships, and support to underprivileged children in our community.",
+      content: `<h2>Empowering Through Education</h2>
+<p>Education is the key to breaking the cycle of poverty. Our Community School Support Program aims to provide quality educational resources to children from underprivileged families in the Lashibi community and surrounding areas.</p>
+
+<h3>What We Provide</h3>
+<ul>
+<li>School supplies (books, uniforms, stationery)</li>
+<li>Scholarship funds for secondary and tertiary education</li>
+<li>After-school tutoring programs</li>
+<li>Computer literacy training</li>
+<li>Mentorship programs</li>
+</ul>
+
+<h3>Impact So Far</h3>
+<p>Since launching this program, we have supported over 150 students, with 25 receiving full scholarships to secondary school. Your continued support helps us reach more children each year.</p>`,
+      imageUrl: "/img/pictures/2/010.jpg",
+      goalAmount: 50000,
+      raisedAmount: 32500,
+      startDate: new Date("2024-09-01"),
+      endDate: new Date("2026-08-31"),
+      status: "ongoing",
+      category: "education",
+      isFeatured: true,
+      isPublished: true,
+    },
+    {
+      id: "proj_medical_outreach",
+      title: "Medical Outreach Mission",
+      slug: "medical-outreach-mission",
+      description: "Bringing free healthcare services to underserved communities through mobile clinics and health education.",
+      content: `<h2>Healthcare for All</h2>
+<p>Many families in our surrounding communities lack access to basic healthcare services. Our Medical Outreach Mission brings doctors, nurses, and medical supplies directly to those in need.</p>
+
+<h3>Services Provided</h3>
+<ul>
+<li>Free medical consultations</li>
+<li>Basic medications and treatments</li>
+<li>Health screenings (blood pressure, diabetes, malaria)</li>
+<li>Maternal and child health services</li>
+<li>Health education workshops</li>
+</ul>
+
+<h3>Upcoming Outreach Dates</h3>
+<p>We conduct quarterly outreach programs in different communities. Join us as a volunteer or support us with your donations.</p>`,
+      imageUrl: "/img/pictures/2/020.jpg",
+      goalAmount: 25000,
+      raisedAmount: 18200,
+      startDate: new Date("2025-03-01"),
+      endDate: new Date("2025-12-31"),
+      status: "ongoing",
+      category: "mission",
+      isFeatured: true,
+      isPublished: true,
+    },
+    {
+      id: "proj_youth_center",
+      title: "Youth Development Center",
+      slug: "youth-development-center",
+      description: "Creating a safe space for youth to learn, grow, and develop skills for their future.",
+      content: `<h2>Investing in Our Youth</h2>
+<p>The Youth Development Center will be a dedicated facility for young people to engage in constructive activities, learn new skills, and receive mentorship from caring adults.</p>
+
+<h3>Planned Facilities</h3>
+<ul>
+<li>Computer lab with internet access</li>
+<li>Library and study area</li>
+<li>Music and arts studio</li>
+<li>Sports and recreation area</li>
+<li>Counseling and mentorship rooms</li>
+</ul>
+
+<h3>Programs</h3>
+<p>The center will offer vocational training, career guidance, leadership development, and spiritual growth programs for youth ages 13-25.</p>`,
+      imageUrl: "/img/pictures/2/030.jpg",
+      goalAmount: 75000,
+      raisedAmount: 12000,
+      startDate: new Date("2025-06-01"),
+      endDate: new Date("2026-12-31"),
+      status: "ongoing",
+      category: "community",
+      isFeatured: false,
+      isPublished: true,
+    },
+    {
+      id: "proj_widow_support",
+      title: "Widows & Orphans Support Fund",
+      slug: "widows-orphans-support",
+      description: "Providing monthly support, food supplies, and care for widows and orphans in our congregation and community.",
+      content: `<h2>Caring for the Vulnerable</h2>
+<p>The Bible calls us to care for widows and orphans. This fund provides ongoing support to those who have lost their primary breadwinners and need assistance with basic necessities.</p>
+
+<h3>How We Help</h3>
+<ul>
+<li>Monthly food packages</li>
+<li>Rent and utility assistance</li>
+<li>Medical expense support</li>
+<li>School fees for orphaned children</li>
+<li>Emotional and spiritual support</li>
+</ul>
+
+<h3>Current Beneficiaries</h3>
+<p>We currently support 45 widows and 78 orphans on a regular basis. Your donations help us expand this vital ministry.</p>`,
+      imageUrl: "/img/pictures/2/040.jpg",
+      goalAmount: 30000,
+      raisedAmount: 22500,
+      startDate: new Date("2024-01-01"),
+      endDate: null,
+      status: "ongoing",
+      category: "community",
+      isFeatured: false,
+      isPublished: true,
+    },
+    {
+      id: "proj_church_van",
+      title: "Church Transportation Van",
+      slug: "church-transportation-van",
+      description: "Purchase of a 30-seater bus to transport elderly members and facilitate ministry activities.",
+      content: `<h2>Mobility for Ministry</h2>
+<p>Many of our elderly members and those without personal transportation struggle to attend services and church activities. A dedicated church van will solve this problem and enable us to conduct more outreach activities.</p>
+
+<h3>Uses</h3>
+<ul>
+<li>Sunday pickup service for elderly and disabled members</li>
+<li>Youth group excursions and retreats</li>
+<li>Outreach and evangelism trips</li>
+<li>Hospital and home visitation</li>
+</ul>`,
+      imageUrl: "/img/pictures/2/050.jpg",
+      goalAmount: 45000,
+      raisedAmount: 45000,
+      startDate: new Date("2024-06-01"),
+      endDate: new Date("2025-02-28"),
+      status: "completed",
+      category: "general",
+      isFeatured: false,
+      isPublished: true,
+    },
+  ];
+
+  for (const project of projects) {
+    await prisma.project.upsert({
+      where: { id: project.id },
+      update: {},
+      create: project,
+    });
+  }
+
+  console.log(`✅ Seeded ${projects.length} projects`);
 }
 
 main()

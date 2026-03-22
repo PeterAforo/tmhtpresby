@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown, Sun, Moon, User, LogIn } from "lucide-react";
+import { Menu, X, ChevronDown, Sun, Moon, User, LogIn, Heart } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import { NAV_ITEMS } from "@/lib/constants";
@@ -156,9 +156,7 @@ export function Navbar() {
                 href="/profile"
                 className={cn(
                   "hidden lg:inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold transition-all duration-200",
-                  isOverHero
-                    ? "bg-white/15 text-white border border-white/20 hover:bg-white/25"
-                    : "bg-[var(--accent)] text-white hover:opacity-90"
+                  "border border-[var(--border)] text-[var(--text)] hover:border-[var(--accent)] hover:text-[var(--accent)]"
                 )}
               >
                 <User size={16} />
@@ -169,15 +167,22 @@ export function Navbar() {
                 href="/login"
                 className={cn(
                   "hidden lg:inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold transition-all duration-200",
-                  isOverHero
-                    ? "bg-white/15 text-white border border-white/20 hover:bg-white/25"
-                    : "bg-[var(--accent)] text-white hover:opacity-90"
+                  "border border-[var(--border)] text-[var(--text)] hover:border-[var(--accent)] hover:text-[var(--accent)]"
                 )}
               >
                 <LogIn size={16} />
                 Sign In
               </Link>
             )}
+
+            {/* Donate Button */}
+            <Link
+              href="/giving"
+              className="hidden lg:inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold bg-[var(--accent)] text-white hover:opacity-90 transition-all duration-200"
+            >
+              <Heart size={16} />
+              Donate
+            </Link>
 
             <button
               className={cn(

@@ -4,6 +4,7 @@ import { AboutSection } from "@/components/home/AboutSection";
 import { LiveStreamSection } from "@/components/home/LiveStreamSection";
 import { PresbyterySection } from "@/components/home/PresbyterySection";
 import { MinistriesSection } from "@/components/home/MinistriesSection";
+import { ProjectsPreviewSection } from "@/components/home/ProjectsPreviewSection";
 import { PrayerFormSection } from "@/components/home/PrayerFormSection";
 import { TestimonialsSection } from "@/components/home/TestimonialsSection";
 import { WhatsNewSection } from "@/components/home/WhatsNewSection";
@@ -17,6 +18,7 @@ export default function HomePage() {
       <LiveStreamSection />
       <PresbyterySection />
       <MinistriesSection />
+      <ProjectsPreviewSection />
       <PrayerFormSection />
       <TestimonialsSection />
       <WhatsNewSection />

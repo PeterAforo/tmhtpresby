@@ -159,6 +159,11 @@ export const NAV_ITEMS: NavItem[] = [
         href: "/about/committees",
         description: "Church committees",
       },
+      {
+        label: "Projects",
+        href: "/projects",
+        description: "Our ongoing projects",
+      },
     ],
   },
   {
