@@ -44,7 +44,7 @@ export function PageHero({
   return (
     <section
       ref={ref}
-      className="relative pt-24 pb-8 sm:pt-28 sm:pb-10 overflow-hidden"
+      className="relative pt-28 pb-8 sm:pt-32 sm:pb-10 lg:pt-36 overflow-hidden"
     >
       {/* Background with gradient overlay */}
       {backgroundImage ? (
