@@ -93,7 +93,7 @@ export default async function RootLayout({
             </a>
             <SplashScreen />
             <Navbar />
-            <main id="main-content">{children}</main>
+            <main id="main-content" className="pt-16 lg:pt-20">{children}</main>
             <Footer />
           </PWAProvider>
         </SessionProvider>
