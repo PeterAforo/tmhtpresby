@@ -145,32 +145,32 @@ export function MinistriesSection() {
             >
               <Link
                 href={ministry.href}
-                className="group relative h-80 rounded-lg overflow-hidden block"
+                className="group relative h-80 rounded-xl overflow-hidden block"
               >
                 {/* Background Image */}
                 <Image
                   src={ministry.image}
                   alt={ministry.title}
                   fill
-                  className="object-cover opacity-40 group-hover:opacity-50 transition-opacity duration-300"
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 
-                {/* Dark overlay */}
-                <div className="absolute inset-0 bg-[#0F172A]" />
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30 group-hover:from-black/95 group-hover:via-black/60 transition-colors duration-300" />
                 
                 {/* Plus Icon */}
-                <div className="absolute top-4 left-4 w-10 h-10 bg-[#E31B23] rounded flex items-center justify-center">
+                <div className="absolute top-4 left-4 w-10 h-10 bg-[#E31B23] rounded-lg flex items-center justify-center group-hover:bg-[var(--accent)] transition-colors duration-300">
                   <Plus size={20} className="text-white" />
                 </div>
 
                 {/* Content */}
                 <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h3 className="text-white font-semibold text-xl mb-3">
+                  <h3 className="text-white font-semibold text-xl mb-3 group-hover:text-[var(--accent)] transition-colors">
                     {ministry.title}
                   </h3>
                   <div className="flex items-start gap-2">
                     <Plus size={14} className="text-[#E31B23] shrink-0 mt-1" />
-                    <p className="text-gray-300 text-sm leading-relaxed">
+                    <p className="text-white/80 text-sm leading-relaxed">
                       {ministry.description}
                     </p>
                   </div>
