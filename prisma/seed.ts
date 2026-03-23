@@ -818,7 +818,8 @@ Phase 4 (Completion): July - December 2027</p>
       name: "The Aged Ministry",
       slug: "aged",
       type: "ministry",
-      description: "Leadership of The Aged Ministry",
+      description: "A fellowship for our senior members, providing spiritual support, health awareness, and community engagement for those 60 years and above.",
+      imageUrl: "/img/pictures/2/001.jpg",
       order: 1,
     },
     {
@@ -826,7 +827,8 @@ Phase 4 (Completion): July - December 2027</p>
       name: "Men's Fellowship (PMF)",
       slug: "men",
       type: "ministry",
-      description: "Leadership of the Presby Men's Fellowship",
+      description: "The Presby Men's Fellowship builds godly men through discipleship, brotherhood, and service to the church and community.",
+      imageUrl: "/img/pictures/2/020.jpg",
       order: 2,
     },
     {
@@ -834,7 +836,8 @@ Phase 4 (Completion): July - December 2027</p>
       name: "Women's Fellowship (PWF)",
       slug: "women",
       type: "ministry",
-      description: "Leadership of the Presbyterian Women's Fellowship",
+      description: "Empowering women to grow in faith, fellowship, and service through Bible study, prayer, and community outreach.",
+      imageUrl: "/img/pictures/2/030.jpg",
       order: 3,
     },
     {
@@ -842,7 +845,8 @@ Phase 4 (Completion): July - December 2027</p>
       name: "Young People's Guild (Y.P.G.)",
       slug: "ypg",
       type: "ministry",
-      description: "Leadership of the Young People's Guild",
+      description: "Nurturing the next generation in faith and Christian values through fellowship, leadership development, and service.",
+      imageUrl: "/img/pictures/2/050.jpg",
       order: 4,
     },
     {
@@ -850,15 +854,25 @@ Phase 4 (Completion): July - December 2027</p>
       name: "Choir Ministry",
       slug: "choir",
       type: "ministry",
-      description: "Leadership of the Church Choir",
+      description: "Leading the congregation in worship through song and instruments, glorifying God with musical excellence.",
+      imageUrl: "/img/pictures/2/040.jpg",
       order: 5,
+    },
+    {
+      id: "lg_children",
+      name: "Children's Ministry",
+      slug: "children",
+      type: "ministry",
+      description: "Nurturing young hearts in God's word through engaging Bible lessons, worship, and activities for ages 2-12.",
+      imageUrl: "/img/pictures/2/010.jpg",
+      order: 6,
     },
   ];
 
   for (const group of ministryLeadershipGroups) {
     await prisma.leadershipGroup.upsert({
       where: { id: group.id },
-      update: {},
+      update: { imageUrl: group.imageUrl, description: group.description },
       create: group,
     });
   }

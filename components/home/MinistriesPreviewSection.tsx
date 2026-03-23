@@ -1,64 +1,50 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Users, Heart, Music, BookOpen, HandHelping, Baby, ArrowRight } from "lucide-react";
+import { Users, ArrowRight, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const FEATURED_MINISTRIES = [
-  {
-    icon: Baby,
-    name: "Children's Ministry",
-    tagline: "Nurturing young hearts in God's word",
-    href: "/ministries/children",
-    image: "/img/pictures/2/010.jpg",
-  },
-  {
-    icon: Users,
-    name: "Youth Ministry",
-    tagline: "Empowering the next generation",
-    href: "/ministries/youth",
-    image: "/img/pictures/2/020.jpg",
-  },
-  {
-    icon: Heart,
-    name: "Women's Ministry",
-    tagline: "Growing together in grace and purpose",
-    href: "/ministries/women",
-    image: "/img/pictures/2/030.jpg",
-  },
-  {
-    icon: BookOpen,
-    name: "Men's Ministry",
-    tagline: "Iron sharpens iron in fellowship",
-    href: "/ministries/men",
-    image: "/img/pictures/2/040.jpg",
-  },
-  {
-    icon: Music,
-    name: "Worship Ministry",
-    tagline: "Leading God's people in praise",
-    href: "/ministries/worship",
-    image: "/img/pictures/2/050.jpg",
-  },
-  {
-    icon: HandHelping,
-    name: "Outreach Ministry",
-    tagline: "Serving our community with love",
-    href: "/ministries/outreach",
-    image: "/img/pictures/2/060.jpg",
-  },
-];
+interface Ministry {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  imageUrl: string | null;
+}
+
+const DEFAULT_IMAGE = "/img/pictures/2/001.jpg";
 
 export function MinistriesPreviewSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [ministries, setMinistries] = useState<Ministry[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    async function fetchMinistries() {
+      try {
+        const res = await fetch("/api/ministries");
+        if (res.ok) {
+          const data = await res.json();
+          setMinistries(data.ministries?.slice(0, 6) || []);
+        }
+      } catch (err) {
+        console.error("Failed to fetch ministries:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchMinistries();
+  }, []);
+
+  useEffect(() => {
+    if (loading || ministries.length === 0) return;
+    
     const prefersReduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
@@ -84,7 +70,7 @@ export function MinistriesPreviewSection() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [loading, ministries]);
 
   return (
     <section ref={sectionRef} className="py-16 lg:py-24 bg-[var(--bg)]">
@@ -104,14 +90,22 @@ export function MinistriesPreviewSection() {
           </p>
         </div>
 
-        {/* Ministry cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {FEATURED_MINISTRIES.map((ministry) => {
-            const Icon = ministry.icon;
-            return (
+        {/* Loading state */}
+        {loading ? (
+          <div className="flex items-center justify-center py-16">
+            <Loader2 size={32} className="animate-spin text-[var(--accent)]" />
+          </div>
+        ) : ministries.length === 0 ? (
+          <div className="text-center py-16 text-[var(--text-muted)]">
+            No ministries available at the moment.
+          </div>
+        ) : (
+          /* Ministry cards */
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {ministries.map((ministry) => (
               <Link
-                key={ministry.name}
-                href={ministry.href}
+                key={ministry.id}
+                href={`/ministries/${ministry.slug}`}
                 className={cn(
                   "ministry-card opacity-0",
                   "group relative overflow-hidden rounded-2xl",
@@ -122,7 +116,7 @@ export function MinistriesPreviewSection() {
               >
                 {/* Background Image */}
                 <Image
-                  src={ministry.image}
+                  src={ministry.imageUrl || DEFAULT_IMAGE}
                   alt={ministry.name}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -135,7 +129,7 @@ export function MinistriesPreviewSection() {
                 <div className="absolute inset-0 p-6 flex flex-col justify-end">
                   {/* Icon */}
                   <div className="absolute top-5 right-5 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white group-hover:bg-[var(--accent)] transition-colors duration-300">
-                    <Icon size={22} />
+                    <Users size={22} />
                   </div>
                   
                   {/* Text */}
@@ -143,8 +137,8 @@ export function MinistriesPreviewSection() {
                     <h3 className="font-[family-name:var(--font-heading)] text-xl font-bold text-white mb-2 group-hover:text-[var(--accent)] transition-colors">
                       {ministry.name}
                     </h3>
-                    <p className="text-sm text-white/80 leading-relaxed mb-3">
-                      {ministry.tagline}
+                    <p className="text-sm text-white/80 leading-relaxed mb-3 line-clamp-2">
+                      {ministry.description || "Join our ministry community"}
                     </p>
                     <span className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       Learn More
@@ -153,9 +147,9 @@ export function MinistriesPreviewSection() {
                   </div>
                 </div>
               </Link>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* View all */}
         <div className="text-center mt-10">
