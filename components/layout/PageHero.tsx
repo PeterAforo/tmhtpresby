@@ -21,7 +21,6 @@ export function PageHero({
   subtitle, 
   overline,
   backgroundImage,
-  overlayColor = "rgba(12, 21, 41, 0.85)"
 }: PageHeroProps) {
   const ref = useRef<HTMLElement>(null);
 
@@ -34,8 +33,8 @@ export function PageHero({
     const ctx = gsap.context(() => {
       gsap.fromTo(
         ".page-hero-content > *",
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.5, stagger: 0.1, ease: "power2.out" }
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.4, stagger: 0.08, ease: "power2.out" }
       );
     }, ref);
 
@@ -45,58 +44,57 @@ export function PageHero({
   return (
     <section
       ref={ref}
-      className={cn(
-        "relative pt-28 pb-16 lg:pt-36 lg:pb-20 overflow-hidden",
-        !backgroundImage && "bg-gradient-to-br from-[#0C1529] via-[#152040] to-[#0C1529]"
-      )}
+      className="relative pt-24 pb-8 sm:pt-28 sm:pb-10 overflow-hidden"
     >
-      {/* Background Image - no overlay */}
-      {backgroundImage && (
-        <Image
-          src={backgroundImage}
-          alt=""
-          fill
-          className="object-cover"
-          priority
-          aria-hidden="true"
-        />
+      {/* Background with gradient overlay */}
+      {backgroundImage ? (
+        <>
+          <Image
+            src={backgroundImage}
+            alt=""
+            fill
+            className="object-cover"
+            priority
+            aria-hidden="true"
+          />
+          {/* Gradient overlay for readability */}
+          <div 
+            className="absolute inset-0 bg-gradient-to-r from-[#0C1529]/95 via-[#0C1529]/80 to-[#0C1529]/60"
+            aria-hidden="true"
+          />
+        </>
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0C1529] via-[#152040] to-[#0C1529]" />
       )}
 
-      {/* Accent glow */}
-      <div
-        className="absolute top-0 right-1/4 w-96 h-96 rounded-full opacity-15 blur-3xl"
-        style={{ background: "radial-gradient(circle, #317256 0%, transparent 70%)" }}
+      {/* Subtle accent line */}
+      <div 
+        className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#3DA066]/50 to-transparent"
         aria-hidden="true"
       />
 
-      <div className="page-hero-content relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
-        {/* Text container with background for readability */}
-        <div 
-          className="inline-block rounded-xl px-8 py-6 sm:px-10 sm:py-8"
-          style={{ backgroundColor: overlayColor }}
-        >
+      <div className="page-hero-content relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-3 mb-2">
           {overline && (
-            <p className="text-[#3DA066] text-sm font-semibold uppercase tracking-[0.2em] mb-3">
-              {overline}
-            </p>
+            <>
+              <span className="text-[#3DA066] text-xs font-semibold uppercase tracking-[0.15em]">
+                {overline}
+              </span>
+              <span className="w-8 h-[1px] bg-[#3DA066]/50" aria-hidden="true" />
+            </>
           )}
-          <h1 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight tracking-tight">
-            {title}
-          </h1>
-          {subtitle && (
-            <p className="mt-4 text-white/80 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-              {subtitle}
-            </p>
-          )}
-          <div
-            aria-hidden="true"
-            className="mx-auto mt-6 h-1 w-16 rounded-full bg-[#3DA066]"
-          />
         </div>
+        
+        <h1 className="font-[family-name:var(--font-heading)] text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight tracking-tight">
+          {title}
+        </h1>
+        
+        {subtitle && (
+          <p className="mt-2 text-white/70 text-sm sm:text-base max-w-xl leading-relaxed">
+            {subtitle}
+          </p>
+        )}
       </div>
-
-      {/* Bottom fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[var(--bg)] to-transparent" />
     </section>
   );
 }
