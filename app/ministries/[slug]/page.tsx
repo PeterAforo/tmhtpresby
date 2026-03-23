@@ -463,9 +463,6 @@ export default async function MinistryDetailPage({ params }: Props) {
                 <MinistryCalendar ministrySlug={slug} ministryName={ministry.name} />
               </div>
 
-              {/* Ministry Gallery */}
-              <MinistryGallery ministrySlug={slug} ministryName={ministry.name} />
-
               {/* Community Hub - Mobile visible */}
               <div className="mt-10 p-6 rounded-xl bg-gradient-to-r from-[var(--primary)]/10 to-[var(--accent)]/10 border border-[var(--primary)]/20 lg:hidden">
                 <div className="flex items-center gap-3 mb-3">
@@ -572,6 +569,13 @@ export default async function MinistryDetailPage({ params }: Props) {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Photos & Videos - Full Width Section */}
+      <section className="py-16 lg:py-20 bg-[var(--bg-card)]">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <MinistryGallery ministrySlug={slug} ministryName={ministry.name} />
         </div>
       </section>
     </>
