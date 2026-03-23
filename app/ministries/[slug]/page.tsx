@@ -453,11 +453,6 @@ export default async function MinistryDetailPage({ params }: Props) {
                 </div>
               </div>
 
-              {/* Ministry Executives */}
-              <div className="mb-10">
-                <MinistryExecutives ministrySlug={slug} ministryName={ministry.name} />
-              </div>
-
               {/* Ministry Calendar */}
               <div className="mb-10">
                 <MinistryCalendar ministrySlug={slug} ministryName={ministry.name} />
@@ -569,6 +564,13 @@ export default async function MinistryDetailPage({ params }: Props) {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Current Executives - Full Width Section */}
+      <section className="py-16 lg:py-20 bg-[var(--bg)]">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <MinistryExecutives ministrySlug={slug} ministryName={ministry.name} />
         </div>
       </section>
 

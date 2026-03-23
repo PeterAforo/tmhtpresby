@@ -58,7 +58,7 @@ export async function GET(req: NextRequest, context: RouteContext) {
     const current = allMembers.filter((m) => m.isCurrent);
     const past = allMembers.filter((m) => !m.isCurrent);
 
-    return NextResponse.json({ current, past });
+    return NextResponse.json({ current, past, ministryName: group.name });
   } catch (error) {
     console.error("Ministry leaders GET error:", error);
     return NextResponse.json(

@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { User, Calendar, ChevronRight, History } from "lucide-react";
+import Image from "next/image";
+import { ChevronLeft, ChevronRight, History, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface LeadershipMember {
@@ -43,9 +44,9 @@ function formatTenure(startDate: string, endDate: string | null): string {
 
 export function MinistryExecutives({ ministrySlug, ministryName }: MinistryExecutivesProps) {
   const [currentLeaders, setCurrentLeaders] = useState<LeadershipMember[]>([]);
-  const [pastLeaders, setPastLeaders] = useState<LeadershipMember[]>([]);
+  const [pastLeadersCount, setPastLeadersCount] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [showPast, setShowPast] = useState(false);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function fetchLeaders() {
@@ -54,7 +55,7 @@ export function MinistryExecutives({ ministrySlug, ministryName }: MinistryExecu
         if (res.ok) {
           const data = await res.json();
           setCurrentLeaders(data.current || []);
-          setPastLeaders(data.past || []);
+          setPastLeadersCount(data.past?.length || 0);
         }
       } catch (error) {
         console.error("Failed to fetch ministry leaders:", error);
@@ -65,117 +66,143 @@ export function MinistryExecutives({ ministrySlug, ministryName }: MinistryExecu
     fetchLeaders();
   }, [ministrySlug]);
 
+  const scroll = (direction: "left" | "right") => {
+    if (!carouselRef.current) return;
+    const scrollAmount = 300;
+    carouselRef.current.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    });
+  };
+
   if (loading) {
     return (
-      <div className="animate-pulse space-y-4">
-        <div className="h-6 bg-[var(--border)] rounded w-1/3"></div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {[1, 2].map((i) => (
-            <div key={i} className="h-24 bg-[var(--border)] rounded-lg"></div>
+      <div className="animate-pulse">
+        <div className="h-8 bg-[var(--border)] rounded w-1/4 mb-6"></div>
+        <div className="flex gap-6 overflow-hidden">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="w-56 shrink-0">
+              <div className="aspect-[3/4] bg-[var(--border)] rounded-xl mb-3"></div>
+              <div className="h-4 bg-[var(--border)] rounded w-3/4 mb-2"></div>
+              <div className="h-3 bg-[var(--border)] rounded w-1/2"></div>
+            </div>
           ))}
         </div>
       </div>
     );
   }
 
-  if (currentLeaders.length === 0 && pastLeaders.length === 0) {
+  if (currentLeaders.length === 0) {
     return null;
   }
 
   return (
     <div className="space-y-6">
-      {/* Current Executives */}
-      {currentLeaders.length > 0 && (
+      {/* Header */}
+      <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold text-[var(--text)] mb-4">
+          <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold text-[var(--text)]">
             Current Executives
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {currentLeaders.map((leader) => (
-              <div
-                key={leader.id}
-                className="p-4 rounded-xl bg-[var(--bg-card)] border border-[var(--border)] hover:border-[var(--accent)]/40 transition-colors"
-              >
-                <div className="flex items-start gap-4">
-                  {/* Avatar */}
-                  <div className="w-14 h-14 rounded-full bg-[var(--accent)]/10 flex items-center justify-center text-[var(--accent)] font-bold text-lg shrink-0">
-                    {leader.imageUrl ? (
-                      <img
-                        src={leader.imageUrl}
-                        alt={`${leader.firstName} ${leader.lastName}`}
-                        className="w-full h-full rounded-full object-cover"
-                      />
-                    ) : (
-                      `${leader.firstName[0]}${leader.lastName[0]}`
-                    )}
-                  </div>
-                  
-                  {/* Info */}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold text-[var(--accent)] uppercase tracking-wider mb-0.5">
-                      {leader.position.title}
-                    </p>
-                    <p className="text-sm font-semibold text-[var(--text)]">
-                      {leader.title && `${leader.title} `}
-                      {leader.firstName} {leader.lastName}
-                    </p>
-                    <p className="text-xs text-[var(--text-muted)] flex items-center gap-1 mt-1">
-                      <Calendar size={12} />
-                      {formatTenure(leader.startDate, leader.endDate)}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <p className="text-sm text-[var(--text-muted)] mt-1">
+            Meet the leadership team of {ministryName}
+          </p>
         </div>
-      )}
+        
+        {/* Navigation & Past Executives Link */}
+        <div className="flex items-center gap-3">
+          {pastLeadersCount > 0 && (
+            <Link
+              href={`/ministries/${ministrySlug}/past-executives`}
+              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-[var(--text-muted)] hover:text-[var(--accent)] hover:bg-[var(--bg)] border border-[var(--border)] transition-colors"
+            >
+              <History size={16} />
+              Past Executives
+            </Link>
+          )}
+          
+          {currentLeaders.length > 3 && (
+            <div className="hidden sm:flex items-center gap-2">
+              <button
+                onClick={() => scroll("left")}
+                className="p-2 rounded-full bg-[var(--bg)] border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text)] hover:border-[var(--accent)]/40 transition-colors"
+                aria-label="Scroll left"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <button
+                onClick={() => scroll("right")}
+                className="p-2 rounded-full bg-[var(--bg)] border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text)] hover:border-[var(--accent)]/40 transition-colors"
+                aria-label="Scroll right"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
 
-      {/* Past Executives Toggle */}
-      {pastLeaders.length > 0 && (
-        <div>
-          <button
-            onClick={() => setShowPast(!showPast)}
+      {/* Carousel */}
+      <div
+        ref={carouselRef}
+        className="flex gap-5 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      >
+        {currentLeaders.map((leader) => (
+          <div
+            key={leader.id}
+            className="group w-52 sm:w-56 shrink-0 snap-start"
+          >
+            {/* Photo */}
+            <div className="relative aspect-[3/4] rounded-xl overflow-hidden mb-4 bg-[var(--bg-card)] border border-[var(--border)] group-hover:border-[var(--accent)]/40 transition-colors">
+              {leader.imageUrl ? (
+                <Image
+                  src={leader.imageUrl}
+                  alt={`${leader.firstName} ${leader.lastName}`}
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-[var(--accent)]/10 to-[var(--primary)]/10">
+                  <Users size={48} className="text-[var(--accent)]/40 mb-2" />
+                  <span className="text-3xl font-bold text-[var(--accent)]/60">
+                    {leader.firstName[0]}{leader.lastName[0]}
+                  </span>
+                </div>
+              )}
+              
+              {/* Gradient overlay */}
+              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent" />
+            </div>
+            
+            {/* Info */}
+            <div className="text-center px-2">
+              <h3 className="font-semibold text-[var(--text)] text-base mb-1 group-hover:text-[var(--accent)] transition-colors">
+                {leader.title && `${leader.title} `}
+                {leader.firstName} {leader.lastName}
+              </h3>
+              <p className="text-sm font-medium text-[var(--accent)] mb-1">
+                {leader.position.title}
+              </p>
+              <p className="text-xs text-[var(--text-muted)]">
+                {formatTenure(leader.startDate, leader.endDate)}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Mobile Past Executives Link */}
+      {pastLeadersCount > 0 && (
+        <div className="sm:hidden">
+          <Link
+            href={`/ministries/${ministrySlug}/past-executives`}
             className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--accent)] hover:underline"
           >
             <History size={16} />
-            {showPast ? "Hide" : "View"} Past Executives ({pastLeaders.length})
-            <ChevronRight
-              size={16}
-              className={cn("transition-transform", showPast && "rotate-90")}
-            />
-          </button>
-
-          {showPast && (
-            <div className="mt-4 space-y-3">
-              <h3 className="text-lg font-semibold text-[var(--text)]">
-                Past Executives
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {pastLeaders.map((leader) => (
-                  <div
-                    key={leader.id}
-                    className="p-3 rounded-lg bg-[var(--bg)] border border-[var(--border)]"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[var(--border)] flex items-center justify-center text-[var(--text-muted)] font-medium text-sm shrink-0">
-                        {leader.firstName[0]}{leader.lastName[0]}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-[var(--text)]">
-                          {leader.title && `${leader.title} `}
-                          {leader.firstName} {leader.lastName}
-                        </p>
-                        <p className="text-xs text-[var(--text-muted)]">
-                          {leader.position.title} • {formatTenure(leader.startDate, leader.endDate)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+            View Past Executives ({pastLeadersCount})
+            <ChevronRight size={16} />
+          </Link>
         </div>
       )}
     </div>
