@@ -20,27 +20,27 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // Get CSRF token first
-      const csrfRes = await fetch("/api/auth/csrf");
-      const { csrfToken } = await csrfRes.json();
-
-      // Call credentials callback with CSRF token
-      const res = await fetch("/api/auth/callback/credentials", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({ email, password, csrfToken }),
-        credentials: "include",
-        redirect: "manual",
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
       });
 
-      // 302 redirect means success
-      if (res.status === 302 || res.ok) {
+      console.log("SignIn result:", result);
+
+      if (result?.error) {
+        setError("Invalid email or password.");
+        setLoading(false);
+        return;
+      }
+
+      if (result?.ok) {
         router.push("/profile");
         router.refresh();
         return;
       }
 
-      setError("Invalid email or password.");
+      setError("Something went wrong. Please try again.");
       setLoading(false);
     } catch (err) {
       console.error("Login error:", err);
