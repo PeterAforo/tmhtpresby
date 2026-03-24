@@ -20,11 +20,18 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const result = await signIn("credentials", {
+      // Add timeout to prevent hanging
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("timeout")), 15000)
+      );
+
+      const signInPromise = signIn("credentials", {
         email,
         password,
         redirect: false,
       });
+
+      const result = await Promise.race([signInPromise, timeoutPromise]) as Awaited<ReturnType<typeof signIn>>;
 
       if (result?.error) {
         setError("Invalid email or password.");
@@ -34,8 +41,12 @@ export default function LoginPage() {
 
       router.push("/profile");
       router.refresh();
-    } catch {
-      setError("Something went wrong. Please try again.");
+    } catch (err) {
+      if (err instanceof Error && err.message === "timeout") {
+        setError("Login timed out. Please try again.");
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
       setLoading(false);
     }
   }
