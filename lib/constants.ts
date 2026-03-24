@@ -84,6 +84,11 @@ export const NAV_ITEMS: NavItem[] = [
     href: "/media",
     subItems: [
       {
+        label: "News",
+        href: "/news",
+        description: "Latest church news",
+      },
+      {
         label: "Announcements",
         href: "/announcements",
         description: "Church announcements",
@@ -114,6 +119,10 @@ export const NAV_ITEMS: NavItem[] = [
         description: "Video gallery",
       },
     ],
+  },
+  {
+    label: "Shop",
+    href: "/shop",
   },
   {
     label: "About",
@@ -325,7 +334,7 @@ export const FOOTER_LINKS: FooterLinkGroup[] = [
       { label: "Checkout", href: "/checkout" },
       { label: "Donation", href: "/give" },
       { label: "Contact Us", href: "/contact" },
-      { label: "Blog", href: "/blog" },
+      { label: "News", href: "/news" },
     ],
   },
 ];

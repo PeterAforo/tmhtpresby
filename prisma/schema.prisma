@@ -282,26 +282,57 @@ model EventRsvp {
   @@map("event_rsvps")
 }
 
-// ─── Blog Posts ─────────────────────────────────────────────────
+// ─── News/Blog Posts ─────────────────────────────────────────────────
 model BlogPost {
-  id          String   @id @default(cuid())
+  id          String        @id @default(cuid())
   title       String
-  slug        String   @unique
+  slug        String        @unique
   excerpt     String?
-  content     String   // HTML or markdown
+  content     String        // HTML or markdown
   author      String
-  category    String   @default("general")
+  category    String        @default("general")
   imageUrl    String?
-  readTime    Int?     // minutes
-  published   Boolean  @default(true)
-  viewCount   Int      @default(0)
-  publishedAt DateTime @default(now())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  readTime    Int?          // minutes
+  published   Boolean       @default(true)
+  viewCount   Int           @default(0)
+  likes       Int           @default(0)
+  publishedAt DateTime      @default(now())
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  comments    NewsComment[]
+  ratings     NewsRating[]
 
   @@index([publishedAt(sort: Desc)])
   @@index([category])
   @@map("blog_posts")
+}
+
+model NewsComment {
+  id          String    @id @default(cuid())
+  content     String
+  authorName  String
+  authorEmail String
+  isApproved  Boolean   @default(false)
+  postId      String
+  post        BlogPost  @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+
+  @@index([postId])
+  @@index([isApproved])
+  @@map("news_comments")
+}
+
+model NewsRating {
+  id        String   @id @default(cuid())
+  rating    Int      // 1-5 stars
+  ipAddress String?
+  postId    String
+  post      BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([postId, ipAddress])
+  @@index([postId])
+  @@map("news_ratings")
 }
 
 // ─── Gallery ────────────────────────────────────────────────────
@@ -633,4 +664,149 @@ model Project {
   @@index([status])
   @@index([isFeatured])
   @@map("projects")
+}
+
+// ─── Shop / E-commerce ────────────────────────────────────────────────
+model ProductCategory {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  imageUrl    String?
+  products    Product[]
+  createdAt   DateTime  @default(now())
+
+  @@map("product_categories")
+}
+
+model Product {
+  id              String           @id @default(cuid())
+  name            String
+  slug            String           @unique
+  description     String?
+  price           Int              // Price in pesewas (smallest currency unit)
+  compareAtPrice  Int?             // Original price for showing discounts
+  sku             String?          @unique
+  stock           Int              @default(0)
+  lowStockAlert   Int              @default(5)
+  images          ProductImage[]
+  categoryId      String?
+  category        ProductCategory? @relation(fields: [categoryId], references: [id])
+  ministryGroup   String?          // aged, men, women, young_adult, ypg, junior, choir, etc.
+  ministrySlug    String?          // Link to specific ministry
+  isFeatured      Boolean          @default(false)
+  isActive        Boolean          @default(true)
+  weight          Float?           // For shipping calculations
+  dimensions      String?          // e.g., "10x5x3 cm"
+  tags            String[]         // Array of tags for filtering
+  orderItems      OrderItem[]
+  cartItems       CartItem[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([categoryId])
+  @@index([ministryGroup])
+  @@index([isFeatured])
+  @@index([isActive])
+  @@map("products")
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  url       String
+  alt       String?
+  order     Int      @default(0)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([productId])
+  @@map("product_images")
+}
+
+model Cart {
+  id        String     @id @default(cuid())
+  sessionId String     @unique // For guest carts
+  userId    String?    // For logged-in users
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([userId])
+  @@map("carts")
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  quantity  Int      @default(1)
+  cartId    String
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([cartId, productId])
+  @@index([cartId])
+  @@index([productId])
+  @@map("cart_items")
+}
+
+model Order {
+  id                String      @id @default(cuid())
+  orderNumber       String      @unique
+  status            String      @default("pending") // pending, processing, shipped, delivered, cancelled, refunded
+  subtotal          Int         // In pesewas
+  shippingCost      Int         @default(0)
+  tax               Int         @default(0)
+  total             Int
+  currency          String      @default("GHS")
+  // Customer info
+  customerEmail     String
+  customerFirstName String
+  customerLastName  String
+  customerPhone     String?
+  userId            String?     // If logged in
+  // Shipping address
+  shippingAddress   String?
+  shippingCity      String?
+  shippingRegion    String?
+  shippingCountry   String      @default("Ghana")
+  // Payment
+  paymentMethod     String?     // stripe, momo, cash
+  paymentStatus     String      @default("pending") // pending, paid, failed, refunded
+  stripeSessionId   String?     @unique
+  stripePaymentId   String?
+  // Tracking
+  trackingNumber    String?
+  shippedAt         DateTime?
+  deliveredAt       DateTime?
+  notes             String?
+  items             OrderItem[]
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([paymentStatus])
+  @@index([createdAt(sort: Desc)])
+  @@map("orders")
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  quantity    Int
+  unitPrice   Int      // Price at time of order (in pesewas)
+  totalPrice  Int
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id])
+  productName String   // Snapshot of product name
+  productSku  String?  // Snapshot of SKU
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
 }
