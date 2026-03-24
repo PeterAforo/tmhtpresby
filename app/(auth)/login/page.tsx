@@ -25,9 +25,11 @@ export default function LoginPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
+        credentials: "include",
       });
 
       const data = await res.json();
+      console.log("Login response:", res.status, data);
 
       if (!res.ok) {
         setError(data.error || "Invalid email or password.");
@@ -35,9 +37,12 @@ export default function LoginPage() {
         return;
       }
 
-      // Success - redirect to profile
-      router.push("/profile");
-      router.refresh();
+      // Success - redirect to admin or profile based on role
+      if (data.user?.role === "super_admin" || data.user?.role === "pastor" || data.user?.role === "ministry_leader") {
+        window.location.href = "/admin";
+      } else {
+        window.location.href = "/profile";
+      }
     } catch (err) {
       console.error("Login error:", err);
       setError("Something went wrong. Please try again.");
@@ -85,7 +90,10 @@ export default function LoginPage() {
             <div className="relative">
               <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
               <input
+                id="email"
+                name="email"
                 type="email"
+                autoComplete="email"
                 required
                 placeholder="Email address"
                 value={email}
@@ -97,7 +105,10 @@ export default function LoginPage() {
             <div className="relative">
               <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
               <input
+                id="password"
+                name="password"
                 type={showPassword ? "text" : "password"}
+                autoComplete="current-password"
                 required
                 placeholder="Password"
                 value={password}
