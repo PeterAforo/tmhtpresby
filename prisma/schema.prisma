@@ -508,6 +508,11 @@ model LeadershipMember {
   phone       String?
   imageUrl    String?
   bio         String?
+  facebook    String?            // Facebook profile URL
+  twitter     String?            // Twitter/X handle or URL
+  instagram   String?            // Instagram handle or URL
+  linkedin    String?            // LinkedIn profile URL
+  whatsapp    String?            // WhatsApp number
   startDate   DateTime           // When they started in this position
   endDate     DateTime?          // Null if currently serving
   isCurrent   Boolean            @default(true)

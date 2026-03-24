@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, use } from "react";
 import Link from "next/link";
 import RichTextEditor from "@/components/admin/RichTextEditor";
 import FileUpload from "@/components/admin/FileUpload";
+import Image from "next/image";
 import {
   Plus,
   Pencil,
@@ -14,6 +15,11 @@ import {
   Loader2,
   User,
   Calendar,
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+  MessageCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -32,6 +38,11 @@ interface Executive {
   phone: string | null;
   imageUrl: string | null;
   bio: string | null;
+  facebook: string | null;
+  twitter: string | null;
+  instagram: string | null;
+  linkedin: string | null;
+  whatsapp: string | null;
   startDate: string;
   endDate: string | null;
   isCurrent: boolean;
@@ -51,10 +62,16 @@ const emptyForm = {
   phone: "",
   imageUrl: "",
   bio: "",
+  facebook: "",
+  twitter: "",
+  instagram: "",
+  linkedin: "",
+  whatsapp: "",
   startDate: new Date().toISOString().split("T")[0],
   endDate: "",
   isCurrent: true,
   positionId: "",
+  customPosition: "",
 };
 
 export default function MinistryExecutivesPage({ params }: Props) {
@@ -126,10 +143,16 @@ export default function MinistryExecutivesPage({ params }: Props) {
       phone: exec.phone || "",
       imageUrl: exec.imageUrl || "",
       bio: exec.bio || "",
+      facebook: exec.facebook || "",
+      twitter: exec.twitter || "",
+      instagram: exec.instagram || "",
+      linkedin: exec.linkedin || "",
+      whatsapp: exec.whatsapp || "",
       startDate: exec.startDate.split("T")[0],
       endDate: exec.endDate?.split("T")[0] || "",
       isCurrent: exec.isCurrent,
       positionId: exec.positionId,
+      customPosition: "",
     });
     setShowForm(true);
   };
@@ -249,8 +272,8 @@ export default function MinistryExecutivesPage({ params }: Props) {
                   </label>
                   <select
                     value={form.positionId}
-                    onChange={(e) => setForm({ ...form, positionId: e.target.value })}
-                    required
+                    onChange={(e) => setForm({ ...form, positionId: e.target.value, customPosition: "" })}
+                    required={!form.customPosition}
                     className={inputClasses}
                   >
                     <option value="">Select position</option>
@@ -259,7 +282,17 @@ export default function MinistryExecutivesPage({ params }: Props) {
                         {pos.title}
                       </option>
                     ))}
+                    <option value="custom">+ Add Custom Position</option>
                   </select>
+                  {form.positionId === "custom" && (
+                    <input
+                      value={form.customPosition}
+                      onChange={(e) => setForm({ ...form, customPosition: e.target.value })}
+                      placeholder="Enter custom position title"
+                      required
+                      className={cn(inputClasses, "mt-2")}
+                    />
+                  )}
                 </div>
               </div>
 
@@ -308,6 +341,58 @@ export default function MinistryExecutivesPage({ params }: Props) {
                   onChange={(value) => setForm({ ...form, bio: value })}
                   placeholder="Executive bio..."
                 />
+              </div>
+
+              {/* Social Media Links */}
+              <div className="p-4 rounded-lg border border-[var(--border)] bg-[var(--bg)]">
+                <p className="text-xs font-semibold text-[var(--text)] mb-3">Social Media Links</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex items-center gap-2">
+                    <Facebook size={16} className="text-blue-600 shrink-0" />
+                    <input
+                      value={form.facebook}
+                      onChange={(e) => setForm({ ...form, facebook: e.target.value })}
+                      placeholder="Facebook URL"
+                      className={cn(inputClasses, "text-xs py-2")}
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Twitter size={16} className="text-sky-500 shrink-0" />
+                    <input
+                      value={form.twitter}
+                      onChange={(e) => setForm({ ...form, twitter: e.target.value })}
+                      placeholder="Twitter/X handle"
+                      className={cn(inputClasses, "text-xs py-2")}
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Instagram size={16} className="text-pink-600 shrink-0" />
+                    <input
+                      value={form.instagram}
+                      onChange={(e) => setForm({ ...form, instagram: e.target.value })}
+                      placeholder="Instagram handle"
+                      className={cn(inputClasses, "text-xs py-2")}
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Linkedin size={16} className="text-blue-700 shrink-0" />
+                    <input
+                      value={form.linkedin}
+                      onChange={(e) => setForm({ ...form, linkedin: e.target.value })}
+                      placeholder="LinkedIn URL"
+                      className={cn(inputClasses, "text-xs py-2")}
+                    />
+                  </div>
+                  <div className="flex items-center gap-2 col-span-2">
+                    <MessageCircle size={16} className="text-green-600 shrink-0" />
+                    <input
+                      value={form.whatsapp}
+                      onChange={(e) => setForm({ ...form, whatsapp: e.target.value })}
+                      placeholder="WhatsApp number (with country code)"
+                      className={cn(inputClasses, "text-xs py-2")}
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -400,9 +485,15 @@ export default function MinistryExecutivesPage({ params }: Props) {
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-start gap-3">
-                        <div className="w-12 h-12 rounded-full bg-[var(--accent)]/10 flex items-center justify-center text-[var(--accent)] font-bold shrink-0">
-                          {exec.firstName[0]}{exec.lastName[0]}
-                        </div>
+                        {exec.imageUrl ? (
+                          <div className="relative w-14 h-14 rounded-full overflow-hidden shrink-0 border-2 border-[var(--accent)]/20">
+                            <Image src={exec.imageUrl} alt={`${exec.firstName} ${exec.lastName}`} fill className="object-cover" />
+                          </div>
+                        ) : (
+                          <div className="w-14 h-14 rounded-full bg-[var(--accent)]/10 flex items-center justify-center text-[var(--accent)] font-bold text-lg shrink-0">
+                            {exec.firstName[0]}{exec.lastName[0]}
+                          </div>
+                        )}
                         <div>
                           <p className="text-xs font-semibold text-[var(--accent)] uppercase tracking-wider">
                             {exec.position.title}
@@ -415,6 +506,36 @@ export default function MinistryExecutivesPage({ params }: Props) {
                             <Calendar size={10} />
                             Since {new Date(exec.startDate).getFullYear()}
                           </p>
+                          {/* Social Media Icons */}
+                          {(exec.facebook || exec.twitter || exec.instagram || exec.linkedin || exec.whatsapp) && (
+                            <div className="flex items-center gap-2 mt-2">
+                              {exec.facebook && (
+                                <a href={exec.facebook} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:opacity-80">
+                                  <Facebook size={14} />
+                                </a>
+                              )}
+                              {exec.twitter && (
+                                <a href={exec.twitter.startsWith('http') ? exec.twitter : `https://twitter.com/${exec.twitter}`} target="_blank" rel="noopener noreferrer" className="text-sky-500 hover:opacity-80">
+                                  <Twitter size={14} />
+                                </a>
+                              )}
+                              {exec.instagram && (
+                                <a href={exec.instagram.startsWith('http') ? exec.instagram : `https://instagram.com/${exec.instagram}`} target="_blank" rel="noopener noreferrer" className="text-pink-600 hover:opacity-80">
+                                  <Instagram size={14} />
+                                </a>
+                              )}
+                              {exec.linkedin && (
+                                <a href={exec.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:opacity-80">
+                                  <Linkedin size={14} />
+                                </a>
+                              )}
+                              {exec.whatsapp && (
+                                <a href={`https://wa.me/${exec.whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:opacity-80">
+                                  <MessageCircle size={14} />
+                                </a>
+                              )}
+                            </div>
+                          )}
                         </div>
                       </div>
                       <div className="flex gap-1">
@@ -451,9 +572,15 @@ export default function MinistryExecutivesPage({ params }: Props) {
                     className="p-3 rounded-lg bg-[var(--bg)] border border-[var(--border)] flex items-center justify-between"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-[var(--border)] flex items-center justify-center text-[var(--text-muted)] text-xs font-medium">
-                        {exec.firstName[0]}{exec.lastName[0]}
-                      </div>
+                      {exec.imageUrl ? (
+                        <div className="relative w-10 h-10 rounded-full overflow-hidden shrink-0">
+                          <Image src={exec.imageUrl} alt={`${exec.firstName} ${exec.lastName}`} fill className="object-cover" />
+                        </div>
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-[var(--border)] flex items-center justify-center text-[var(--text-muted)] text-xs font-medium">
+                          {exec.firstName[0]}{exec.lastName[0]}
+                        </div>
+                      )}
                       <div>
                         <p className="text-sm font-medium text-[var(--text)]">
                           {exec.title && `${exec.title} `}

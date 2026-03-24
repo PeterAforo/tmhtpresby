@@ -73,32 +73,77 @@ export async function POST(req: NextRequest, context: RouteContext) {
       phone,
       imageUrl,
       bio,
+      facebook,
+      twitter,
+      instagram,
+      linkedin,
+      whatsapp,
       startDate,
       endDate,
       isCurrent,
       positionId,
+      customPosition,
     } = body;
 
-    if (!firstName || !lastName || !positionId || !startDate) {
+    if (!firstName || !lastName || !startDate) {
       return NextResponse.json(
-        { error: "First name, last name, position, and start date are required." },
+        { error: "First name, last name, and start date are required." },
         { status: 400 }
       );
     }
 
-    // Verify the position belongs to this ministry
-    const position = await prisma.leadershipPosition.findFirst({
-      where: {
-        id: positionId,
-        group: { slug, type: "ministry" },
-      },
+    // Find the ministry group
+    const group = await prisma.leadershipGroup.findFirst({
+      where: { slug, type: "ministry" },
     });
 
-    if (!position) {
+    if (!group) {
       return NextResponse.json(
-        { error: "Invalid position for this ministry." },
+        { error: "Ministry not found." },
+        { status: 404 }
+      );
+    }
+
+    let finalPositionId = positionId;
+
+    // Handle custom position creation
+    if (positionId === "custom" && customPosition) {
+      // Get max order for positions in this group
+      const maxOrderPos = await prisma.leadershipPosition.findFirst({
+        where: { groupId: group.id },
+        orderBy: { order: "desc" },
+      });
+      const newOrder = (maxOrderPos?.order || 0) + 1;
+
+      // Create the new position
+      const newPosition = await prisma.leadershipPosition.create({
+        data: {
+          title: customPosition,
+          groupId: group.id,
+          order: newOrder,
+        },
+      });
+      finalPositionId = newPosition.id;
+    } else if (!positionId || positionId === "custom") {
+      return NextResponse.json(
+        { error: "Position is required." },
         { status: 400 }
       );
+    } else {
+      // Verify the position belongs to this ministry
+      const position = await prisma.leadershipPosition.findFirst({
+        where: {
+          id: positionId,
+          group: { slug, type: "ministry" },
+        },
+      });
+
+      if (!position) {
+        return NextResponse.json(
+          { error: "Invalid position for this ministry." },
+          { status: 400 }
+        );
+      }
     }
 
     const executive = await prisma.leadershipMember.create({
@@ -110,10 +155,15 @@ export async function POST(req: NextRequest, context: RouteContext) {
         phone: phone || null,
         imageUrl: imageUrl || null,
         bio: bio || null,
+        facebook: facebook || null,
+        twitter: twitter || null,
+        instagram: instagram || null,
+        linkedin: linkedin || null,
+        whatsapp: whatsapp || null,
         startDate: new Date(startDate),
         endDate: endDate ? new Date(endDate) : null,
         isCurrent: isCurrent !== false,
-        positionId,
+        positionId: finalPositionId,
       },
       include: {
         position: { select: { id: true, title: true } },
@@ -149,9 +199,12 @@ export async function PUT(req: NextRequest) {
     else if (data.endDate === "") data.endDate = null;
 
     // Nullify empty strings
-    for (const key of ["title", "email", "phone", "imageUrl", "bio"]) {
+    for (const key of ["title", "email", "phone", "imageUrl", "bio", "facebook", "twitter", "instagram", "linkedin", "whatsapp"]) {
       if (data[key] === "") data[key] = null;
     }
+    
+    // Remove customPosition from data as it's not a database field
+    delete data.customPosition;
 
     const executive = await prisma.leadershipMember.update({
       where: { id },
