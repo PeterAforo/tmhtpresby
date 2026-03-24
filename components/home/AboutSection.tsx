@@ -161,10 +161,10 @@ export function AboutSection() {
           <div ref={imageRef} className="relative order-2 lg:order-1">
             <div className="relative mx-auto max-w-md lg:max-w-none">
               {/* Decorative ring */}
-              <div className="about-deco-circle absolute -left-4 sm:-left-6 lg:-left-8 -top-4 sm:-top-6 lg:-top-8 w-[280px] h-[280px] sm:w-[320px] sm:h-[320px] lg:w-[380px] lg:h-[380px] rounded-full border-[12px] sm:border-[16px] border-primary/10 z-0" />
+              <div className="about-deco-circle absolute -left-4 sm:-left-6 lg:-left-10 -top-4 sm:-top-6 lg:-top-10 w-[320px] h-[320px] sm:w-[400px] sm:h-[400px] lg:w-[520px] lg:h-[520px] rounded-full border-[12px] sm:border-[16px] border-primary/10 z-0" />
               
               {/* Main circular image */}
-              <div className="about-image-wrapper relative w-[260px] h-[260px] sm:w-[300px] sm:h-[300px] lg:w-[360px] lg:h-[360px] rounded-full overflow-hidden z-10 mx-auto lg:mx-0 shadow-2xl">
+              <div className="about-image-wrapper relative w-[300px] h-[300px] sm:w-[380px] sm:h-[380px] lg:w-[480px] lg:h-[480px] rounded-full overflow-hidden z-10 mx-auto lg:mx-0 shadow-2xl">
                 <motion.div
                   className="w-full h-full"
                   whileHover={{ scale: 1.05 }}
@@ -196,7 +196,7 @@ export function AboutSection() {
 
               {/* Secondary badge - Years */}
               <motion.div
-                className="about-badge-secondary absolute -top-2 sm:top-4 lg:top-8 -right-2 sm:right-4 lg:right-0 bg-primary text-white rounded-xl sm:rounded-2xl px-4 sm:px-5 lg:px-6 py-3 sm:py-4 z-20 shadow-lg"
+                className="about-badge-secondary absolute top-16 sm:top-20 lg:top-24 -right-4 sm:-right-2 lg:-right-8 bg-primary text-white rounded-xl sm:rounded-2xl px-4 sm:px-5 lg:px-6 py-3 sm:py-4 z-20 shadow-lg"
                 whileHover={{ scale: 1.08, rotate: 2 }}
                 transition={{ duration: 0.3 }}
               >
