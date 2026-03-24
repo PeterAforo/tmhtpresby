@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { Plus, Search, Edit, Trash2, User, X, Save, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import FileUpload from "@/components/admin/FileUpload";
 
 interface UserData {
   id: string;
@@ -51,6 +52,7 @@ export default function AdminUsersPage() {
     lastName: "",
     email: "",
     phone: "",
+    image: "",
     role: "visitor",
     ministryGroup: "",
     isActive: true,
@@ -82,6 +84,7 @@ export default function AdminUsersPage() {
       lastName: user.lastName,
       email: user.email,
       phone: user.phone || "",
+      image: user.image || "",
       role: user.role,
       ministryGroup: user.ministryGroup || "",
       isActive: user.isActive,
@@ -262,6 +265,15 @@ export default function AdminUsersPage() {
                   value={editForm.phone}
                   onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
                   className={inputClasses}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Profile Picture</label>
+                <FileUpload
+                  value={editForm.image}
+                  onChange={(url) => setEditForm({ ...editForm, image: url })}
+                  type="image"
+                  placeholder="Upload profile picture"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">

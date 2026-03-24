@@ -23,6 +23,7 @@ export async function GET() {
         firstName: true,
         lastName: true,
         email: true,
+        image: true,
         phone: true,
         role: true,
         ministryGroup: true,
@@ -52,7 +53,7 @@ export async function PUT(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { id, firstName, lastName, email, phone, role: userRole, ministryGroup, isActive } = body;
+    const { id, firstName, lastName, email, phone, image, role: userRole, ministryGroup, isActive } = body;
 
     if (!id) {
       return NextResponse.json({ error: "User ID is required" }, { status: 400 });
@@ -74,9 +75,10 @@ export async function PUT(req: NextRequest) {
     if (firstName !== undefined) updateData.firstName = firstName;
     if (lastName !== undefined) updateData.lastName = lastName;
     if (email !== undefined) updateData.email = email;
-    if (phone !== undefined) updateData.phone = phone;
+    if (phone !== undefined) updateData.phone = phone || null;
+    if (image !== undefined) updateData.image = image || null;
     if (userRole !== undefined) updateData.role = userRole;
-    if (ministryGroup !== undefined) updateData.ministryGroup = ministryGroup;
+    if (ministryGroup !== undefined) updateData.ministryGroup = ministryGroup || null;
     if (isActive !== undefined) updateData.isActive = isActive;
 
     const user = await prisma.user.update({
@@ -87,6 +89,7 @@ export async function PUT(req: NextRequest) {
         firstName: true,
         lastName: true,
         email: true,
+        image: true,
         role: true,
         isActive: true,
       },
