@@ -14,6 +14,7 @@ interface BlogPost {
   content: string;
   author: string;
   category: string;
+  imageUrl: string | null;
   readTime: number | null;
   published: boolean;
   viewCount: number;
@@ -28,6 +29,7 @@ const emptyForm = {
   content: "",
   author: "",
   category: "general",
+  imageUrl: "",
   readTime: "",
   published: true,
   publishedAt: new Date().toISOString().split("T")[0],
@@ -69,6 +71,7 @@ export default function AdminBlogPage() {
       content: post.content,
       author: post.author,
       category: post.category,
+      imageUrl: post.imageUrl || "",
       readTime: post.readTime?.toString() || "",
       published: post.published,
       publishedAt: post.publishedAt.split("T")[0],
@@ -136,6 +139,16 @@ export default function AdminBlogPage() {
               <input required placeholder="Post title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30" />
 
               <input placeholder="Author name" required value={form.author} onChange={(e) => setForm({ ...form, author: e.target.value })} className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30" />
+
+              <div>
+                <label className="block text-xs font-medium text-[var(--text)] mb-1">Cover Image</label>
+                <FileUpload
+                  value={form.imageUrl}
+                  onChange={(url) => setForm({ ...form, imageUrl: url })}
+                  type="image"
+                  placeholder="Upload post cover image"
+                />
+              </div>
 
               <RichTextEditor
                 value={form.excerpt}
