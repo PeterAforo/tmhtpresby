@@ -6,7 +6,8 @@ import { prisma } from "@/lib/db";
 import bcrypt from "bcryptjs";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma),
+  // Note: PrismaAdapter is NOT used with credentials provider
+  // as it causes issues with JWT sessions
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 }, // 30 days
   trustHost: true, // Required for Vercel deployment
   secret: process.env.AUTH_SECRET,
