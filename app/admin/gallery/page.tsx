@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Plus, Pencil, Trash2, Eye, EyeOff, X, Save, Loader2, ImageIcon } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import { Plus, Pencil, Trash2, Eye, EyeOff, X, Save, Loader2, ImageIcon, Images } from "lucide-react";
 import { cn } from "@/lib/utils";
 import RichTextEditor from "@/components/admin/RichTextEditor";
 import FileUpload from "@/components/admin/FileUpload";
@@ -162,10 +164,24 @@ export default function AdminGalleryPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {albums.map((album) => (
-            <div key={album.id} className="rounded-xl bg-[var(--bg-card)] border border-[var(--border)] overflow-hidden">
-              <div className="aspect-[16/10] bg-gradient-to-br from-[var(--primary)]/10 to-[var(--accent)]/10 flex items-center justify-center">
-                <ImageIcon size={32} className="text-[var(--text-muted)] opacity-30" />
-              </div>
+            <div key={album.id} className="group rounded-xl bg-[var(--bg-card)] border border-[var(--border)] overflow-hidden hover:shadow-lg transition-shadow">
+              <Link href={`/admin/gallery/${album.id}`} className="block">
+                <div className="relative aspect-[16/10] bg-gradient-to-br from-[var(--primary)]/10 to-[var(--accent)]/10">
+                  {album.coverUrl ? (
+                    <Image src={album.coverUrl} alt={album.title} fill className="object-cover" />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <ImageIcon size={32} className="text-[var(--text-muted)] opacity-30" />
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <div className="flex items-center gap-2 text-white text-sm font-medium">
+                      <Images size={18} />
+                      Manage Images
+                    </div>
+                  </div>
+                </div>
+              </Link>
               <div className="p-4">
                 <div className="flex items-center justify-between mb-1">
                   <h3 className="text-sm font-semibold text-[var(--text)]">{album.title}</h3>
@@ -175,6 +191,13 @@ export default function AdminGalleryPage() {
                 </div>
                 <p className="text-xs text-[var(--text-muted)] mb-3">{album._count.images} photo{album._count.images !== 1 ? "s" : ""}</p>
                 <div className="flex items-center gap-2">
+                  <Link
+                    href={`/admin/gallery/${album.id}`}
+                    className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[var(--accent)] text-white hover:opacity-90 transition-opacity"
+                  >
+                    <Images size={14} />
+                    Add Images
+                  </Link>
                   <button onClick={() => togglePublished(album)} className="p-1.5 rounded-lg hover:bg-[var(--border)]/50 text-[var(--text-muted)]" title={album.published ? "Unpublish" : "Publish"}>
                     {album.published ? <EyeOff size={14} /> : <Eye size={14} />}
                   </button>
