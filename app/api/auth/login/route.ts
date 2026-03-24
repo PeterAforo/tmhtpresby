@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import bcrypt from "bcryptjs";
-import { cookies } from "next/headers";
-import * as jose from "jose";
+import { signIn } from "@/lib/auth";
+import { AuthError } from "next-auth";
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,63 +11,34 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Email and password required" }, { status: 400 });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email },
-      select: {
-        id: true,
-        email: true,
-        firstName: true,
-        lastName: true,
-        role: true,
-        image: true,
-        hashedPassword: true,
-      },
+    // Use the server-side signIn from auth config
+    await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
     });
 
-    if (!user || !user.hashedPassword) {
-      return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
-    }
-
-    const passwordMatch = await bcrypt.compare(password, user.hashedPassword);
-    if (!passwordMatch) {
-      return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
-    }
-
-    // Create JWT token
-    const secret = new TextEncoder().encode(process.env.AUTH_SECRET);
-    const token = await new jose.SignJWT({
-      id: user.id,
-      email: user.email,
-      name: `${user.firstName} ${user.lastName}`,
-      role: user.role,
-      picture: user.image,
-    })
-      .setProtectedHeader({ alg: "HS256" })
-      .setIssuedAt()
-      .setExpirationTime("30d")
-      .sign(secret);
-
-    // Set the session cookie
-    const cookieStore = await cookies();
-    cookieStore.set("authjs.session-token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 30 * 24 * 60 * 60, // 30 days
-      path: "/",
-    });
-
+    // If we get here, authentication was successful
+    // The signIn function will have set the session cookie
     return NextResponse.json({
       success: true,
-      user: {
-        id: user.id,
-        email: user.email,
-        name: `${user.firstName} ${user.lastName}`,
-        role: user.role,
-      },
+      redirectTo: "/admin",
     });
   } catch (error) {
     console.error("Login error:", error);
+    
+    if (error instanceof AuthError) {
+      return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+    }
+    
+    // Check if it's a redirect (which means success in NextAuth)
+    if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
+      return NextResponse.json({
+        success: true,
+        redirectTo: "/admin",
+      });
+    }
+    
     return NextResponse.json({ error: "Login failed" }, { status: 500 });
   }
 }
