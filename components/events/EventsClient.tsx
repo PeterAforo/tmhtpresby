@@ -16,6 +16,8 @@ import {
   CalendarDays,
   Grid3X3,
   List,
+  Heart,
+  CalendarPlus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -32,6 +34,7 @@ interface Event {
   startTime: string | null;
   endTime: string | null;
   capacity: number | null;
+  likes: number;
   isFeatured: boolean;
   _count: { rsvps: number };
 }
@@ -137,10 +140,10 @@ export function EventsClient({ featured, upcoming, pastEvents, categories }: Eve
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
                         
-                        <div className="absolute top-4 left-4 bg-white dark:bg-gray-900 rounded-xl p-3 text-center shadow-lg">
-                          <span className="block text-xs font-bold text-[var(--accent)]">{dateInfo.month}</span>
-                          <span className="block text-2xl font-bold text-[var(--text)]">{dateInfo.day}</span>
-                          <span className="block text-xs text-[var(--text-muted)]">{dateInfo.weekday}</span>
+                        <div className="absolute top-4 left-4 bg-[var(--accent)] text-white rounded-xl p-3 text-center shadow-lg">
+                          <span className="block text-xs font-bold uppercase tracking-wide">{dateInfo.month}</span>
+                          <span className="block text-3xl font-bold">{dateInfo.day}</span>
+                          <span className="block text-xs opacity-80">{dateInfo.weekday}</span>
                         </div>
                         
                         {daysUntil > 0 && daysUntil <= 7 && (
@@ -186,9 +189,16 @@ export function EventsClient({ featured, upcoming, pastEvents, categories }: Eve
                         </div>
                         
                         <div className="mt-4 pt-4 border-t border-[var(--border)] flex items-center justify-between">
-                          <span className="text-sm font-medium text-[var(--accent)] group-hover:underline flex items-center gap-1">
-                            View Details <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                          </span>
+                          <div className="flex items-center gap-4">
+                            <span className="text-sm font-medium text-[var(--accent)] group-hover:underline flex items-center gap-1">
+                              View Details <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                            </span>
+                            {event.likes > 0 && (
+                              <span className="flex items-center gap-1 text-rose-500 text-sm">
+                                <Heart size={14} fill="currentColor" /> {event.likes}
+                              </span>
+                            )}
+                          </div>
                           {event.capacity && (
                             <span className="text-xs text-[var(--text-muted)]">
                               {event.capacity - event._count.rsvps} spots left
@@ -314,9 +324,10 @@ export function EventsClient({ featured, upcoming, pastEvents, categories }: Eve
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                             
-                            <div className="absolute top-3 left-3 bg-white dark:bg-gray-900 rounded-lg px-2.5 py-1.5 text-center shadow-md">
-                              <span className="block text-[10px] font-bold text-[var(--accent)]">{dateInfo.month}</span>
-                              <span className="block text-lg font-bold text-[var(--text)] leading-none">{dateInfo.day}</span>
+                            {/* Date Badge - More readable */}
+                            <div className="absolute top-3 left-3 bg-[var(--accent)] text-white rounded-lg px-3 py-2 text-center shadow-lg">
+                              <span className="block text-[11px] font-bold uppercase tracking-wide">{dateInfo.month}</span>
+                              <span className="block text-2xl font-bold leading-none">{dateInfo.day}</span>
                             </div>
                             
                             <div className="absolute bottom-3 left-3">
@@ -326,8 +337,15 @@ export function EventsClient({ featured, upcoming, pastEvents, categories }: Eve
                             </div>
                             
                             {event.isFeatured && (
-                              <div className="absolute top-3 right-3 bg-[var(--accent)] text-white px-2 py-1 rounded-full text-[10px] font-bold flex items-center gap-1">
+                              <div className="absolute top-3 right-3 bg-white text-[var(--accent)] px-2 py-1 rounded-full text-[10px] font-bold flex items-center gap-1 shadow-md">
                                 <Sparkles size={10} /> Featured
+                              </div>
+                            )}
+                            
+                            {/* Likes badge */}
+                            {event.likes > 0 && (
+                              <div className="absolute bottom-3 right-3 bg-white/90 dark:bg-gray-900/90 text-rose-500 px-2 py-1 rounded-full text-xs font-semibold flex items-center gap-1 shadow-md">
+                                <Heart size={12} fill="currentColor" /> {event.likes}
                               </div>
                             )}
                           </div>

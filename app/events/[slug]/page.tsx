@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { prisma } from "@/lib/db";
-import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { RsvpForm } from "@/components/events/RsvpForm";
-import { Calendar, MapPin, Clock, Users, ArrowLeft, Share2 } from "lucide-react";
+import { EventDetailClient } from "@/components/events/EventDetailClient";
+import { Calendar, MapPin, Clock, Users, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const categoryColors: Record<string, string> = {
@@ -53,23 +54,39 @@ export default async function EventDetailPage({ params }: Props) {
 
   return (
     <>
-      <PageHeroWithBackground
-        pageSlug={`events-${event.slug}`}
-        overline={event.category.charAt(0).toUpperCase() + event.category.slice(1)}
-        title={event.title}
-        subtitle={event.description || undefined}
+      {/* Event Image Hero with Actions */}
+      <EventDetailClient
+        event={{
+          id: event.id,
+          title: event.title,
+          slug: event.slug,
+          description: event.description,
+          location: event.location,
+          category: event.category,
+          imageUrl: event.imageUrl,
+          startDate: event.startDate,
+          endDate: event.endDate,
+          startTime: event.startTime,
+          endTime: event.endTime,
+          likes: (event as any).likes || 0,
+        }}
       />
 
-      <section className="py-16 lg:py-24 bg-[var(--bg)]">
+      <section className="py-8 lg:py-12 bg-[var(--bg)]">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           {/* Back link */}
           <Link
             href="/events"
-            className="inline-flex items-center gap-2 text-sm text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors mb-8"
+            className="inline-flex items-center gap-2 text-sm text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors mb-6"
           >
             <ArrowLeft size={16} />
             Back to Events
           </Link>
+
+          {/* Event Title */}
+          <h1 className="font-[family-name:var(--font-heading)] text-3xl md:text-4xl font-bold text-[var(--text)] mb-6">
+            {event.title}
+          </h1>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             {/* Main content */}
@@ -79,7 +96,7 @@ export default async function EventDetailPage({ params }: Props) {
                 <div className="flex items-center gap-3">
                   <span
                     className={cn(
-                      "px-3 py-1 rounded-full text-xs font-semibold",
+                      "px-3 py-1 rounded-full text-xs font-semibold capitalize",
                       categoryColors[event.category] || "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
                     )}
                   >
@@ -150,7 +167,7 @@ export default async function EventDetailPage({ params }: Props) {
 
             {/* Sidebar: RSVP */}
             <div className="lg:col-span-1">
-              <div className="sticky top-24 space-y-4">
+              <div className="sticky top-40 space-y-4">
                 {!isPast ? (
                   <div className="rounded-xl bg-[var(--bg-card)] border border-[var(--border)] p-6">
                     <h3 className="font-[family-name:var(--font-heading)] text-lg font-bold text-[var(--text)] mb-1">
@@ -176,17 +193,6 @@ export default async function EventDetailPage({ params }: Props) {
                     </Link>
                   </div>
                 )}
-
-                {/* Share */}
-                <div className="rounded-xl bg-[var(--bg-card)] border border-[var(--border)] p-5">
-                  <div className="flex items-center gap-2 text-sm font-medium text-[var(--text)]">
-                    <Share2 size={16} className="text-[var(--accent)]" />
-                    Share this event
-                  </div>
-                  <p className="text-xs text-[var(--text-muted)] mt-1">
-                    Invite friends and family to join you.
-                  </p>
-                </div>
               </div>
             </div>
           </div>

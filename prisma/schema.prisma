@@ -254,6 +254,7 @@ model Event {
   startTime   String?     // e.g. "09:00"
   endTime     String?     // e.g. "17:00"
   capacity    Int?
+  likes       Int         @default(0)
   isFeatured  Boolean     @default(false)
   published   Boolean     @default(true)
   rsvps       EventRsvp[]
