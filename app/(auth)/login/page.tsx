@@ -20,33 +20,26 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // Add timeout to prevent hanging
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("timeout")), 15000)
-      );
-
-      const signInPromise = signIn("credentials", {
-        email,
-        password,
-        redirect: false,
+      // Use direct API call instead of next-auth/react signIn
+      const res = await fetch("/api/auth/callback/credentials", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({ email, password }),
+        credentials: "include",
       });
 
-      const result = await Promise.race([signInPromise, timeoutPromise]) as Awaited<ReturnType<typeof signIn>>;
-
-      if (result?.error) {
+      if (!res.ok) {
         setError("Invalid email or password.");
         setLoading(false);
         return;
       }
 
+      // Redirect on success
       router.push("/profile");
       router.refresh();
     } catch (err) {
-      if (err instanceof Error && err.message === "timeout") {
-        setError("Login timed out. Please try again.");
-      } else {
-        setError("Something went wrong. Please try again.");
-      }
+      console.error("Login error:", err);
+      setError("Something went wrong. Please try again.");
       setLoading(false);
     }
   }
