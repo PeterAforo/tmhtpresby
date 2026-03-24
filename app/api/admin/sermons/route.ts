@@ -43,6 +43,7 @@ export async function POST(req: NextRequest) {
       videoUrl,
       audioUrl,
       youtubeId,
+      thumbnailUrl,
       documentUrl,
       speakerId,
       seriesId,
@@ -76,6 +77,7 @@ export async function POST(req: NextRequest) {
         videoUrl: videoUrl || null,
         audioUrl: audioUrl || null,
         youtubeId: youtubeId || null,
+        thumbnailUrl: thumbnailUrl || null,
         documentUrl: documentUrl || null,
         speakerId,
         seriesId: seriesId || null,
@@ -109,7 +111,7 @@ export async function PUT(req: NextRequest) {
     if (data.duration) data.duration = parseInt(data.duration, 10);
 
     // Nullify empty strings
-    for (const key of ["scripture", "description", "content", "videoUrl", "audioUrl", "youtubeId", "documentUrl", "seriesId"]) {
+    for (const key of ["scripture", "description", "content", "videoUrl", "audioUrl", "youtubeId", "thumbnailUrl", "documentUrl", "seriesId"]) {
       if (data[key] === "") data[key] = null;
     }
 
