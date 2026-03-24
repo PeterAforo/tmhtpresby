@@ -171,10 +171,10 @@ export function AboutSection() {
                   transition={{ duration: 0.5, ease: "easeOut" }}
                 >
                   <Image
-                    src="/img/pictures/2/020.jpg"
+                    src="/img/about/3.png"
                     alt="Our Church Community"
                     fill
-                    className="object-cover"
+                    className="object-cover object-top"
                   />
                 </motion.div>
                 {/* Overlay gradient */}
