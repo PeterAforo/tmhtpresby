@@ -2,12 +2,10 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Loader2, Mail, Lock, Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -20,25 +18,29 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // Use custom login API that calls server-side signIn
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-        credentials: "include",
+      // Use NextAuth's signIn with redirect:false to handle errors
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
       });
 
-      const data = await res.json();
-      console.log("Login response:", res.status, data);
+      console.log("SignIn result:", result);
 
-      if (!res.ok) {
-        setError(data.error || "Invalid email or password.");
+      if (result?.error) {
+        setError("Invalid email or password.");
         setLoading(false);
         return;
       }
 
-      // Success - redirect using the URL from response or default to /admin
-      window.location.href = data.redirectTo || "/admin";
+      if (result?.ok) {
+        // Successful login - do a full page redirect to ensure cookies are recognized
+        window.location.href = "/admin";
+        return;
+      }
+
+      setError("Something went wrong. Please try again.");
+      setLoading(false);
     } catch (err) {
       console.error("Login error:", err);
       setError("Something went wrong. Please try again.");
