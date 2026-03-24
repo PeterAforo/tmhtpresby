@@ -565,6 +565,7 @@ model Page {
   content     Json?    // Page builder content blocks
   published   Boolean  @default(false)
   template    String   @default("default") // default, full-width, sidebar
+  isCore      Boolean  @default(false)     // Core pages (Home, About, etc.) vs custom pages
   metaTitle   String?
   metaDesc    String?
   featuredImg String?
