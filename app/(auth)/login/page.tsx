@@ -20,23 +20,28 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // Use direct API call instead of next-auth/react signIn
+      // Get CSRF token first
+      const csrfRes = await fetch("/api/auth/csrf");
+      const { csrfToken } = await csrfRes.json();
+
+      // Call credentials callback with CSRF token
       const res = await fetch("/api/auth/callback/credentials", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({ email, password }),
+        body: new URLSearchParams({ email, password, csrfToken }),
         credentials: "include",
+        redirect: "manual",
       });
 
-      if (!res.ok) {
-        setError("Invalid email or password.");
-        setLoading(false);
+      // 302 redirect means success
+      if (res.status === 302 || res.ok) {
+        router.push("/profile");
+        router.refresh();
         return;
       }
 
-      // Redirect on success
-      router.push("/profile");
-      router.refresh();
+      setError("Invalid email or password.");
+      setLoading(false);
     } catch (err) {
       console.error("Login error:", err);
       setError("Something went wrong. Please try again.");
