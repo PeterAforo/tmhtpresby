@@ -1,5 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+
+// Temporary secret key for one-time image update
+const UPDATE_SECRET = "tmht-update-images-2026";
 
 const images = [
   "/img/pictures/2/001.jpg",
@@ -14,8 +17,15 @@ const images = [
   "/img/pictures/2/090.jpg",
 ];
 
-export async function POST() {
+export async function POST(req: NextRequest) {
   try {
+    // Check for secret key
+    const { searchParams } = new URL(req.url);
+    const secret = searchParams.get("secret");
+    
+    if (secret !== UPDATE_SECRET) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     const events = await prisma.event.findMany({
       select: { id: true, slug: true, title: true },
       orderBy: { startDate: "asc" },
