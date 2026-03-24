@@ -1,15 +1,21 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { BookOpen, Plus, Pencil, Trash2, Eye, EyeOff, X, Save, Loader2 } from "lucide-react";
+import Image from "next/image";
+import { BookOpen, Plus, Pencil, Trash2, Eye, EyeOff, X, Save, Loader2, Calendar, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import RichTextEditor from "@/components/admin/RichTextEditor";
+import FileUpload from "@/components/admin/FileUpload";
 
 interface Devotional {
   id: string;
   title: string;
+  coverImage: string | null;
   scripture: string;
-  content: string;
+  scriptureText: string | null;
+  content: string | null;
+  prayer: string | null;
+  keyNote: string | null;
   author: string;
   publishDate: string;
   published: boolean;
@@ -17,8 +23,12 @@ interface Devotional {
 
 const emptyForm = {
   title: "",
+  coverImage: "",
   scripture: "",
+  scriptureText: "",
   content: "",
+  prayer: "",
+  keyNote: "",
   author: "",
   publishDate: new Date().toISOString().split("T")[0],
   published: true,
@@ -60,8 +70,12 @@ export default function DevotionalsAdminPage() {
   const openEdit = (devotional: Devotional) => {
     setForm({
       title: devotional.title,
+      coverImage: devotional.coverImage || "",
       scripture: devotional.scripture,
-      content: devotional.content,
+      scriptureText: devotional.scriptureText || "",
+      content: devotional.content || "",
+      prayer: devotional.prayer || "",
+      keyNote: devotional.keyNote || "",
       author: devotional.author,
       publishDate: devotional.publishDate.split("T")[0],
       published: devotional.published,
@@ -139,7 +153,8 @@ export default function DevotionalsAdminPage() {
                 <X size={20} />
               </button>
             </div>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Title */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
                 <input
@@ -150,15 +165,28 @@ export default function DevotionalsAdminPage() {
                   placeholder="Devotional title"
                 />
               </div>
+
+              {/* Cover Image */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Cover Image</label>
+                <FileUpload
+                  value={form.coverImage}
+                  onChange={(url) => setForm({ ...form, coverImage: url })}
+                  type="image"
+                  placeholder="Upload devotional cover image"
+                />
+              </div>
+
+              {/* Scripture Reference */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Scripture *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Scripture Reference *</label>
                   <input
                     required
                     value={form.scripture}
                     onChange={(e) => setForm({ ...form, scripture: e.target.value })}
                     className={inputClasses}
-                    placeholder="e.g., John 3:16"
+                    placeholder="e.g., John 3:16-18"
                   />
                 </div>
                 <div>
@@ -172,14 +200,48 @@ export default function DevotionalsAdminPage() {
                   />
                 </div>
               </div>
+
+              {/* Full Scripture Text */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Content *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Full Scripture Text *</label>
+                <RichTextEditor
+                  value={form.scriptureText}
+                  onChange={(value) => setForm({ ...form, scriptureText: value })}
+                  placeholder="Enter the full scripture passage..."
+                />
+              </div>
+
+              {/* Prayer */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Prayer</label>
+                <RichTextEditor
+                  value={form.prayer}
+                  onChange={(value) => setForm({ ...form, prayer: value })}
+                  placeholder="Prayer for the day..."
+                />
+              </div>
+
+              {/* Key Note */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Key Note / Takeaway</label>
+                <RichTextEditor
+                  value={form.keyNote}
+                  onChange={(value) => setForm({ ...form, keyNote: value })}
+                  placeholder="Key takeaway or note from this devotional..."
+                />
+              </div>
+
+              {/* Additional Content (optional) */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Additional Content (optional)</label>
                 <RichTextEditor
                   value={form.content}
                   onChange={(value) => setForm({ ...form, content: value })}
-                  placeholder="Devotional content..."
+                  placeholder="Any additional devotional content..."
                 />
               </div>
+
+              {/* Publish Date & Status */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Publish Date *</label>

@@ -364,14 +364,18 @@ model GalleryImage {
 
 // ─── Daily Devotionals ──────────────────────────────────────────
 model Devotional {
-  id          String   @id @default(cuid())
-  title       String
-  scripture   String
-  content     String
-  author      String
-  publishDate DateTime @unique
-  published   Boolean  @default(true)
-  createdAt   DateTime @default(now())
+  id              String   @id @default(cuid())
+  title           String
+  coverImage      String?  // Cover image URL
+  scripture       String   // Scripture reference (e.g., "John 3:16")
+  scriptureText   String?  @db.Text // Full scripture text
+  content         String?  @db.Text // Main devotional content (optional now)
+  prayer          String?  @db.Text // Prayer section
+  keyNote         String?  @db.Text // Key takeaway/note
+  author          String
+  publishDate     DateTime @unique
+  published       Boolean  @default(true)
+  createdAt       DateTime @default(now())
 
   @@index([publishDate(sort: Desc)])
   @@map("devotionals")

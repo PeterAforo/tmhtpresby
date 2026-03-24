@@ -39,17 +39,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const { title, scripture, content, author, publishDate, published } = await req.json();
+    const { title, coverImage, scripture, scriptureText, content, prayer, keyNote, author, publishDate, published } = await req.json();
 
-    if (!title || !scripture || !content || !author || !publishDate) {
-      return NextResponse.json({ error: "All fields are required" }, { status: 400 });
+    if (!title || !scripture || !author || !publishDate) {
+      return NextResponse.json({ error: "Title, scripture, author, and publish date are required" }, { status: 400 });
     }
 
     const devotional = await prisma.devotional.create({
       data: {
         title,
+        coverImage: coverImage || null,
         scripture,
-        content,
+        scriptureText: scriptureText || null,
+        content: content || null,
+        prayer: prayer || null,
+        keyNote: keyNote || null,
         author,
         publishDate: new Date(publishDate),
         published: published !== false,
@@ -76,7 +80,7 @@ export async function PUT(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { id, title, scripture, content, author, publishDate, published } = body;
+    const { id, title, coverImage, scripture, scriptureText, content, prayer, keyNote, author, publishDate, published } = body;
 
     if (!id) {
       return NextResponse.json({ error: "ID is required" }, { status: 400 });
@@ -84,8 +88,12 @@ export async function PUT(req: NextRequest) {
 
     const updateData: Record<string, unknown> = {};
     if (title !== undefined) updateData.title = title;
+    if (coverImage !== undefined) updateData.coverImage = coverImage || null;
     if (scripture !== undefined) updateData.scripture = scripture;
-    if (content !== undefined) updateData.content = content;
+    if (scriptureText !== undefined) updateData.scriptureText = scriptureText || null;
+    if (content !== undefined) updateData.content = content || null;
+    if (prayer !== undefined) updateData.prayer = prayer || null;
+    if (keyNote !== undefined) updateData.keyNote = keyNote || null;
     if (author !== undefined) updateData.author = author;
     if (publishDate !== undefined) updateData.publishDate = new Date(publishDate);
     if (published !== undefined) updateData.published = published;
