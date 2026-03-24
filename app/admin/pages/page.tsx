@@ -2,13 +2,14 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Plus, Edit, Eye, Trash2, FileText, Globe, Lock, Loader2 } from "lucide-react";
+import { Plus, Edit, Eye, Trash2, FileText, Globe, Lock, Loader2, RefreshCw } from "lucide-react";
 
 interface PageData {
   id: string;
   title: string;
   slug: string;
   published: boolean;
+  isCore?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -16,6 +17,7 @@ interface PageData {
 export default function PagesListPage() {
   const [pages, setPages] = useState<PageData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [seeding, setSeeding] = useState(false);
 
   const fetchPages = useCallback(async () => {
     setLoading(true);
@@ -35,6 +37,24 @@ export default function PagesListPage() {
   useEffect(() => {
     fetchPages();
   }, [fetchPages]);
+
+  const handleSeedPages = async () => {
+    if (!confirm("This will add all core website pages to the database. Continue?")) return;
+    setSeeding(true);
+    try {
+      const res = await fetch("/api/admin/pages/seed", { method: "POST" });
+      if (res.ok) {
+        fetchPages();
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to seed pages");
+      }
+    } catch (err) {
+      console.error("Seed error:", err);
+    } finally {
+      setSeeding(false);
+    }
+  };
 
   const handleDelete = async (page: PageData) => {
     if (!confirm(`Delete "${page.title}"? This cannot be undone.`)) return;
@@ -83,15 +103,25 @@ export default function PagesListPage() {
             </div>
             <h3 className="text-lg font-medium text-gray-900 mb-1">No pages yet</h3>
             <p className="text-sm text-gray-500 mb-4">
-              Create your first custom page with the page builder.
+              Load core website pages or create a custom page.
             </p>
-            <Link
-              href="/admin/pages/new"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--accent)] text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
-            >
-              <Plus size={18} />
-              Create Page
-            </Link>
+            <div className="flex items-center justify-center gap-3">
+              <button
+                onClick={handleSeedPages}
+                disabled={seeding}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
+              >
+                {seeding ? <Loader2 size={18} className="animate-spin" /> : <RefreshCw size={18} />}
+                Load Core Pages
+              </button>
+              <Link
+                href="/admin/pages/new"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--accent)] text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
+              >
+                <Plus size={18} />
+                Create Page
+              </Link>
+            </div>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -123,7 +153,14 @@ export default function PagesListPage() {
                         <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center">
                           <FileText size={20} className="text-gray-500" />
                         </div>
-                        <span className="font-medium text-gray-900">{page.title}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-gray-900">{page.title}</span>
+                          {page.isCore && (
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-100 text-blue-700">
+                              Core
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
