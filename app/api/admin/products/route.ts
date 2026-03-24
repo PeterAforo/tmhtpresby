@@ -116,3 +116,93 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Failed to create product" }, { status: 500 });
   }
 }
+
+export async function PUT(req: NextRequest) {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const role = (session.user as { role?: string }).role;
+    if (!role || !ADMIN_ROLES.includes(role)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const body = await req.json();
+    const { id, name, description, price, compareAtPrice, sku, stock, categoryId, ministryGroup, isFeatured, isActive, images } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: "Product ID is required" }, { status: 400 });
+    }
+
+    const updateData: Record<string, unknown> = {};
+    if (name !== undefined) updateData.name = name;
+    if (description !== undefined) updateData.description = description;
+    if (price !== undefined) updateData.price = price;
+    if (compareAtPrice !== undefined) updateData.compareAtPrice = compareAtPrice;
+    if (sku !== undefined) updateData.sku = sku;
+    if (stock !== undefined) updateData.stock = stock;
+    if (categoryId !== undefined) updateData.categoryId = categoryId || null;
+    if (ministryGroup !== undefined) updateData.ministryGroup = ministryGroup || null;
+    if (isFeatured !== undefined) updateData.isFeatured = isFeatured;
+    if (isActive !== undefined) updateData.isActive = isActive;
+
+    const product = await prisma.product.update({
+      where: { id },
+      data: updateData,
+    });
+
+    // Update images if provided
+    if (images !== undefined) {
+      await prisma.productImage.deleteMany({ where: { productId: id } });
+      if (images.length > 0) {
+        await prisma.productImage.createMany({
+          data: images.map((url: string, index: number) => ({
+            url,
+            productId: id,
+            order: index,
+          })),
+        });
+      }
+    }
+
+    const completeProduct = await prisma.product.findUnique({
+      where: { id },
+      include: { category: true, images: { orderBy: { order: "asc" } } },
+    });
+
+    return NextResponse.json(completeProduct);
+  } catch (error) {
+    console.error("Error updating product:", error);
+    return NextResponse.json({ error: "Failed to update product" }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const session = await auth();
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const role = (session.user as { role?: string }).role;
+    if (!role || !ADMIN_ROLES.includes(role)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json({ error: "Product ID is required" }, { status: 400 });
+    }
+
+    await prisma.product.delete({ where: { id } });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    return NextResponse.json({ error: "Failed to delete product" }, { status: 500 });
+  }
+}

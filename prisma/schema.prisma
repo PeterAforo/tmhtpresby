@@ -832,3 +832,16 @@ model OrderItem {
   @@index([productId])
   @@map("order_items")
 }
+
+// =============================================================================
+// Site Settings
+// =============================================================================
+
+model SiteSettings {
+  id        String   @id @default("main")
+  data      Json     // Store all settings as JSON
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("site_settings")
+}
