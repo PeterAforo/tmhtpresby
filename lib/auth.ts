@@ -5,17 +5,11 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/db";
 import bcrypt from "bcryptjs";
 
-// Determine the correct base URL for auth
-const getBaseUrl = () => {
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-  if (process.env.AUTH_URL) return process.env.AUTH_URL;
-  return "http://localhost:3000";
-};
-
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 }, // 30 days
-  trustHost: true, // Trust the host header on Vercel
+  trustHost: true, // Required for Vercel deployment
+  secret: process.env.AUTH_SECRET,
   pages: {
     signIn: "/login",
     newUser: "/register",
