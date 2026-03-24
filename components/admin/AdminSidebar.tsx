@@ -47,6 +47,7 @@ const navItems: NavItem[] = [
     icon: <FileText size={20} />,
     children: [
       { label: "Sermons", href: "/admin/sermons" },
+      { label: "Speakers", href: "/admin/speakers" },
       { label: "Blog / News", href: "/admin/blog" },
       { label: "Events", href: "/admin/events" },
       { label: "Gallery", href: "/admin/gallery" },
@@ -95,6 +96,7 @@ const navItems: NavItem[] = [
     icon: <Megaphone size={20} />,
     children: [
       { label: "Notifications", href: "/admin/notifications" },
+      { label: "Newsletter", href: "/admin/newsletter" },
       { label: "Contact Messages", href: "/admin/contacts" },
       { label: "Prayer Requests", href: "/admin/prayer-requests" },
     ],
