@@ -101,7 +101,7 @@ export default async function BlogPostPage({ params }: Props) {
           {/* Article content */}
           <article
             className="prose prose-lg max-w-none text-[var(--text)] prose-headings:font-[family-name:var(--font-heading)] prose-headings:text-[var(--text)] prose-a:text-[var(--accent)] prose-strong:text-[var(--text)]"
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            dangerouslySetInnerHTML={{ __html: post.content || "" }}
           />
 
           {/* Related posts */}

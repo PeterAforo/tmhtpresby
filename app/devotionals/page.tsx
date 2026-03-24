@@ -63,7 +63,7 @@ export default async function DevotionalsPage() {
                 </p>
                 <div
                   className="prose prose-sm max-w-none text-[var(--text-muted)] leading-relaxed"
-                  dangerouslySetInnerHTML={{ __html: todayDevo.content }}
+                  dangerouslySetInnerHTML={{ __html: todayDevo.content || "" }}
                 />
                 <p className="mt-6 text-xs text-[var(--text-muted)] flex items-center gap-1">
                   <User size={12} /> {todayDevo.author}
@@ -101,7 +101,7 @@ export default async function DevotionalsPage() {
                     <div className="px-5 pb-5 pt-2 border-t border-[var(--border)]">
                       <div
                         className="prose prose-sm max-w-none text-[var(--text-muted)] leading-relaxed"
-                        dangerouslySetInnerHTML={{ __html: devo.content }}
+                        dangerouslySetInnerHTML={{ __html: devo.content || "" }}
                       />
                       <p className="mt-4 text-xs text-[var(--text-muted)] flex items-center gap-1">
                         <User size={12} /> {devo.author}

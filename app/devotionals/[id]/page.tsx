@@ -116,7 +116,7 @@ export default async function DevotionalDetailPage({ params }: Props) {
                 prose-p:text-[var(--text-muted)]
                 prose-strong:text-[var(--text)]
                 prose-a:text-[var(--accent)] prose-a:no-underline hover:prose-a:underline"
-              dangerouslySetInnerHTML={{ __html: devotional.content }}
+              dangerouslySetInnerHTML={{ __html: devotional.content || "" }}
             />
 
             {/* Author */}

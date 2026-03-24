@@ -60,7 +60,7 @@ export default async function AnnouncementsPage() {
                         </h2>
                         <div 
                           className="prose prose-sm text-[var(--text-muted)]"
-                          dangerouslySetInnerHTML={{ __html: announcement.content }}
+                          dangerouslySetInnerHTML={{ __html: announcement.content || "" }}
                         />
                       </div>
                     </div>

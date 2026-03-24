@@ -180,7 +180,7 @@ export default async function SermonDetailPage({ params }: Props) {
                         prose-strong:text-[var(--text)]
                         prose-a:text-[var(--accent)] prose-a:no-underline hover:prose-a:underline
                         prose-blockquote:border-l-[var(--accent)] prose-blockquote:text-[var(--text-muted)] prose-blockquote:italic"
-                      dangerouslySetInnerHTML={{ __html: sermon.content }}
+                      dangerouslySetInnerHTML={{ __html: sermon.content || "" }}
                     />
                   </div>
                 )}
