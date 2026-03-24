@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import { cookies } from "next/headers";
 import "./globals.css";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
-import { SplashScreen } from "@/components/animations/SplashScreen";
+import { LayoutWrapper } from "@/components/layout/LayoutWrapper";
 import { SessionProvider } from "@/components/providers/SessionProvider";
 import { ThemeScript } from "@/components/providers/ThemeScript";
 import { PWAProvider } from "@/components/pwa/PWAProvider";
@@ -88,13 +86,7 @@ export default async function RootLayout({
         <ThemeScript />
         <SessionProvider>
           <PWAProvider>
-            <a href="#main-content" className="skip-to-content">
-              Skip to main content
-            </a>
-            <SplashScreen />
-            <Navbar />
-            <main id="main-content" className="pt-16 lg:pt-20">{children}</main>
-            <Footer />
+            <LayoutWrapper>{children}</LayoutWrapper>
           </PWAProvider>
         </SessionProvider>
       </body>
