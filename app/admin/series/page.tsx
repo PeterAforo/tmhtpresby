@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Library, Plus, Pencil, Trash2, X, Save, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import FileUpload from "@/components/admin/FileUpload";
 
 interface Series {
   id: string;
@@ -145,13 +146,12 @@ export default function SeriesAdminPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Cover Image URL</label>
-                <input
-                  type="url"
+                <label className="block text-sm font-medium text-gray-700 mb-1">Cover Image</label>
+                <FileUpload
                   value={form.imageUrl}
-                  onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-                  className={inputClasses}
-                  placeholder="https://..."
+                  onChange={(url) => setForm({ ...form, imageUrl: url })}
+                  type="image"
+                  placeholder="Upload series cover image"
                 />
               </div>
               <div className="flex justify-end gap-3 pt-4">

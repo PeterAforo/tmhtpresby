@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Plus, Pencil, Trash2, Eye, EyeOff, X, Save, Loader2, ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import RichTextEditor from "@/components/admin/RichTextEditor";
+import FileUpload from "@/components/admin/FileUpload";
 
 interface GalleryAlbum {
   id: string;
@@ -126,7 +127,15 @@ export default function AdminGalleryPage() {
                 placeholder="Description (optional)"
               />
 
-              <input placeholder="Cover image URL (optional)" value={form.coverUrl} onChange={(e) => setForm({ ...form, coverUrl: e.target.value })} className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30" />
+              <div>
+                <label className="block text-xs font-semibold text-[var(--text)] mb-1">Cover Image</label>
+                <FileUpload
+                  value={form.coverUrl}
+                  onChange={(url) => setForm({ ...form, coverUrl: url })}
+                  type="image"
+                  placeholder="Upload cover image"
+                />
+              </div>
 
               <label className="flex items-center gap-2 text-sm text-[var(--text)]">
                 <input type="checkbox" checked={form.published} onChange={(e) => setForm({ ...form, published: e.target.checked })} className="rounded" />

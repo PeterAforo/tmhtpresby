@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Upload, X, Loader2 } from "lucide-react";
 import RichTextEditor from "@/components/admin/RichTextEditor";
+import FileUpload from "@/components/admin/FileUpload";
 
 export default function NewProductPage() {
   const router = useRouter();
@@ -127,30 +128,31 @@ export default function NewProductPage() {
         {/* Images */}
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h2 className="font-semibold text-gray-900 mb-4">Product Images</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {images.map((img, index) => (
-              <div key={index} className="relative aspect-square rounded-lg overflow-hidden bg-gray-100">
-                <img src={img} alt="" className="w-full h-full object-cover" />
-                <button
-                  type="button"
-                  onClick={() => removeImage(index)}
-                  className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
-                >
-                  <X size={14} />
-                </button>
+          <div className="space-y-4">
+            <FileUpload
+              value=""
+              onChange={(url) => {
+                if (url) setImages((prev) => [...prev, url]);
+              }}
+              type="image"
+              placeholder="Upload product image"
+            />
+            {images.length > 0 && (
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {images.map((img, index) => (
+                  <div key={index} className="relative aspect-square rounded-lg overflow-hidden bg-gray-100">
+                    <img src={img} alt="" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index)}
+                      className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                ))}
               </div>
-            ))}
-            <label className="aspect-square rounded-lg border-2 border-dashed border-gray-300 hover:border-[var(--accent)] flex flex-col items-center justify-center cursor-pointer transition-colors">
-              <Upload size={24} className="text-gray-400 mb-2" />
-              <span className="text-xs text-gray-500">Add Image</span>
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleImageUpload}
-                className="hidden"
-              />
-            </label>
+            )}
           </div>
         </div>
 

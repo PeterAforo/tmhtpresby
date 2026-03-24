@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, use } from "react";
 import Link from "next/link";
 import RichTextEditor from "@/components/admin/RichTextEditor";
+import FileUpload from "@/components/admin/FileUpload";
 import {
   Plus,
   Pencil,
@@ -288,13 +289,13 @@ export default function MinistryExecutivesPage({ params }: Props) {
 
               <div>
                 <label className="block text-xs font-semibold text-[var(--text)] mb-1">
-                  Image URL
+                  Profile Image
                 </label>
-                <input
+                <FileUpload
                   value={form.imageUrl}
-                  onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-                  placeholder="https://..."
-                  className={inputClasses}
+                  onChange={(url) => setForm({ ...form, imageUrl: url })}
+                  type="image"
+                  placeholder="Upload executive photo"
                 />
               </div>
 

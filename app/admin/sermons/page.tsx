@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import RichTextEditor from "@/components/admin/RichTextEditor";
+import FileUpload from "@/components/admin/FileUpload";
 
 interface Speaker {
   id: string;
@@ -300,28 +301,45 @@ export default function AdminSermonsPage() {
                 </div>
               </div>
 
-              {/* Video/Audio URLs - shown for video and audio types */}
+              {/* Video/Audio - shown for video and audio types */}
               {(form.mediaType === "video" || form.mediaType === "audio") && (
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="space-y-4">
                   <div>
-                    <label className="block text-xs font-semibold text-[var(--text)] mb-1">YouTube ID</label>
+                    <label className="block text-xs font-semibold text-[var(--text)] mb-1">YouTube ID (optional)</label>
                     <input value={form.youtubeId} onChange={(e) => setForm({ ...form, youtubeId: e.target.value })} placeholder="dQw4w9WgXcQ" className={inputClasses} />
                   </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-[var(--text)] mb-1">Video URL</label>
-                    <input value={form.videoUrl} onChange={(e) => setForm({ ...form, videoUrl: e.target.value })} className={inputClasses} />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-[var(--text)] mb-1">Audio URL</label>
-                    <input value={form.audioUrl} onChange={(e) => setForm({ ...form, audioUrl: e.target.value })} className={inputClasses} />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-semibold text-[var(--text)] mb-1">Upload Video</label>
+                      <FileUpload
+                        value={form.videoUrl}
+                        onChange={(url) => setForm({ ...form, videoUrl: url })}
+                        type="video"
+                        placeholder="Upload video file"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-[var(--text)] mb-1">Upload Audio</label>
+                      <FileUpload
+                        value={form.audioUrl}
+                        onChange={(url) => setForm({ ...form, audioUrl: url })}
+                        type="audio"
+                        placeholder="Upload audio file"
+                      />
+                    </div>
                   </div>
                 </div>
               )}
 
-              {/* Document URL - for downloadable PDF */}
+              {/* Document Upload - for downloadable PDF */}
               <div>
-                <label className="block text-xs font-semibold text-[var(--text)] mb-1">Document URL (PDF)</label>
-                <input value={form.documentUrl} onChange={(e) => setForm({ ...form, documentUrl: e.target.value })} placeholder="https://..." className={inputClasses} />
+                <label className="block text-xs font-semibold text-[var(--text)] mb-1">Sermon Document (PDF)</label>
+                <FileUpload
+                  value={form.documentUrl}
+                  onChange={(url) => setForm({ ...form, documentUrl: url })}
+                  type="document"
+                  placeholder="Upload PDF document"
+                />
               </div>
 
               {/* Full sermon content/transcript */}

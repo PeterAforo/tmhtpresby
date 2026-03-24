@@ -7,6 +7,7 @@ import Image from "next/image";
 import { ArrowLeft, Save, Loader2, Trash2, Plus, X, Package } from "lucide-react";
 import { cn } from "@/lib/utils";
 import RichTextEditor from "@/components/admin/RichTextEditor";
+import FileUpload from "@/components/admin/FileUpload";
 
 interface ProductImage {
   id: string;
@@ -306,23 +307,15 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           <div className="bg-white rounded-xl border border-gray-200 p-6">
             <h2 className="font-semibold text-gray-900 mb-4">Images</h2>
             <div className="space-y-4">
-              <div className="flex gap-2">
-                <input
-                  type="url"
-                  value={newImageUrl}
-                  onChange={(e) => setNewImageUrl(e.target.value)}
-                  className={cn(inputClasses, "flex-1")}
-                  placeholder="Enter image URL"
-                  onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addImage())}
-                />
-                <button
-                  onClick={addImage}
-                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-                >
-                  <Plus size={18} />
-                </button>
-              </div>
-              {form.images.length > 0 ? (
+              <FileUpload
+                value=""
+                onChange={(url) => {
+                  if (url) setForm({ ...form, images: [...form.images, url] });
+                }}
+                type="image"
+                placeholder="Upload product image"
+              />
+              {form.images.length > 0 && (
                 <div className="grid grid-cols-3 gap-3">
                   {form.images.map((url, index) => (
                     <div key={index} className="relative group">
@@ -343,11 +336,6 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
                       </button>
                     </div>
                   ))}
-                </div>
-              ) : (
-                <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
-                  <Package size={32} className="mx-auto text-gray-400 mb-2" />
-                  <p className="text-sm text-gray-500">No images added yet</p>
                 </div>
               )}
             </div>

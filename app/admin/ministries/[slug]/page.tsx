@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import RichTextEditor from "@/components/admin/RichTextEditor";
+import FileUpload from "@/components/admin/FileUpload";
 import {
   ArrowLeft,
   Save,
@@ -195,29 +196,12 @@ export default function AdminMinistryDetailPage() {
               <h2 className="text-lg font-semibold text-[var(--text)] mb-4">Cover Image</h2>
               <p className="text-sm text-[var(--text-muted)] mb-4">This image displays on ministry cards.</p>
 
-              {form.imageUrl ? (
-                <div className="relative aspect-video rounded-lg overflow-hidden mb-4">
-                  <Image src={form.imageUrl} alt={form.name} fill className="object-cover" />
-                  <button
-                    type="button"
-                    onClick={() => setForm({ ...form, imageUrl: "" })}
-                    className="absolute top-2 right-2 p-1.5 rounded-full bg-black/50 text-white"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-              ) : (
-                <div className="aspect-video rounded-lg border-2 border-dashed border-[var(--border)] flex flex-col items-center justify-center mb-4 bg-[var(--bg)]">
-                  <ImageIcon size={48} className="text-[var(--text-muted)] mb-2" />
-                  <p className="text-sm text-[var(--text-muted)]">No image uploaded</p>
-                </div>
-              )}
-
-              <label className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold bg-[var(--bg)] border border-[var(--border)] cursor-pointer">
-                <Upload size={16} />
-                {uploading ? "Uploading..." : "Upload Image"}
-                <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" disabled={uploading} />
-              </label>
+              <FileUpload
+                value={form.imageUrl}
+                onChange={(url) => setForm({ ...form, imageUrl: url })}
+                type="image"
+                placeholder="Upload ministry cover image"
+              />
             </div>
 
             <div className="flex justify-end">
