@@ -20,7 +20,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // Use custom login API
+      // Use custom login API that calls server-side signIn
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -37,12 +37,8 @@ export default function LoginPage() {
         return;
       }
 
-      // Success - redirect to admin or profile based on role
-      if (data.user?.role === "super_admin" || data.user?.role === "pastor" || data.user?.role === "ministry_leader") {
-        window.location.href = "/admin";
-      } else {
-        window.location.href = "/profile";
-      }
+      // Success - redirect using the URL from response or default to /admin
+      window.location.href = data.redirectTo || "/admin";
     } catch (err) {
       console.error("Login error:", err);
       setError("Something went wrong. Please try again.");
