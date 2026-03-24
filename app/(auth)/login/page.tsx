@@ -20,28 +20,24 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
+      // Use custom login API
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
 
-      console.log("SignIn result:", result);
+      const data = await res.json();
 
-      if (result?.error) {
-        setError("Invalid email or password.");
+      if (!res.ok) {
+        setError(data.error || "Invalid email or password.");
         setLoading(false);
         return;
       }
 
-      if (result?.ok) {
-        router.push("/profile");
-        router.refresh();
-        return;
-      }
-
-      setError("Something went wrong. Please try again.");
-      setLoading(false);
+      // Success - redirect to profile
+      router.push("/profile");
+      router.refresh();
     } catch (err) {
       console.error("Login error:", err);
       setError("Something went wrong. Please try again.");
