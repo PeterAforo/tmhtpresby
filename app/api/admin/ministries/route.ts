@@ -90,6 +90,10 @@ export async function PUT(req: NextRequest) {
     for (const key of ["description", "imageUrl"]) {
       if (data[key] === "") data[key] = null;
     }
+    
+    // Handle age range fields
+    if (data.ageMin === "" || data.ageMin === null) data.ageMin = null;
+    if (data.ageMax === "" || data.ageMax === null) data.ageMax = null;
 
     const ministry = await prisma.leadershipGroup.update({
       where: { id },
