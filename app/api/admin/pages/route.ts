@@ -9,7 +9,7 @@ export async function GET() {
     const pages = await prisma.page.findMany({
       orderBy: { updatedAt: "desc" },
     });
-    return NextResponse.json(pages);
+    return NextResponse.json({ pages });
   } catch (error) {
     console.error("Error fetching pages:", error);
     return NextResponse.json({ error: "Failed to fetch pages" }, { status: 500 });

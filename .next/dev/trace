@@ -93,3 +93,4 @@
 [{"name":"compile-path","duration":3270,"timestamp":2222998227,"id":8,"tags":{"trigger":"middleware"},"startTime":1774180455024,"traceId":"e1f2ccf1d1a6f97e"}]
 [{"name":"compile-path","duration":2959,"timestamp":2223723892,"id":9,"tags":{"trigger":"middleware"},"startTime":1774180455750,"traceId":"e1f2ccf1d1a6f97e"}]
 [{"name":"compile-path","duration":2827,"timestamp":2227916932,"id":10,"tags":{"trigger":"middleware"},"startTime":1774180459943,"traceId":"e1f2ccf1d1a6f97e"}]
+[{"name":"hot-reloader","duration":160,"timestamp":62552841323,"id":3,"tags":{"version":"16.1.6"},"startTime":1774245981304,"traceId":"f4618c0cd24f4be5"},{"name":"compile-path","duration":11243261,"timestamp":62582661186,"id":4,"tags":{"trigger":"middleware"},"startTime":1774246011124,"traceId":"f4618c0cd24f4be5"}]

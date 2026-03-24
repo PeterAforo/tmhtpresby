@@ -145,7 +145,7 @@ export default function AdminSidebar() {
         <Link href="/admin" className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center overflow-hidden">
             <Image
-              src="/images/logo.png"
+              src="/logo.png"
               alt="TMHT"
               width={32}
               height={32}
