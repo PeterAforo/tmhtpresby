@@ -5,7 +5,14 @@ const ADMIN_ROLES = ["super_admin", "pastor", "ministry_leader"];
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  
+  // Debug: Log cookies
+  const cookies = req.cookies.getAll();
+  console.log("Middleware - Path:", pathname);
+  console.log("Middleware - Cookies:", cookies.map(c => c.name));
+  
   const token = await getToken({ req, secret: process.env.AUTH_SECRET });
+  console.log("Middleware - Token:", token ? { id: token.id, role: token.role } : null);
 
   // Protect admin routes
   if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {

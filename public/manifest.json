@@ -104,21 +104,5 @@
       "icons": [{ "src": "/icons/shortcut-live.png", "sizes": "96x96" }]
     }
   ],
-  "screenshots": [
-    {
-      "src": "/screenshots/screenshot-mobile.png",
-      "sizes": "390x844",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "TMHT Presby on mobile"
-    },
-    {
-      "src": "/screenshots/screenshot-desktop.png",
-      "sizes": "1280x800",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "TMHT Presby on desktop"
-    }
-  ],
   "prefer_related_applications": false
 }
