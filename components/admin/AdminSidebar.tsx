@@ -48,6 +48,7 @@ const navItems: NavItem[] = [
     children: [
       { label: "Sermons", href: "/admin/sermons" },
       { label: "Speakers", href: "/admin/speakers" },
+      { label: "Sermon Series", href: "/admin/series" },
       { label: "Blog / News", href: "/admin/blog" },
       { label: "Events", href: "/admin/events" },
       { label: "Gallery", href: "/admin/gallery" },
@@ -80,8 +81,11 @@ const navItems: NavItem[] = [
   },
   {
     label: "Shop",
-    href: "/admin/products",
     icon: <ShoppingBag size={20} />,
+    children: [
+      { label: "Products", href: "/admin/products" },
+      { label: "Categories", href: "/admin/categories" },
+    ],
   },
   {
     label: "User Management",
