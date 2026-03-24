@@ -246,9 +246,11 @@ model Event {
   title       String
   slug        String      @unique
   description String?
-  location    String?
+  location    String?     // Venue name/address
+  latitude    Float?      // GPS latitude
+  longitude   Float?      // GPS longitude
   category    String      @default("special") // worship, youth, women, men, prayer, outreach, conference, special, family
-  imageUrl    String?
+  imageUrl    String?     // Event image/artwork
   startDate   DateTime
   endDate     DateTime?
   startTime   String?     // e.g. "09:00"

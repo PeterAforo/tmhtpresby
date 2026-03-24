@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Plus, Pencil, Trash2, Eye, EyeOff, X, Save, Loader2, Calendar, Star, Users } from "lucide-react";
+import { Plus, Pencil, Trash2, Eye, EyeOff, X, Save, Loader2, Calendar, Star, Users, MapPin, Navigation } from "lucide-react";
 import { cn } from "@/lib/utils";
 import RichTextEditor from "@/components/admin/RichTextEditor";
 import FileUpload from "@/components/admin/FileUpload";
@@ -12,7 +12,10 @@ interface Event {
   slug: string;
   description: string | null;
   location: string | null;
+  latitude: number | null;
+  longitude: number | null;
   category: string;
+  imageUrl: string | null;
   startDate: string;
   endDate: string | null;
   startTime: string | null;
@@ -29,7 +32,10 @@ const emptyForm = {
   title: "",
   description: "",
   location: "",
+  latitude: "",
+  longitude: "",
   category: "special",
+  imageUrl: "",
   startDate: new Date().toISOString().split("T")[0],
   endDate: "",
   startTime: "",
@@ -73,7 +79,10 @@ export default function AdminEventsPage() {
       title: event.title,
       description: event.description || "",
       location: event.location || "",
+      latitude: event.latitude?.toString() || "",
+      longitude: event.longitude?.toString() || "",
       category: event.category,
+      imageUrl: event.imageUrl || "",
       startDate: event.startDate.split("T")[0],
       endDate: event.endDate ? event.endDate.split("T")[0] : "",
       startTime: event.startTime || "",
@@ -85,6 +94,25 @@ export default function AdminEventsPage() {
     setEditingId(event.id);
     setShowForm(true);
   }
+
+  const getCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setForm({
+          ...form,
+          latitude: position.coords.latitude.toString(),
+          longitude: position.coords.longitude.toString(),
+        });
+      },
+      (error) => {
+        alert("Unable to retrieve your location: " + error.message);
+      }
+    );
+  };
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -144,6 +172,17 @@ export default function AdminEventsPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <input required placeholder="Event title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30" />
 
+              {/* Event Image */}
+              <div>
+                <label className="block text-xs font-medium text-[var(--text)] mb-1">Event Image / Artwork</label>
+                <FileUpload
+                  value={form.imageUrl}
+                  onChange={(url) => setForm({ ...form, imageUrl: url })}
+                  type="image"
+                  placeholder="Upload event image or artwork"
+                />
+              </div>
+
               <RichTextEditor
                 value={form.description}
                 onChange={(value) => setForm({ ...form, description: value })}
@@ -151,10 +190,63 @@ export default function AdminEventsPage() {
               />
 
               <div className="grid grid-cols-2 gap-4">
-                <input placeholder="Location" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30" />
+                <input placeholder="Location / Venue" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30" />
                 <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30">
                   {categories.map((c) => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}
                 </select>
+              </div>
+
+              {/* GPS Location */}
+              <div className="p-4 rounded-lg border border-[var(--border)] bg-[var(--bg)]">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <MapPin size={16} className="text-[var(--accent)]" />
+                    <span className="text-sm font-medium text-[var(--text)]">GPS Location</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={getCurrentLocation}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[var(--accent)] text-white hover:opacity-90 transition-opacity"
+                  >
+                    <Navigation size={14} />
+                    Get Current Location
+                  </button>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs text-[var(--text-muted)] mb-1 block">Latitude</label>
+                    <input
+                      type="number"
+                      step="any"
+                      placeholder="e.g. 5.6037"
+                      value={form.latitude}
+                      onChange={(e) => setForm({ ...form, latitude: e.target.value })}
+                      className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg-card)] px-3 py-2.5 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-[var(--text-muted)] mb-1 block">Longitude</label>
+                    <input
+                      type="number"
+                      step="any"
+                      placeholder="e.g. -0.1870"
+                      value={form.longitude}
+                      onChange={(e) => setForm({ ...form, longitude: e.target.value })}
+                      className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg-card)] px-3 py-2.5 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30"
+                    />
+                  </div>
+                </div>
+                {form.latitude && form.longitude && (
+                  <a
+                    href={`https://www.google.com/maps?q=${form.latitude},${form.longitude}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 mt-2 text-xs text-[var(--accent)] hover:underline"
+                  >
+                    <MapPin size={12} />
+                    View on Google Maps
+                  </a>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">

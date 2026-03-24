@@ -29,7 +29,7 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { title, description, location, category, imageUrl, startDate, endDate, startTime, endTime, capacity, isFeatured, published } = body;
+    const { title, description, location, latitude, longitude, category, imageUrl, startDate, endDate, startTime, endTime, capacity, isFeatured, published } = body;
 
     if (!title || !startDate) {
       return NextResponse.json({ error: "Title and start date are required." }, { status: 400 });
@@ -45,6 +45,8 @@ export async function POST(req: NextRequest) {
         slug,
         description: description?.trim() || null,
         location: location?.trim() || null,
+        latitude: latitude ? parseFloat(latitude) : null,
+        longitude: longitude ? parseFloat(longitude) : null,
         category: category || "special",
         imageUrl: imageUrl?.trim() || null,
         startDate: new Date(startDate),
@@ -68,7 +70,7 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   try {
     const body = await req.json();
-    const { id, title, description, location, category, imageUrl, startDate, endDate, startTime, endTime, capacity, isFeatured, published } = body;
+    const { id, title, description, location, latitude, longitude, category, imageUrl, startDate, endDate, startTime, endTime, capacity, isFeatured, published } = body;
 
     if (!id) {
       return NextResponse.json({ error: "Event ID is required." }, { status: 400 });
@@ -80,6 +82,8 @@ export async function PUT(req: NextRequest) {
         ...(title && { title: title.trim() }),
         ...(description !== undefined && { description: description?.trim() || null }),
         ...(location !== undefined && { location: location?.trim() || null }),
+        ...(latitude !== undefined && { latitude: latitude ? parseFloat(latitude) : null }),
+        ...(longitude !== undefined && { longitude: longitude ? parseFloat(longitude) : null }),
         ...(category && { category }),
         ...(imageUrl !== undefined && { imageUrl: imageUrl?.trim() || null }),
         ...(startDate && { startDate: new Date(startDate) }),
