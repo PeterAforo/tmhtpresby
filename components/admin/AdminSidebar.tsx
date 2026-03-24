@@ -50,6 +50,7 @@ const navItems: NavItem[] = [
       { label: "Blog / News", href: "/admin/blog" },
       { label: "Events", href: "/admin/events" },
       { label: "Gallery", href: "/admin/gallery" },
+      { label: "Devotionals", href: "/admin/devotionals" },
       { label: "Page Heroes", href: "/admin/page-heroes" },
     ],
   },
@@ -93,8 +94,9 @@ const navItems: NavItem[] = [
     label: "Communications",
     icon: <Megaphone size={20} />,
     children: [
-      { label: "Announcements", href: "/admin/announcements" },
       { label: "Notifications", href: "/admin/notifications" },
+      { label: "Contact Messages", href: "/admin/contacts" },
+      { label: "Prayer Requests", href: "/admin/prayer-requests" },
     ],
   },
   {
