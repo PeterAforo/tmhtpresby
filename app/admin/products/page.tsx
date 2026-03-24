@@ -1,29 +1,87 @@
-import { prisma } from "@/lib/db";
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Plus, Search, Filter, Edit, Trash2, Eye, Package } from "lucide-react";
+import { Plus, Search, Edit, Trash2, Eye, Package, Loader2 } from "lucide-react";
 
-async function getProducts() {
-  const products = await prisma.product.findMany({
-    include: {
-      category: true,
-      images: {
-        orderBy: { order: "asc" },
-        take: 1,
-      },
-    },
-    orderBy: { createdAt: "desc" },
-  });
-
-  const categories = await prisma.productCategory.findMany({
-    orderBy: { name: "asc" },
-  });
-
-  return { products, categories };
+interface ProductImage {
+  id: string;
+  url: string;
 }
 
-export default async function AdminProductsPage() {
-  const { products, categories } = await getProducts();
+interface Category {
+  id: string;
+  name: string;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  slug: string;
+  sku: string | null;
+  price: number;
+  compareAtPrice: number | null;
+  stock: number;
+  isActive: boolean;
+  category: Category | null;
+  images: ProductImage[];
+}
+
+export default function AdminProductsPage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+
+  const fetchProducts = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/products");
+      if (res.ok) {
+        const data = await res.json();
+        setProducts(data || []);
+        // Extract unique categories
+        const cats = data
+          .map((p: Product) => p.category)
+          .filter((c: Category | null): c is Category => c !== null)
+          .filter((c: Category, i: number, arr: Category[]) => arr.findIndex((x) => x.id === c.id) === i);
+        setCategories(cats);
+      }
+    } catch (err) {
+      console.error("Failed to fetch products:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
+  const handleDelete = async (product: Product) => {
+    if (!confirm(`Delete "${product.name}"? This cannot be undone.`)) return;
+    try {
+      const res = await fetch(`/api/admin/products?id=${product.id}`, { method: "DELETE" });
+      if (res.ok) {
+        fetchProducts();
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to delete product");
+      }
+    } catch (err) {
+      console.error("Delete error:", err);
+    }
+  };
+
+  const filteredProducts = products.filter((p) => {
+    const matchesSearch = !searchQuery || p.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = !categoryFilter || p.category?.id === categoryFilter;
+    const matchesStatus = !statusFilter || (statusFilter === "active" ? p.isActive : !p.isActive);
+    return matchesSearch && matchesCategory && matchesStatus;
+  });
 
   return (
     <div className="space-y-6">
@@ -52,10 +110,16 @@ export default async function AdminProductsPage() {
             <input
               type="text"
               placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 focus:border-[var(--accent)]"
             />
           </div>
-          <select className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 focus:border-[var(--accent)]">
+          <select
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 focus:border-[var(--accent)]"
+          >
             <option value="">All Categories</option>
             {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>
@@ -63,7 +127,11 @@ export default async function AdminProductsPage() {
               </option>
             ))}
           </select>
-          <select className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 focus:border-[var(--accent)]">
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 focus:border-[var(--accent)]"
+          >
             <option value="">All Status</option>
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
@@ -73,7 +141,11 @@ export default async function AdminProductsPage() {
 
       {/* Products Table */}
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        {products.length === 0 ? (
+        {loading ? (
+          <div className="flex items-center justify-center py-16">
+            <Loader2 size={24} className="animate-spin text-[var(--accent)]" />
+          </div>
+        ) : filteredProducts.length === 0 ? (
           <div className="p-12 text-center">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
               <Package size={32} className="text-gray-400" />
@@ -116,7 +188,7 @@ export default async function AdminProductsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {products.map((product) => (
+                {filteredProducts.map((product) => (
                   <tr key={product.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-3">
@@ -198,6 +270,7 @@ export default async function AdminProductsPage() {
                           <Edit size={16} />
                         </Link>
                         <button
+                          onClick={() => handleDelete(product)}
                           className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                           title="Delete"
                         >

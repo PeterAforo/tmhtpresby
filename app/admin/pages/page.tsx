@@ -1,24 +1,55 @@
-import { prisma } from "@/lib/db";
-import Link from "next/link";
-import { Plus, Edit, Eye, Trash2, FileText, Globe, Lock } from "lucide-react";
+"use client";
 
-async function getPages() {
-  const pages = await prisma.page.findMany({
-    orderBy: { updatedAt: "desc" },
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-      published: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-  });
-  return pages;
+import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
+import { Plus, Edit, Eye, Trash2, FileText, Globe, Lock, Loader2 } from "lucide-react";
+
+interface PageData {
+  id: string;
+  title: string;
+  slug: string;
+  published: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export default async function PagesListPage() {
-  const pages = await getPages();
+export default function PagesListPage() {
+  const [pages, setPages] = useState<PageData[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchPages = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/pages");
+      if (res.ok) {
+        const data = await res.json();
+        setPages(data.pages || []);
+      }
+    } catch (err) {
+      console.error("Failed to fetch pages:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchPages();
+  }, [fetchPages]);
+
+  const handleDelete = async (page: PageData) => {
+    if (!confirm(`Delete "${page.title}"? This cannot be undone.`)) return;
+    try {
+      const res = await fetch(`/api/admin/pages/${page.id}`, { method: "DELETE" });
+      if (res.ok) {
+        fetchPages();
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to delete page");
+      }
+    } catch (err) {
+      console.error("Delete error:", err);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -41,7 +72,11 @@ export default async function PagesListPage() {
 
       {/* Pages List */}
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        {pages.length === 0 ? (
+        {loading ? (
+          <div className="flex items-center justify-center py-16">
+            <Loader2 size={24} className="animate-spin text-[var(--accent)]" />
+          </div>
+        ) : pages.length === 0 ? (
           <div className="p-12 text-center">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
               <FileText size={32} className="text-gray-400" />
@@ -144,6 +179,7 @@ export default async function PagesListPage() {
                           <Edit size={16} />
                         </Link>
                         <button
+                          onClick={() => handleDelete(page)}
                           className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                           title="Delete"
                         >
