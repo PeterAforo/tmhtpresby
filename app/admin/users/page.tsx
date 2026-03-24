@@ -15,7 +15,7 @@ async function getUsers() {
       role: true,
       isActive: true,
       createdAt: true,
-      lastLogin: true,
+      updatedAt: true,
     },
   });
 
@@ -149,7 +149,7 @@ export default async function AdminUsersPage() {
                     Joined
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Last Login
+                    Last Updated
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
@@ -210,13 +210,11 @@ export default async function AdminUsersPage() {
                         })}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {user.lastLogin
-                          ? new Date(user.lastLogin).toLocaleDateString("en-US", {
-                              month: "short",
-                              day: "numeric",
-                              year: "numeric",
-                            })
-                          : "Never"}
+                        {new Date(user.updatedAt).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
                         <div className="flex items-center justify-end gap-2">
