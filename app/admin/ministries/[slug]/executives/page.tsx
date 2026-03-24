@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, use } from "react";
 import Link from "next/link";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 import {
   Plus,
   Pencil,
@@ -301,11 +302,10 @@ export default function MinistryExecutivesPage({ params }: Props) {
                 <label className="block text-xs font-semibold text-[var(--text)] mb-1">
                   Bio
                 </label>
-                <textarea
+                <RichTextEditor
                   value={form.bio}
-                  onChange={(e) => setForm({ ...form, bio: e.target.value })}
-                  rows={3}
-                  className={inputClasses}
+                  onChange={(value) => setForm({ ...form, bio: value })}
+                  placeholder="Executive bio..."
                 />
               </div>
 

@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Plus, Pencil, Trash2, Eye, EyeOff, X, Save, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 
 interface BlogPost {
   id: string;
@@ -135,9 +136,17 @@ export default function AdminBlogPage() {
 
               <input placeholder="Author name" required value={form.author} onChange={(e) => setForm({ ...form, author: e.target.value })} className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30" />
 
-              <textarea rows={2} placeholder="Short excerpt (optional)" value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30" />
+              <RichTextEditor
+                value={form.excerpt}
+                onChange={(value) => setForm({ ...form, excerpt: value })}
+                placeholder="Short excerpt (optional)"
+              />
 
-              <textarea rows={12} required placeholder="Post content (HTML supported)" value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-sm text-[var(--text)] font-mono focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30" />
+              <RichTextEditor
+                value={form.content}
+                onChange={(value) => setForm({ ...form, content: value })}
+                placeholder="Post content..."
+              />
 
               <div className="grid grid-cols-3 gap-4">
                 <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30">

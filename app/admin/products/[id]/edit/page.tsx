@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Save, Loader2, Trash2, Plus, X, Package } from "lucide-react";
 import { cn } from "@/lib/utils";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 
 interface ProductImage {
   id: string;
@@ -239,11 +240,9 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                <textarea
-                  rows={4}
+                <RichTextEditor
                   value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  className={inputClasses}
+                  onChange={(value) => setForm({ ...form, description: value })}
                   placeholder="Product description..."
                 />
               </div>

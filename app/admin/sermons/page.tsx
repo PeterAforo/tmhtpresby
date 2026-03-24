@@ -12,6 +12,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 
 interface Speaker {
   id: string;
@@ -259,7 +260,11 @@ export default function AdminSermonsPage() {
 
               <div>
                 <label className="block text-xs font-semibold text-[var(--text)] mb-1">Description</label>
-                <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className={inputClasses} />
+                <RichTextEditor
+                  value={form.description}
+                  onChange={(value) => setForm({ ...form, description: value })}
+                  placeholder="Sermon description..."
+                />
               </div>
 
               {/* Media Type Selection */}
@@ -324,13 +329,10 @@ export default function AdminSermonsPage() {
                 <label className="block text-xs font-semibold text-[var(--text)] mb-1">
                   {form.mediaType === "text" ? "Sermon Content *" : "Sermon Transcript (optional)"}
                 </label>
-                <textarea 
-                  value={form.content} 
-                  onChange={(e) => setForm({ ...form, content: e.target.value })} 
-                  rows={8} 
-                  placeholder="Enter the full sermon text or transcript here. HTML formatting is supported."
-                  className={inputClasses} 
-                  required={form.mediaType === "text"}
+                <RichTextEditor
+                  value={form.content}
+                  onChange={(value) => setForm({ ...form, content: value })}
+                  placeholder="Enter the full sermon text or transcript here..."
                 />
               </div>
 

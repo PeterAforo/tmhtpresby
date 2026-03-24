@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 import {
   ArrowLeft,
   Save,
@@ -172,11 +173,10 @@ export default function AdminMinistryDetailPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-[var(--text)] mb-1.5">Description</label>
-                  <textarea
-                    rows={4}
+                  <RichTextEditor
                     value={form.description}
-                    onChange={(e) => setForm({ ...form, description: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-lg border border-[var(--border)] bg-[var(--bg)] text-[var(--text)]"
+                    onChange={(value) => setForm({ ...form, description: value })}
+                    placeholder="Ministry description..."
                   />
                 </div>
                 <div>

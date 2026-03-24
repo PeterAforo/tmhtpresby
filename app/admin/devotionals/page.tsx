@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { BookOpen, Plus, Pencil, Trash2, Eye, EyeOff, X, Save, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 
 interface Devotional {
   id: string;
@@ -173,12 +174,9 @@ export default function DevotionalsAdminPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Content *</label>
-                <textarea
-                  required
-                  rows={8}
+                <RichTextEditor
                   value={form.content}
-                  onChange={(e) => setForm({ ...form, content: e.target.value })}
-                  className={inputClasses}
+                  onChange={(value) => setForm({ ...form, content: value })}
                   placeholder="Devotional content..."
                 />
               </div>

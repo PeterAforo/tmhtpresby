@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Upload, X, Loader2 } from "lucide-react";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 
 export default function NewProductPage() {
   const router = useRouter();
@@ -114,11 +115,9 @@ export default function NewProductPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Description
               </label>
-              <textarea
-                rows={4}
+              <RichTextEditor
                 value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20 focus:border-[var(--accent)]"
+                onChange={(value) => setFormData({ ...formData, description: value })}
                 placeholder="Describe your product..."
               />
             </div>

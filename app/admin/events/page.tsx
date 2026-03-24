@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Plus, Pencil, Trash2, Eye, EyeOff, X, Save, Loader2, Star, Users } from "lucide-react";
+import { Plus, Pencil, Trash2, Eye, EyeOff, X, Save, Loader2, Calendar, Star, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 
 interface Event {
   id: string;
@@ -142,7 +143,11 @@ export default function AdminEventsPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <input required placeholder="Event title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30" />
 
-              <textarea rows={3} placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30" />
+              <RichTextEditor
+                value={form.description}
+                onChange={(value) => setForm({ ...form, description: value })}
+                placeholder="Event description..."
+              />
 
               <div className="grid grid-cols-2 gap-4">
                 <input placeholder="Location" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} className="w-full rounded-lg border border-[var(--border)] bg-[var(--bg)] px-3 py-2.5 text-sm text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/30" />
