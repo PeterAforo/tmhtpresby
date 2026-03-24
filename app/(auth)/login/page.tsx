@@ -12,13 +12,19 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    e.stopPropagation();
+    
+    // Prevent double submission
+    if (loading) return;
+    
     setError("");
     setLoading(true);
 
+    console.log("Form submitted, attempting login...");
+
     try {
-      // Use NextAuth's signIn with redirect:false to handle errors
       const result = await signIn("credentials", {
         email,
         password,
@@ -28,13 +34,14 @@ export default function LoginPage() {
       console.log("SignIn result:", result);
 
       if (result?.error) {
+        console.log("SignIn error:", result.error);
         setError("Invalid email or password.");
         setLoading(false);
         return;
       }
 
       if (result?.ok) {
-        // Successful login - do a full page redirect to ensure cookies are recognized
+        console.log("SignIn successful, redirecting...");
         window.location.href = "/admin";
         return;
       }
@@ -84,7 +91,7 @@ export default function LoginPage() {
             <div className="flex-1 h-px bg-[var(--border)]" />
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} action="#" method="post" className="space-y-4">
             <div className="relative">
               <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
               <input
