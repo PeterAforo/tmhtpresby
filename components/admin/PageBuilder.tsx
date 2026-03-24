@@ -431,9 +431,9 @@ function BlockRenderer({ block, previewMode }: { block: BlockData; previewMode: 
               content.width === "full" ? "w-full" : content.width === "medium" ? "max-w-lg mx-auto" : "max-w-sm mx-auto"
             }`}
           />
-          {content.caption && (
+          {typeof content.caption === "string" && content.caption && (
             <figcaption className="text-sm text-gray-500 text-center mt-2">
-              {String(content.caption)}
+              {content.caption}
             </figcaption>
           )}
         </figure>
@@ -459,13 +459,16 @@ function BlockRenderer({ block, previewMode }: { block: BlockData; previewMode: 
       );
 
     case "quote":
+      const quoteText = String(content.text || "Quote...");
+      const quoteAuthor = typeof content.author === "string" ? content.author : "";
+      const quoteSource = typeof content.source === "string" ? content.source : "";
       return (
         <blockquote className="border-l-4 border-[var(--accent)] pl-4 py-2 italic">
-          <p className="text-lg text-gray-700">{String(content.text || "Quote...")}</p>
-          {content.author && (
+          <p className="text-lg text-gray-700">{quoteText}</p>
+          {quoteAuthor && (
             <footer className="text-sm text-gray-500 mt-2">
-              — {String(content.author)}
-              {content.source && `, ${String(content.source)}`}
+              — {quoteAuthor}
+              {quoteSource && `, ${quoteSource}`}
             </footer>
           )}
         </blockquote>
@@ -506,7 +509,8 @@ function BlockRenderer({ block, previewMode }: { block: BlockData; previewMode: 
       );
 
     case "hero":
-      const heroBgImage = content.bgImage as string | undefined;
+      const heroBgImage = typeof content.bgImage === "string" ? content.bgImage : undefined;
+      const showOverlay = Boolean(content.overlay) && Boolean(heroBgImage);
       return (
         <div
           className="relative rounded-xl overflow-hidden min-h-[300px] flex items-center justify-center text-center text-white"
@@ -517,7 +521,7 @@ function BlockRenderer({ block, previewMode }: { block: BlockData; previewMode: 
             backgroundPosition: "center",
           }}
         >
-          {content.overlay && content.bgImage && (
+          {showOverlay && (
             <div className="absolute inset-0 bg-black/50" />
           )}
           <div className="relative z-10 p-8">
