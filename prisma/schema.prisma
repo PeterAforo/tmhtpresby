@@ -517,6 +517,28 @@ model LeadershipMember {
 }
 
 // =============================================================================
+// Custom Pages (Page Builder)
+// =============================================================================
+
+model Page {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String?
+  content     Json?    // Page builder content blocks
+  published   Boolean  @default(false)
+  template    String   @default("default") // default, full-width, sidebar
+  metaTitle   String?
+  metaDesc    String?
+  featuredImg String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([slug])
+  @@index([published])
+  @@map("pages")
+}
+
 // Page Hero Settings
 // =============================================================================
 

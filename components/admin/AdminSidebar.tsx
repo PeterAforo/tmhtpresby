@@ -25,6 +25,8 @@ import {
   X,
   ExternalLink,
   Bell,
+  FolderOpen,
+  Layers,
 } from "lucide-react";
 
 interface NavItem {
@@ -50,6 +52,16 @@ const navItems: NavItem[] = [
       { label: "Gallery", href: "/admin/gallery" },
       { label: "Page Heroes", href: "/admin/page-heroes" },
     ],
+  },
+  {
+    label: "Pages",
+    href: "/admin/pages",
+    icon: <Layers size={20} />,
+  },
+  {
+    label: "File Manager",
+    href: "/admin/files",
+    icon: <FolderOpen size={20} />,
   },
   {
     label: "Ministries",
