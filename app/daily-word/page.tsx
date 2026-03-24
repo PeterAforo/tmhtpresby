@@ -59,7 +59,7 @@ export default async function DailyWordPage() {
                 </p>
                 <div 
                   className="prose prose-lg text-[var(--text-muted)] mb-6"
-                  dangerouslySetInnerHTML={{ __html: todayDevotional.content }}
+                  dangerouslySetInnerHTML={{ __html: todayDevotional.content || "" }}
                 />
                 <p className="text-sm text-[var(--text-muted)]">
                   {formatShortDate(todayDevotional.publishDate)}
