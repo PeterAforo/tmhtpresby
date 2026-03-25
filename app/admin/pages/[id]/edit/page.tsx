@@ -3,7 +3,7 @@
 import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Save, Eye, Loader2, Trash2, Info, ExternalLink, Settings } from "lucide-react";
+import { ArrowLeft, Save, Loader2, Trash2, Settings } from "lucide-react";
 import PageBuilder, { BlockData } from "@/components/admin/PageBuilder";
 
 interface PageData {
@@ -140,95 +140,50 @@ export default function EditPagePage({ params }: { params: Promise<{ id: string 
   }
 
   return (
-    <div className="h-full flex flex-col">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link
-              href="/admin/pages"
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <ArrowLeft size={20} className="text-gray-600" />
-            </Link>
-            <div>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => handleTitleChange(e.target.value)}
-                placeholder="Page Title"
-                className="text-xl font-bold text-gray-900 border-none outline-none bg-transparent w-full"
-              />
-              <p className="text-sm text-gray-500">
-                /{slug || "page-url"}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
-              <button
-                onClick={() => setActiveTab("content")}
-                className={`px-4 py-2 text-sm font-medium ${
-                  activeTab === "content"
-                    ? "bg-gray-100 text-gray-900"
-                    : "text-gray-600 hover:bg-gray-50"
-                }`}
-              >
-                Content
-              </button>
-              <button
-                onClick={() => setActiveTab("settings")}
-                className={`px-4 py-2 text-sm font-medium ${
-                  activeTab === "settings"
-                    ? "bg-gray-100 text-gray-900"
-                    : "text-gray-600 hover:bg-gray-50"
-                }`}
-              >
-                Settings
-              </button>
-            </div>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={published}
-                onChange={(e) => setPublished(e.target.checked)}
-                className="rounded border-gray-300 text-[var(--accent)] focus:ring-[var(--accent)]"
-              />
-              <span className="text-sm text-gray-700">Published</span>
-            </label>
-            <button
-              onClick={handleDelete}
-              disabled={deleting}
-              className="inline-flex items-center gap-2 px-4 py-2 border border-red-200 text-red-600 rounded-lg font-medium hover:bg-red-50 transition-colors disabled:opacity-50"
-            >
-              {deleting ? <Loader2 size={18} className="animate-spin" /> : <Trash2 size={18} />}
-              Delete
+    <div className="-m-6 h-[calc(100vh-64px)] flex flex-col overflow-hidden">
+      {/* Compact Header Bar */}
+      <div className="bg-[#242424] text-white px-4 py-0 h-12 flex items-center justify-between flex-shrink-0">
+        <div className="flex items-center gap-3">
+          <Link href="/admin/pages" className="p-1.5 hover:bg-white/10 rounded-lg transition-colors">
+            <ArrowLeft size={18} />
+          </Link>
+          <div className="h-6 w-px bg-white/20" />
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => handleTitleChange(e.target.value)}
+            placeholder="Page Title"
+            className="text-sm font-semibold bg-transparent border-none outline-none text-white placeholder:text-gray-400 w-48 focus:w-64 transition-all"
+          />
+          <span className="text-xs text-gray-500 hidden sm:block">/{slug || "page-url"}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center bg-white/10 rounded-lg overflow-hidden">
+            <button onClick={() => setActiveTab("content")} className={`px-3 py-1.5 text-xs font-medium transition-colors ${activeTab === "content" ? "bg-white/20 text-white" : "text-gray-400 hover:text-white"}`}>
+              Content
             </button>
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--accent)] text-white rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
-            >
-              {saving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
-              {saving ? "Saving..." : "Save Changes"}
+            <button onClick={() => setActiveTab("settings")} className={`px-3 py-1.5 text-xs font-medium transition-colors ${activeTab === "settings" ? "bg-white/20 text-white" : "text-gray-400 hover:text-white"}`}>
+              <Settings size={13} className="inline mr-1" />Page Settings
             </button>
           </div>
+          <div className="h-6 w-px bg-white/20" />
+          <label className="flex items-center gap-1.5 cursor-pointer px-2">
+            <input type="checkbox" checked={published} onChange={(e) => setPublished(e.target.checked)} className="rounded border-gray-500 bg-transparent text-green-500 focus:ring-green-500 w-3.5 h-3.5" />
+            <span className={`text-xs font-medium ${published ? "text-green-400" : "text-gray-400"}`}>{published ? "Live" : "Draft"}</span>
+          </label>
+          <button onClick={handleDelete} disabled={deleting} className="p-1.5 hover:bg-red-500/20 rounded-lg text-gray-400 hover:text-red-400 transition-colors disabled:opacity-50" title="Delete page">
+            {deleting ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
+          </button>
+          <button onClick={handleSave} disabled={saving} className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-green-500 hover:bg-green-600 text-white rounded-lg text-sm font-semibold transition-colors disabled:opacity-50 shadow-sm">
+            {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
+            {saving ? "Saving..." : "Save"}
+          </button>
         </div>
       </div>
 
       {/* Content */}
       {activeTab === "content" ? (
         <div className="flex-1 overflow-hidden">
-          {page.isCore && (
-            <div className="bg-blue-50 border-b border-blue-200 px-6 py-3">
-              <div className="flex items-center gap-3">
-                <Info size={18} className="text-blue-600 flex-shrink-0" />
-                <p className="text-sm text-blue-800">
-                  <strong>Core Page:</strong> Edit the content of each section below. Changes will appear on the live site after saving.
-                </p>
-              </div>
-            </div>
-          )}
           <PageBuilder initialBlocks={blocks} onChange={setBlocks} />
         </div>
       ) : (
