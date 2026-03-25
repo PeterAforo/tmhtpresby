@@ -539,6 +539,28 @@ function BlockRenderer({ block, previewMode }: { block: BlockData; previewMode: 
 
     case "core-section":
       const sectionContent = content as { name: string; label: string; description: string };
+      const getEditLink = (componentName: string): { href: string; label: string } | null => {
+        const links: Record<string, { href: string; label: string }> = {
+          "HeroSection": { href: "/admin/page-heroes", label: "Edit Hero Slides" },
+          "PageHeroWithBackground": { href: "/admin/page-heroes", label: "Edit Page Hero" },
+          "MinistriesSection": { href: "/admin/ministries", label: "Manage Ministries" },
+          "MinistriesGrid": { href: "/admin/ministries", label: "Manage Ministries" },
+          "EventsList": { href: "/admin/events", label: "Manage Events" },
+          "SermonsGrid": { href: "/admin/sermons", label: "Manage Sermons" },
+          "BlogGrid": { href: "/admin/blog", label: "Manage Blog Posts" },
+          "GalleryGrid": { href: "/admin/gallery", label: "Manage Gallery" },
+          "DevotionalsList": { href: "/admin/devotionals", label: "Manage Devotionals" },
+          "ProductsGrid": { href: "/admin/shop/products", label: "Manage Products" },
+          "TestimonialsSection": { href: "/admin/testimonials", label: "Manage Testimonials" },
+          "ProjectsPreviewSection": { href: "/admin/projects", label: "Manage Projects" },
+          "WhatsNewSection": { href: "/admin/blog", label: "Manage News" },
+          "ContactInfo": { href: "/admin/settings", label: "Edit Contact Info" },
+          "GivingOptions": { href: "/admin/giving", label: "Manage Giving" },
+          "LiveStreamPlayer": { href: "/admin/settings", label: "Edit Stream Settings" },
+        };
+        return links[componentName] || null;
+      };
+      const editLink = getEditLink(sectionContent.name);
       return (
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
           <div className="flex items-start gap-4">
@@ -553,9 +575,20 @@ function BlockRenderer({ block, previewMode }: { block: BlockData; previewMode: 
                 </span>
               </div>
               <p className="text-sm text-gray-600 mb-2">{sectionContent.description}</p>
-              <code className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">
-                &lt;{sectionContent.name} /&gt;
-              </code>
+              <div className="flex items-center gap-3">
+                <code className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">
+                  &lt;{sectionContent.name} /&gt;
+                </code>
+                {editLink && (
+                  <a
+                    href={editLink.href}
+                    className="text-xs font-medium text-blue-600 hover:text-blue-800 hover:underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    → {editLink.label}
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         </div>
