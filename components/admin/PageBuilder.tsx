@@ -196,7 +196,7 @@ function getDefaultContent(type: string): Record<string, unknown> {
     case "map":
       return { address: "Lashibi, Accra, Ghana", zoom: 15 };
     case "columns":
-      return { columns: 2, gap: "16px" };
+      return { columns: 2, gap: "16px", children: [[], []] as BlockData[][] };
     case "html":
       return { html: "" };
     default:
@@ -902,12 +902,25 @@ function BlockRenderer({ block, onInlineEdit, onStartEdit }: { block: BlockData;
 
     case "columns":
       const cols = (content.columns as number) || 2;
+      const colChildren = (content.children as BlockData[][] | undefined) || Array.from({ length: cols }, () => []);
       return (
         <div className="grid gap-3 p-4" style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
           {Array.from({ length: cols }).map((_, i) => (
-            <div key={i} className="bg-gray-50 border-2 border-dashed border-gray-200 rounded-lg p-6 text-center">
-              <Plus size={16} className="mx-auto text-gray-300 mb-1" />
-              <span className="text-xs text-gray-400">Column {i + 1}</span>
+            <div key={i} className="bg-gray-50 border-2 border-dashed border-gray-200 rounded-lg p-3 min-h-[80px]">
+              {colChildren[i] && colChildren[i].length > 0 ? (
+                <div className="space-y-2">
+                  {colChildren[i].map((child: BlockData) => (
+                    <div key={child.id} className="bg-white rounded border border-gray-200 p-2">
+                      <BlockRenderer block={child} />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full min-h-[60px] text-center">
+                  <Plus size={14} className="text-gray-300 mb-1" />
+                  <span className="text-[10px] text-gray-400">Column {i + 1}</span>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -1240,10 +1253,58 @@ function BlockSettings({ block, onChange }: { block: BlockData; onChange: (conte
       );
 
     case "columns":
+      const colCount = (content.columns as number) || 2;
+      const colChildrenEdit = (content.children as BlockData[][] | undefined) || Array.from({ length: colCount }, () => []);
       return (
         <div>
-          <SelectInput label="Columns" field="columns" options={[{ value: "2", label: "2 Columns" }, { value: "3", label: "3 Columns" }, { value: "4", label: "4 Columns" }]} />
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Columns</label>
+            <select value={String(colCount)} onChange={(e) => {
+              const newCount = parseInt(e.target.value);
+              const newChildren = Array.from({ length: newCount }, (_, i) => colChildrenEdit[i] || []);
+              onChange({ columns: newCount, children: newChildren });
+            }} className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm">
+              <option value="2">2 Columns</option><option value="3">3 Columns</option><option value="4">4 Columns</option>
+            </select>
+          </div>
           <TextInput label="Gap" field="gap" placeholder="16px" />
+          <div className="mt-4 border-t pt-4">
+            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Column Contents</h4>
+            {Array.from({ length: colCount }).map((_, colIdx) => (
+              <div key={colIdx} className="mb-4">
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-xs font-medium text-gray-400">Column {colIdx + 1} ({(colChildrenEdit[colIdx] || []).length} blocks)</label>
+                  <div className="flex gap-1">
+                    <select onChange={(e) => {
+                      if (!e.target.value) return;
+                      const newChild: BlockData = { id: generateId(), type: e.target.value, content: getDefaultContent(e.target.value) };
+                      const updated = [...colChildrenEdit];
+                      updated[colIdx] = [...(updated[colIdx] || []), newChild];
+                      onChange({ children: updated });
+                      e.target.value = "";
+                    }} className="text-[10px] bg-[#383838] border border-[#505050] text-white rounded px-1 py-0.5">
+                      <option value="">+ Add</option>
+                      {BLOCK_TYPES.filter(bt => bt.type !== 'columns').map(bt => <option key={bt.type} value={bt.type}>{bt.label}</option>)}
+                    </select>
+                  </div>
+                </div>
+                {(colChildrenEdit[colIdx] || []).map((child: BlockData, childIdx: number) => {
+                  const childInfo = BLOCK_TYPES.find(b => b.type === child.type);
+                  return (
+                    <div key={child.id} className="flex items-center gap-2 bg-[#383838] rounded px-2 py-1.5 mb-1">
+                      {childInfo && <childInfo.icon size={12} className="text-gray-400 flex-shrink-0" />}
+                      <span className="flex-1 text-xs text-gray-300 truncate">{childInfo?.label || child.type}</span>
+                      <button onClick={() => {
+                        const updated = [...colChildrenEdit];
+                        updated[colIdx] = updated[colIdx].filter((_: BlockData, idx: number) => idx !== childIdx);
+                        onChange({ children: updated });
+                      }} className="text-red-400 hover:text-red-300"><Trash2 size={10} /></button>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
         </div>
       );
 
