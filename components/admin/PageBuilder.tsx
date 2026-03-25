@@ -275,7 +275,7 @@ export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilde
     const handler = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "z" && !e.shiftKey) { e.preventDefault(); undo(); }
       if ((e.ctrlKey || e.metaKey) && (e.key === "y" || (e.key === "z" && e.shiftKey))) { e.preventDefault(); redo(); }
-      if (e.key === "Escape") setSelectedBlock(null);
+      if (e.key === "Escape") { setSelectedBlock(null); setInsertPickerAt(null); }
       if (e.key === "Delete" && selectedBlock) {
         e.preventDefault();
         const newBlocks = blocks.filter((b) => b.id !== selectedBlock);
@@ -456,10 +456,18 @@ export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilde
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
               <SortableContext items={blocks.map((b) => b.id)} strategy={verticalListSortingStrategy}>
                 {blocks.length === 0 ? (
-                  <div className="bg-white rounded-xl border-2 border-dashed border-gray-300 p-16 text-center cursor-pointer hover:border-[var(--accent)] transition-colors" onClick={() => addBlock("heading")}>
+                  <div className="bg-white rounded-xl border-2 border-dashed border-gray-300 p-12 text-center hover:border-[var(--accent)] transition-colors">
                     <Plus size={40} className="mx-auto text-gray-300 mb-3" />
-                    <p className="text-gray-400 font-medium">Click to add your first widget</p>
-                    <p className="text-xs text-gray-300 mt-1">Or drag a widget from the left panel</p>
+                    <p className="text-gray-400 font-medium mb-4">Add your first widget</p>
+                    <p className="text-xs text-gray-400 mb-4">Click a widget below or use the left panel</p>
+                    <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 max-w-lg mx-auto">
+                      {BLOCK_TYPES.slice(0, 12).map((bt) => (
+                        <button key={bt.type} onClick={() => addBlock(bt.type, 0)} className="flex flex-col items-center gap-1 p-2.5 rounded-lg border border-gray-200 hover:border-[var(--accent)] hover:bg-[var(--accent)]/5 transition-all group/w">
+                          <bt.icon size={18} className="text-gray-400 group-hover/w:text-[var(--accent)]" />
+                          <span className="text-[9px] text-gray-500 leading-tight">{bt.label}</span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 ) : (
                   <div className="space-y-3">
