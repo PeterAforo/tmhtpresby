@@ -1218,9 +1218,36 @@ function BlockSettings({ block, onChange }: { block: BlockData; onChange: (conte
   }
 }
 
+const STYLE_PRESETS: { name: string; style: Record<string, string> }[] = [
+  { name: "Card", style: { padding: "24px", background: "#ffffff", borderRadius: "12px", border: "1px solid #e5e7eb" } },
+  { name: "Dark Card", style: { padding: "24px", background: "#1a1a2e", borderRadius: "12px" } },
+  { name: "Hero", style: { padding: "60px 24px", background: "linear-gradient(135deg, #0c1529 0%, #1a1a2e 100%)", minHeight: "300px" } },
+  { name: "Accent", style: { padding: "32px", background: "var(--accent)", borderRadius: "12px" } },
+  { name: "Subtle", style: { padding: "16px", background: "#f9fafb", borderRadius: "8px", border: "1px solid #f3f4f6" } },
+  { name: "Wide", style: { padding: "40px 0", maxWidth: "1200px", margin: "0 auto" } },
+];
+
 /* ─── Style Settings (per-block styling) ─── */
 function StyleSettings({ block, onChange }: { block: BlockData; onChange: (style: Record<string, string>) => void }) {
   const style = block.style || {};
+  const [savedPresets, setSavedPresets] = useState<{ name: string; style: Record<string, string> }[]>(() => {
+    try { const s = typeof window !== 'undefined' && localStorage.getItem('pb_style_presets'); return s ? JSON.parse(s) : []; } catch { return []; }
+  });
+  const [presetName, setPresetName] = useState("");
+
+  const savePreset = () => {
+    if (!presetName.trim() || Object.keys(style).length === 0) return;
+    const updated = [...savedPresets, { name: presetName.trim(), style: { ...style } }];
+    setSavedPresets(updated);
+    try { localStorage.setItem('pb_style_presets', JSON.stringify(updated)); } catch {}
+    setPresetName("");
+  };
+
+  const deletePreset = (idx: number) => {
+    const updated = savedPresets.filter((_, i) => i !== idx);
+    setSavedPresets(updated);
+    try { localStorage.setItem('pb_style_presets', JSON.stringify(updated)); } catch {}
+  };
 
   const StyleInput = ({ label, field, placeholder = "" }: { label: string; field: string; placeholder?: string }) => (
     <div className="mb-4">
@@ -1231,6 +1258,35 @@ function StyleSettings({ block, onChange }: { block: BlockData; onChange: (style
 
   return (
     <div>
+      {/* Presets */}
+      <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Quick Presets</h4>
+      <div className="grid grid-cols-3 gap-1.5 mb-4">
+        {STYLE_PRESETS.map((p) => (
+          <button key={p.name} onClick={() => onChange(p.style)} className="px-2 py-1.5 bg-[#383838] hover:bg-[#484848] rounded text-[10px] text-gray-300 hover:text-white transition-colors border border-transparent hover:border-[var(--accent)]">
+            {p.name}
+          </button>
+        ))}
+      </div>
+      {savedPresets.length > 0 && (
+        <>
+          <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Saved Presets</h4>
+          <div className="space-y-1 mb-4">
+            {savedPresets.map((p, i) => (
+              <div key={i} className="flex items-center gap-1">
+                <button onClick={() => onChange(p.style)} className="flex-1 px-2 py-1.5 bg-[#383838] hover:bg-[#484848] rounded text-[10px] text-gray-300 hover:text-white text-left truncate">{p.name}</button>
+                <button onClick={() => deletePreset(i)} className="p-1 hover:bg-red-500/20 rounded text-gray-500 hover:text-red-400"><Trash2 size={10} /></button>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+      {Object.keys(style).length > 0 && (
+        <div className="flex gap-1 mb-4">
+          <input type="text" value={presetName} onChange={(e) => setPresetName(e.target.value)} placeholder="Preset name..." className="flex-1 px-2 py-1 bg-[#383838] border border-[#505050] rounded text-xs text-white placeholder:text-gray-500" />
+          <button onClick={savePreset} disabled={!presetName.trim()} className="px-2 py-1 bg-[var(--accent)] text-white rounded text-xs disabled:opacity-30">Save</button>
+        </div>
+      )}
+
       <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Spacing</h4>
       <div className="grid grid-cols-2 gap-2 mb-4">
         <StyleInput label="Padding" field="padding" placeholder="e.g. 20px" />
