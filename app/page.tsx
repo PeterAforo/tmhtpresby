@@ -1,27 +1,27 @@
-import { HeroSection } from "@/components/home/HeroSection";
-import { QuickLinksSection } from "@/components/home/QuickLinksSection";
-import { AboutSection } from "@/components/home/AboutSection";
-import { LiveStreamSection } from "@/components/home/LiveStreamSection";
-import { PresbyterySection } from "@/components/home/PresbyterySection";
-import { MinistriesSection } from "@/components/home/MinistriesSection";
-import { ProjectsPreviewSection } from "@/components/home/ProjectsPreviewSection";
-import { PrayerFormSection } from "@/components/home/PrayerFormSection";
-import { TestimonialsSection } from "@/components/home/TestimonialsSection";
-import { WhatsNewSection } from "@/components/home/WhatsNewSection";
+import { prisma } from "@/lib/db";
+import { HomePageClient } from "@/components/home/HomePageClient";
 
-export default function HomePage() {
-  return (
-    <>
-      <HeroSection />
-      <QuickLinksSection />
-      <AboutSection />
-      <LiveStreamSection />
-      <PresbyterySection />
-      <MinistriesSection />
-      <ProjectsPreviewSection />
-      <PrayerFormSection />
-      <TestimonialsSection />
-      <WhatsNewSection />
-    </>
-  );
+interface BlockData {
+  id: string;
+  type: string;
+  content: Record<string, unknown>;
+}
+
+async function getHomePageContent(): Promise<BlockData[] | null> {
+  try {
+    const page = await prisma.page.findUnique({
+      where: { slug: "home" },
+      select: { content: true, published: true },
+    });
+
+    if (!page?.published || !page.content) return null;
+    return page.content as unknown as BlockData[];
+  } catch {
+    return null;
+  }
+}
+
+export default async function HomePage() {
+  const blocks = await getHomePageContent();
+  return <HomePageClient blocks={blocks} />;
 }

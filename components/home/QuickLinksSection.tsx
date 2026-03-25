@@ -9,23 +9,27 @@ import { motion } from "framer-motion";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const quickLinks = [
+const ICON_MAP: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
+  Church, LayoutGrid, Calendar,
+};
+
+const defaultQuickLinks = [
   {
-    icon: Church,
+    icon: "Church",
     title: "Our Church",
     description: "Discover our rich history, beliefs, and the vibrant community that makes up The Most Holy Trinity Presbyterian Church.",
     href: "/about",
     variant: "white" as const,
   },
   {
-    icon: LayoutGrid,
+    icon: "LayoutGrid",
     title: "Ministries",
     description: "Find your place to serve and grow. From youth to seniors, there's a ministry for everyone in our church family.",
     href: "/ministries",
     variant: "red" as const,
   },
   {
-    icon: Calendar,
+    icon: "Calendar",
     title: "Events",
     description: "Stay connected with upcoming services, fellowship gatherings, outreach programs, and special celebrations.",
     href: "/events",
@@ -33,7 +37,23 @@ const quickLinks = [
   },
 ];
 
-export function QuickLinksSection() {
+interface QuickLink {
+  icon: string;
+  title: string;
+  description: string;
+  href: string;
+  variant: string;
+}
+
+interface QuickLinksSectionProps {
+  links?: QuickLink[];
+}
+
+export function QuickLinksSection({ links }: QuickLinksSectionProps = {}) {
+  const quickLinks = (links && links.length > 0 ? links : defaultQuickLinks).map(link => ({
+    ...link,
+    IconComponent: ICON_MAP[link.icon] || Church,
+  }));
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -93,7 +113,7 @@ export function QuickLinksSection() {
                         ? "bg-white/10"
                         : "bg-[#E31B23]/5"
                     }`}>
-                      <link.icon 
+                      <link.IconComponent 
                         size={28} 
                         className={link.variant === "red" ? "text-white" : "text-[#E31B23]"} 
                       />

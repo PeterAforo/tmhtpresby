@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const testimonials = [
+const DEFAULT_TESTIMONIALS = [
   {
     quote: "Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Pellentesque in ipsum id orci porta dapibus. Proin eget tortor risus.",
     name: "Bobby K. Parker",
@@ -41,7 +41,24 @@ const testimonials = [
   },
 ];
 
-export function TestimonialsSection() {
+interface TestimonialItem {
+  quote: string;
+  name: string;
+  role: string;
+  image: string;
+  rating: number;
+}
+
+interface TestimonialsSectionProps {
+  label?: string;
+  heading?: string;
+  testimonials?: TestimonialItem[];
+}
+
+export function TestimonialsSection(props: TestimonialsSectionProps = {}) {
+  const testimonials = props.testimonials && props.testimonials.length > 0 ? props.testimonials : DEFAULT_TESTIMONIALS;
+  const sectionLabel = props.label || "TESTIMONIALS";
+  const sectionHeading = props.heading || "What Our\nCongregation Say";
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 2;
   const totalPages = Math.ceil(testimonials.length / itemsPerPage);
@@ -90,11 +107,11 @@ export function TestimonialsSection() {
         <div className="testimonial-header text-center mb-16">
           <div className="flex items-center justify-center gap-2 text-[#E31B23] text-sm font-semibold mb-4">
             <Plus size={16} />
-            <span>TESTIMONIALS</span>
+            <span>{sectionLabel}</span>
             <Plus size={16} />
           </div>
           <h2 className="font-[family-name:var(--font-heading)] text-3xl md:text-4xl font-bold text-[#0F172A]">
-            What Our<br />Congregation Say
+            {sectionHeading.split('\n').map((line, i) => (<span key={i}>{line}{i < sectionHeading.split('\n').length - 1 && <br />}</span>))}
           </h2>
         </div>
 

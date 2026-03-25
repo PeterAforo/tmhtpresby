@@ -63,7 +63,25 @@ const recentVideos: VideoItem[] = [
   },
 ];
 
-export function LiveStreamSection() {
+interface LiveStreamSectionProps {
+  label?: string;
+  heading?: string;
+  description?: string;
+  featuredVideo?: { videoId: string; title: string; date: string };
+  youtubeChannel?: string;
+}
+
+export function LiveStreamSection(props: LiveStreamSectionProps = {}) {
+  const streamLabel = props.label || "LIVE & ON-DEMAND";
+  const streamHeading = props.heading || "Watch Our Services";
+  const streamDescription = props.description || "Join us live every Sunday or catch up on past services, sermons, and special events.";
+  const overrideFeatured = props.featuredVideo?.videoId ? {
+    ...featuredVideo,
+    videoId: props.featuredVideo.videoId,
+    title: props.featuredVideo.title || featuredVideo.title,
+    date: props.featuredVideo.date || featuredVideo.date,
+    thumbnail: `https://img.youtube.com/vi/${props.featuredVideo.videoId}/maxresdefault.jpg`,
+  } : featuredVideo;
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -169,13 +187,13 @@ export function LiveStreamSection() {
           <div className="livestream-header text-center mb-12 lg:mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 text-red-500 text-sm font-semibold mb-4">
               <Radio size={16} className="animate-pulse" />
-              <span>LIVE & ON-DEMAND</span>
+              <span>{streamLabel}</span>
             </div>
             <h2 className="font-[family-name:var(--font-heading)] text-3xl sm:text-4xl lg:text-5xl font-bold text-[var(--text)] mb-4">
-              Watch Our Services
+              {streamHeading}
             </h2>
             <p className="text-[var(--text-muted)] text-base sm:text-lg max-w-2xl mx-auto">
-              Join us live every Sunday or catch up on past services, sermons, and special events.
+              {streamDescription}
             </p>
           </div>
 
@@ -187,8 +205,8 @@ export function LiveStreamSection() {
                 <div className="lg:col-span-3 relative">
                   <div className="relative aspect-video lg:aspect-auto lg:h-full min-h-[300px] lg:min-h-[400px]">
                     <Image
-                      src={featuredVideo.thumbnail}
-                      alt={featuredVideo.title}
+                      src={overrideFeatured.thumbnail}
+                      alt={overrideFeatured.title}
                       fill
                       className="object-cover"
                     />
@@ -198,7 +216,7 @@ export function LiveStreamSection() {
                     
                     {/* Play button */}
                     <motion.button
-                      onClick={() => openVideo(featuredVideo.videoId)}
+                      onClick={() => openVideo(overrideFeatured.videoId)}
                       className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.95 }}
@@ -212,9 +230,9 @@ export function LiveStreamSection() {
                     </motion.button>
 
                     {/* Duration badge */}
-                    {featuredVideo.duration && (
+                    {overrideFeatured.duration && (
                       <div className="absolute bottom-4 left-4 px-3 py-1 rounded-lg bg-black/70 text-white text-sm font-medium backdrop-blur-sm">
-                        {featuredVideo.duration}
+                        {overrideFeatured.duration}
                       </div>
                     )}
                   </div>
@@ -228,12 +246,12 @@ export function LiveStreamSection() {
                     </span>
                     <span className="flex items-center gap-1 text-slate-400 text-sm">
                       <Calendar size={14} />
-                      {featuredVideo.date}
+                      {overrideFeatured.date}
                     </span>
                   </div>
                   
                   <h3 className="font-[family-name:var(--font-heading)] text-xl lg:text-2xl font-bold text-white mb-4 leading-tight">
-                    {featuredVideo.title}
+                    {overrideFeatured.title}
                   </h3>
                   
                   <p className="text-slate-300 text-sm lg:text-base leading-relaxed mb-6">
@@ -243,7 +261,7 @@ export function LiveStreamSection() {
 
                   <div className="flex flex-col sm:flex-row gap-3">
                     <motion.button
-                      onClick={() => openVideo(featuredVideo.videoId)}
+                      onClick={() => openVideo(overrideFeatured.videoId)}
                       className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-white text-slate-900 font-semibold hover:bg-slate-100 transition-colors"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}

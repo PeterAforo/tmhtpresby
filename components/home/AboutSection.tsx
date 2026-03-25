@@ -10,28 +10,43 @@ import { motion } from "framer-motion";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const FEATURES = [
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  Heart, Users, BookOpen, Church,
+};
+
+const DEFAULT_FEATURES = [
   {
-    icon: Heart,
+    icon: "Heart",
     title: "Compassionate Community",
     description: "A welcoming family where everyone belongs and is loved unconditionally.",
   },
   {
-    icon: Users,
+    icon: "Users",
     title: "Strong Fellowship",
     description: "Building lasting relationships through shared faith and service together.",
   },
   {
-    icon: BookOpen,
+    icon: "BookOpen",
     title: "Biblical Teaching",
     description: "Grounded in Scripture, equipping believers for life and ministry.",
   },
   {
-    icon: Church,
+    icon: "Church",
     title: "Vibrant Worship",
     description: "Encountering God's presence through Spirit-filled praise and prayer.",
   },
 ];
+
+interface AboutSectionProps {
+  label?: string;
+  heading?: string;
+  description?: string;
+  image?: string;
+  stats?: { value: string; label: string }[];
+  features?: { icon: string; title: string; description: string }[];
+  contactPhone?: string;
+  contactLabel?: string;
+}
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -56,7 +71,19 @@ const itemVariants = {
   },
 };
 
-export function AboutSection() {
+export function AboutSection(props: AboutSectionProps = {}) {
+  const features = (props.features && props.features.length > 0 ? props.features : DEFAULT_FEATURES).map(f => ({
+    ...f,
+    IconComponent: ICON_MAP[f.icon] || Heart,
+  }));
+  const aboutLabel = props.label || "About Our Church";
+  const aboutHeading = props.heading || "A Community Built on Faith, Love & Purpose";
+  const aboutDescription = props.description || "At The Most Holy Trinity Presbyterian Church, we believe in the transformative power of God\u2019s love. For over 25 years, we\u2019ve been nurturing faith, building community, and serving Lashibi and beyond with compassion and purpose.";
+  const aboutImage = props.image || "/img/about/3.png";
+  const stat1 = props.stats?.[0] || { value: "1500+", label: "Church Members" };
+  const stat2 = props.stats?.[1] || { value: "25+", label: "Years of Faith" };
+  const contactPhone = props.contactPhone || "+233 24 683 9756";
+  const contactLabel = props.contactLabel || "Speak with our Pastor";
   const sectionRef = useRef<HTMLElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
 
@@ -171,7 +198,7 @@ export function AboutSection() {
                   transition={{ duration: 0.5, ease: "easeOut" }}
                 >
                   <Image
-                    src="/img/about/3.png"
+                    src={aboutImage}
                     alt="Our Church Community"
                     fill
                     className="object-cover object-top"
@@ -188,10 +215,10 @@ export function AboutSection() {
                 transition={{ duration: 0.3 }}
               >
                 <div className="flex items-baseline">
-                  <span className="text-3xl sm:text-4xl lg:text-5xl font-bold font-heading">1500</span>
-                  <span className="text-crimson text-xl sm:text-2xl lg:text-3xl font-bold">+</span>
+                  <span className="text-3xl sm:text-4xl lg:text-5xl font-bold font-heading">{stat1.value.replace('+', '')}</span>
+                  <span className="text-crimson text-xl sm:text-2xl lg:text-3xl font-bold">{stat1.value.includes('+') ? '+' : ''}</span>
                 </div>
-                <span className="text-xs sm:text-sm text-white/80 text-center mt-1 px-2">Church Members</span>
+                <span className="text-xs sm:text-sm text-white/80 text-center mt-1 px-2">{stat1.label}</span>
               </motion.div>
 
               {/* Secondary badge - Years */}
@@ -200,8 +227,8 @@ export function AboutSection() {
                 whileHover={{ scale: 1.08, rotate: 2 }}
                 transition={{ duration: 0.3 }}
               >
-                <span className="text-2xl sm:text-3xl lg:text-4xl font-bold font-heading">25+</span>
-                <span className="block text-xs sm:text-sm text-white/90">Years of Faith</span>
+                <span className="text-2xl sm:text-3xl lg:text-4xl font-bold font-heading">{stat2.value}</span>
+                <span className="block text-xs sm:text-sm text-white/90">{stat2.label}</span>
               </motion.div>
             </div>
           </div>
@@ -218,7 +245,7 @@ export function AboutSection() {
             <motion.div variants={itemVariants} className="flex items-center gap-2 mb-4 sm:mb-6">
               <span className="w-8 sm:w-12 h-[2px] bg-crimson" />
               <span className="text-crimson text-xs sm:text-sm font-semibold tracking-wider uppercase">
-                About Our Church
+                {aboutLabel}
               </span>
             </motion.div>
 
@@ -227,8 +254,7 @@ export function AboutSection() {
               variants={itemVariants}
               className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-bold text-navy mb-4 sm:mb-6 leading-[1.1]"
             >
-              A Community Built on{" "}
-              <span className="text-primary">Faith, Love</span> & Purpose
+              {aboutHeading}
             </motion.h2>
 
             {/* Description */}
@@ -236,9 +262,7 @@ export function AboutSection() {
               variants={itemVariants}
               className="text-charcoal/70 text-base sm:text-lg leading-relaxed mb-6 sm:mb-8 max-w-xl"
             >
-              At The Most Holy Trinity Presbyterian Church, we believe in the transformative power of 
-              God&apos;s love. For over 25 years, we&apos;ve been nurturing faith, building community, 
-              and serving Lashibi and beyond with compassion and purpose.
+              {aboutDescription}
             </motion.p>
 
             {/* CTA Buttons */}
@@ -262,14 +286,14 @@ export function AboutSection() {
 
         {/* Features Grid */}
         <div className="features-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-16 sm:mt-20 lg:mt-24">
-          {FEATURES.map((feature, index) => (
+          {features.map((feature, index) => (
             <motion.div
               key={feature.title}
               className="feature-card group bg-white rounded-xl sm:rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 hover:border-primary/20"
               whileHover={{ y: -8 }}
             >
               <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary group-hover:scale-110 transition-all duration-300">
-                <feature.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary group-hover:text-white transition-colors" />
+                <feature.IconComponent className="w-6 h-6 sm:w-7 sm:h-7 text-primary group-hover:text-white transition-colors" />
               </div>
               <h4 className="font-heading font-semibold text-navy text-lg sm:text-xl mb-2">
                 {feature.title}
@@ -295,8 +319,8 @@ export function AboutSection() {
                   </svg>
                 </div>
                 <div className="text-white">
-                  <p className="text-sm text-white/60 mb-1">Speak with our Pastor</p>
-                  <p className="text-2xl sm:text-3xl font-bold tracking-wide font-heading">+233 24 683 9756</p>
+                  <p className="text-sm text-white/60 mb-1">{contactLabel}</p>
+                  <p className="text-2xl sm:text-3xl font-bold tracking-wide font-heading">{contactPhone}</p>
                 </div>
               </div>
 

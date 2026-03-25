@@ -7,7 +7,7 @@ import { gsap } from "gsap";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
-const HERO_SLIDES = [
+const DEFAULT_SLIDES = [
   {
     image: "/img/pictures/2/001.jpg",
     headline: "Welcome to The Most Holy Trinity",
@@ -46,7 +46,21 @@ const HERO_SLIDES = [
   },
 ];
 
-export function HeroSection() {
+interface HeroSlide {
+  image: string;
+  headline: string;
+  subline: string;
+  accent: string;
+}
+
+interface HeroSectionProps {
+  slides?: HeroSlide[];
+  autoplaySpeed?: number;
+  height?: string;
+}
+
+export function HeroSection({ slides, autoplaySpeed = 6000, height }: HeroSectionProps = {}) {
+  const HERO_SLIDES = slides && slides.length > 0 ? slides : DEFAULT_SLIDES;
   const [currentSlide, setCurrentSlide] = useState(0);
   const [prevSlideIndex, setPrevSlideIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -109,7 +123,7 @@ export function HeroSection() {
   };
 
   useEffect(() => {
-    const interval = setInterval(nextSlide, 6000);
+    const interval = setInterval(nextSlide, autoplaySpeed);
     return () => clearInterval(interval);
   }, [nextSlide]);
 

@@ -224,9 +224,7 @@ export default function EditPagePage({ params }: { params: Promise<{ id: string 
               <div className="flex items-center gap-3">
                 <Info size={18} className="text-blue-600 flex-shrink-0" />
                 <p className="text-sm text-blue-800">
-                  <strong>Core Page:</strong> These sections are managed through code components. 
-                  You can reorder them, but content is edited via{" "}
-                  <Link href="/admin/page-heroes" className="underline font-medium">Page Heroes</Link> and other admin sections.
+                  <strong>Core Page:</strong> Edit the content of each section below. Changes will appear on the live site after saving.
                 </p>
               </div>
             </div>
