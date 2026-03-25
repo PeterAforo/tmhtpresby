@@ -46,6 +46,10 @@ import {
   ArrowLeft,
   Search,
   Grip,
+  Clipboard,
+  Upload,
+  Palette,
+  MoreVertical,
 } from "lucide-react";
 import {
   DndContext,
@@ -267,6 +271,11 @@ export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilde
   const [widgetSearch, setWidgetSearch] = useState("");
   const [dragActiveId, setDragActiveId] = useState<string | null>(null);
   const [insertPickerAt, setInsertPickerAt] = useState<number | null>(null);
+  const [contextMenu, setContextMenu] = useState<{ x: number; y: number; blockId: string } | null>(null);
+  const [editingBlockId, setEditingBlockId] = useState<string | null>(null);
+  const [clipboardBlock, setClipboardBlock] = useState<BlockData | null>(() => {
+    try { const s = typeof window !== 'undefined' && localStorage.getItem('pb_clipboard'); return s ? JSON.parse(s) : null; } catch { return null; }
+  });
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
@@ -281,10 +290,12 @@ export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilde
         push(blocks.filter((b) => b.id !== selectedBlock));
         setSelectedBlock(null);
       }
+      if ((e.ctrlKey || e.metaKey) && e.key === "c" && selectedBlock) { e.preventDefault(); copyBlock(selectedBlock); }
+      if ((e.ctrlKey || e.metaKey) && e.key === "v" && clipboardBlock) { e.preventDefault(); pasteBlock(selectedBlock || undefined); }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [undo, redo, selectedBlock, blocks, push]);
+  }, [undo, redo, selectedBlock, blocks, push, clipboardBlock]);
 
   // Sync history to parent
   useEffect(() => { onChange(blocks); }, [blocks, onChange]);
@@ -325,6 +336,33 @@ export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilde
 
   const updateBlockStyle = (id: string, style: Record<string, string>) => {
     updateBlocks(blocks.map((b) => (b.id === id ? { ...b, style: { ...b.style, ...style } } : b)));
+  };
+
+  const moveBlock = (id: string, direction: 'up' | 'down') => {
+    const idx = blocks.findIndex((b) => b.id === id);
+    if (idx === -1) return;
+    const newIdx = direction === 'up' ? idx - 1 : idx + 1;
+    if (newIdx < 0 || newIdx >= blocks.length) return;
+    updateBlocks(arrayMove(blocks, idx, newIdx));
+  };
+
+  const copyBlock = (id: string) => {
+    const block = blocks.find((b) => b.id === id);
+    if (!block) return;
+    const copy = { ...block, id: generateId(), content: { ...block.content }, style: block.style ? { ...block.style } : undefined };
+    setClipboardBlock(copy);
+    try { localStorage.setItem('pb_clipboard', JSON.stringify(copy)); } catch {}
+  };
+
+  const pasteBlock = (afterId?: string) => {
+    if (!clipboardBlock) return;
+    const pasted = { ...clipboardBlock, id: generateId(), content: { ...clipboardBlock.content } };
+    const newBlocks = [...blocks];
+    const idx = afterId ? blocks.findIndex((b) => b.id === afterId) : blocks.length - 1;
+    newBlocks.splice(idx + 1, 0, pasted);
+    updateBlocks(newBlocks);
+    setSelectedBlock(pasted.id);
+    setSidebarPanel('settings');
   };
 
   const handleDragStart = (event: DragStartEvent) => setDragActiveId(event.active.id as string);
@@ -526,17 +564,24 @@ export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilde
                           </div>
                         )}
                         <SortableBlock id={block.id} isSelected={selectedBlock === block.id} isPreview={previewMode} onClick={() => {
-                          if (!previewMode) { setSelectedBlock(block.id); setSidebarPanel("settings"); setSidebarOpen(true); setInsertPickerAt(null); }
+                          if (!previewMode) { setSelectedBlock(block.id); setSidebarPanel("settings"); setSidebarOpen(true); setInsertPickerAt(null); setContextMenu(null); }
                         }}>
                           {/* Block toolbar */}
                           {!previewMode && selectedBlock === block.id && (
                             <div className="absolute -top-3 right-4 flex items-center gap-0.5 bg-[var(--accent)] rounded-lg shadow-lg px-1 py-0.5 z-20">
-                              <button onClick={(e) => { e.stopPropagation(); duplicateBlock(block.id); }} className="p-1 hover:bg-white/20 rounded text-white" title="Duplicate"><Copy size={13} /></button>
+                              <button onClick={(e) => { e.stopPropagation(); moveBlock(block.id, 'up'); }} disabled={index === 0} className="p-1 hover:bg-white/20 rounded text-white disabled:opacity-30" title="Move Up"><ChevronUp size={13} /></button>
+                              <button onClick={(e) => { e.stopPropagation(); moveBlock(block.id, 'down'); }} disabled={index === blocks.length - 1} className="p-1 hover:bg-white/20 rounded text-white disabled:opacity-30" title="Move Down"><ChevronDown size={13} /></button>
+                              <div className="w-px h-4 bg-white/20 mx-0.5" />
+                              <button onClick={(e) => { e.stopPropagation(); copyBlock(block.id); }} className="p-1 hover:bg-white/20 rounded text-white" title="Copy (Ctrl+C)"><Copy size={13} /></button>
+                              <button onClick={(e) => { e.stopPropagation(); duplicateBlock(block.id); }} className="p-1 hover:bg-white/20 rounded text-white" title="Duplicate"><LayoutGrid size={13} /></button>
                               <button onClick={(e) => { e.stopPropagation(); removeBlock(block.id); }} className="p-1 hover:bg-white/20 rounded text-white" title="Delete"><Trash2 size={13} /></button>
                             </div>
                           )}
-                          <div className="bg-white rounded-lg overflow-hidden" style={block.style ? { padding: block.style.padding, margin: block.style.margin, background: block.style.background } : undefined}>
-                            <BlockRenderer block={block} />
+                          {/* Right-click context menu trigger */}
+                          <div onContextMenu={(e) => { if (!previewMode) { e.preventDefault(); e.stopPropagation(); setContextMenu({ x: e.clientX, y: e.clientY, blockId: block.id }); setSelectedBlock(block.id); } }}>
+                            <div className="bg-white rounded-lg overflow-hidden" style={block.style ? { padding: block.style.padding, margin: block.style.margin, background: block.style.background } : undefined}>
+                              <BlockRenderer block={block} onInlineEdit={editingBlockId === block.id ? (field: string, value: string) => updateBlockContent(block.id, { [field]: value }) : undefined} onStartEdit={() => setEditingBlockId(block.id)} />
+                            </div>
                           </div>
                         </SortableBlock>
                       </div>
@@ -581,12 +626,36 @@ export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilde
             </DndContext>
           </div>
         </div>
+
+        {/* Right-click context menu */}
+        {contextMenu && (
+          <>
+            <div className="fixed inset-0 z-40" onClick={() => setContextMenu(null)} onContextMenu={(e) => { e.preventDefault(); setContextMenu(null); }} />
+            <div className="fixed z-50 bg-white rounded-xl shadow-2xl border border-gray-200 py-1.5 w-48 text-sm" style={{ left: contextMenu.x, top: contextMenu.y }}>
+              {(() => { const idx = blocks.findIndex(b => b.id === contextMenu.blockId); return (
+                <>
+                  <button onClick={() => { moveBlock(contextMenu.blockId, 'up'); setContextMenu(null); }} disabled={idx === 0} className="w-full flex items-center gap-2.5 px-3 py-1.5 hover:bg-gray-50 disabled:opacity-30 disabled:hover:bg-transparent text-gray-700"><ChevronUp size={14} /> Move Up</button>
+                  <button onClick={() => { moveBlock(contextMenu.blockId, 'down'); setContextMenu(null); }} disabled={idx === blocks.length - 1} className="w-full flex items-center gap-2.5 px-3 py-1.5 hover:bg-gray-50 disabled:opacity-30 disabled:hover:bg-transparent text-gray-700"><ChevronDown size={14} /> Move Down</button>
+                  <div className="h-px bg-gray-100 my-1" />
+                  <button onClick={() => { copyBlock(contextMenu.blockId); setContextMenu(null); }} className="w-full flex items-center gap-2.5 px-3 py-1.5 hover:bg-gray-50 text-gray-700"><Copy size={14} /> Copy</button>
+                  <button onClick={() => { pasteBlock(contextMenu.blockId); setContextMenu(null); }} disabled={!clipboardBlock} className="w-full flex items-center gap-2.5 px-3 py-1.5 hover:bg-gray-50 disabled:opacity-30 text-gray-700"><Clipboard size={14} /> Paste After</button>
+                  <button onClick={() => { duplicateBlock(contextMenu.blockId); setContextMenu(null); }} className="w-full flex items-center gap-2.5 px-3 py-1.5 hover:bg-gray-50 text-gray-700"><LayoutGrid size={14} /> Duplicate</button>
+                  <div className="h-px bg-gray-100 my-1" />
+                  <button onClick={() => { setSelectedBlock(contextMenu.blockId); setSidebarPanel('settings'); setSidebarOpen(true); setContextMenu(null); }} className="w-full flex items-center gap-2.5 px-3 py-1.5 hover:bg-gray-50 text-gray-700"><Settings size={14} /> Edit Settings</button>
+                  <button onClick={() => { setSelectedBlock(contextMenu.blockId); setSidebarPanel('style'); setSidebarOpen(true); setContextMenu(null); }} className="w-full flex items-center gap-2.5 px-3 py-1.5 hover:bg-gray-50 text-gray-700"><Paintbrush size={14} /> Edit Style</button>
+                  <div className="h-px bg-gray-100 my-1" />
+                  <button onClick={() => { removeBlock(contextMenu.blockId); setContextMenu(null); }} className="w-full flex items-center gap-2.5 px-3 py-1.5 hover:bg-red-50 text-red-600"><Trash2 size={14} /> Delete</button>
+                </>
+              ); })()}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
 }
 
-function BlockRenderer({ block }: { block: BlockData }) {
+function BlockRenderer({ block, onInlineEdit, onStartEdit }: { block: BlockData; onInlineEdit?: (field: string, value: string) => void; onStartEdit?: () => void }) {
   const { type, content } = block;
   const blockInfo = BLOCK_TYPES.find((b) => b.type === type);
 
@@ -717,10 +786,18 @@ function BlockRenderer({ block }: { block: BlockData }) {
     case "heading":
       const level = (content.level as string) || "h2";
       const headingClass = `font-bold ${level === "h1" ? "text-3xl" : level === "h2" ? "text-2xl" : "text-xl"} text-${content.align || "left"}`;
-      return <h2 className={headingClass}>{(content.text as string) || "Heading"}</h2>;
+      return onInlineEdit ? (
+        <h2 className={headingClass + " outline-none ring-2 ring-[var(--accent)]/30 rounded px-1 -mx-1"} contentEditable suppressContentEditableWarning onBlur={(e) => onInlineEdit("text", e.currentTarget.textContent || "")}>{(content.text as string) || "Heading"}</h2>
+      ) : (
+        <h2 className={headingClass + " cursor-text"} onDoubleClick={onStartEdit}>{(content.text as string) || "Heading"}</h2>
+      );
 
     case "paragraph":
-      return <p className={`text-gray-700 text-${content.align || "left"}`}>{(content.text as string) || "Paragraph..."}</p>;
+      return onInlineEdit ? (
+        <p className={`text-gray-700 text-${content.align || "left"} outline-none ring-2 ring-[var(--accent)]/30 rounded px-1 -mx-1`} contentEditable suppressContentEditableWarning onBlur={(e) => onInlineEdit("text", e.currentTarget.textContent || "")}>{(content.text as string) || "Paragraph..."}</p>
+      ) : (
+        <p className={`text-gray-700 text-${content.align || "left"} cursor-text`} onDoubleClick={onStartEdit}>{(content.text as string) || "Paragraph..."}</p>
+      );
 
     case "image":
       return content.url ? <img src={content.url as string} alt={(content.alt as string) || ""} className="rounded-lg w-full" /> : (
@@ -733,7 +810,11 @@ function BlockRenderer({ block }: { block: BlockData }) {
     case "quote":
       return (
         <blockquote className="border-l-4 border-[var(--accent)] pl-4 py-2 italic">
-          <p className="text-gray-700">{(content.text as string) || "Quote..."}</p>
+          {onInlineEdit ? (
+            <p className="text-gray-700 outline-none ring-2 ring-[var(--accent)]/30 rounded px-1 -mx-1" contentEditable suppressContentEditableWarning onBlur={(e) => onInlineEdit("text", e.currentTarget.textContent || "")}>{(content.text as string) || "Quote..."}</p>
+          ) : (
+            <p className="text-gray-700 cursor-text" onDoubleClick={onStartEdit}>{(content.text as string) || "Quote..."}</p>
+          )}
           {typeof content.author === 'string' && content.author && <footer className="text-sm text-gray-500 mt-1">— {content.author}</footer>}
         </blockquote>
       );
