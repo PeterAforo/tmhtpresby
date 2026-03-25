@@ -81,13 +81,23 @@ export default function PagesListPage() {
             Create and manage custom pages with the page builder
           </p>
         </div>
-        <Link
-          href="/admin/pages/new"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--accent)] text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
-        >
-          <Plus size={18} />
-          Create Page
-        </Link>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleSeedPages}
+            disabled={seeding}
+            className="inline-flex items-center gap-2 px-4 py-2 border border-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+          >
+            {seeding ? <Loader2 size={18} className="animate-spin" /> : <RefreshCw size={18} />}
+            {seeding ? "Updating..." : "Refresh Core Pages"}
+          </button>
+          <Link
+            href="/admin/pages/new"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--accent)] text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
+          >
+            <Plus size={18} />
+            Create Page
+          </Link>
+        </div>
       </div>
 
       {/* Pages List */}
