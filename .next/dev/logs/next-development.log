@@ -1,3 +1,0 @@
-[00:01:04.512] Server  LOG     ○ Compiling middleware ...
-[00:01:13.276] Server  WARN    ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
-[00:01:19.403] Server  LOG     ✓ Ready in 66.9s

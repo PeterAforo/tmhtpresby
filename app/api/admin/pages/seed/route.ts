@@ -5,90 +5,214 @@ import { prisma } from "@/lib/db";
 // Helper to generate unique IDs
 const genId = () => Math.random().toString(36).substring(2, 9);
 
-// Define sections for each core page
+// Home page with full editable sections
 const homePageSections = [
-  { id: genId(), type: "core-section", content: { name: "HeroSection", label: "Hero Section", description: "Main hero with slideshow and call-to-action buttons" } },
-  { id: genId(), type: "core-section", content: { name: "QuickLinksSection", label: "Quick Links", description: "Quick access buttons for key pages" } },
-  { id: genId(), type: "core-section", content: { name: "AboutSection", label: "About Section", description: "Brief introduction about the church" } },
-  { id: genId(), type: "core-section", content: { name: "LiveStreamSection", label: "Live Stream", description: "Live streaming and upcoming service info" } },
-  { id: genId(), type: "core-section", content: { name: "PresbyterySection", label: "Presbytery Section", description: "Presbyterian Church of Ghana information" } },
-  { id: genId(), type: "core-section", content: { name: "MinistriesSection", label: "Ministries Preview", description: "Featured ministries showcase" } },
-  { id: genId(), type: "core-section", content: { name: "ProjectsPreviewSection", label: "Projects Preview", description: "Featured church projects" } },
-  { id: genId(), type: "core-section", content: { name: "PrayerFormSection", label: "Prayer Request", description: "Prayer request submission form" } },
-  { id: genId(), type: "core-section", content: { name: "TestimonialsSection", label: "Testimonials", description: "Member testimonials carousel" } },
-  { id: genId(), type: "core-section", content: { name: "WhatsNewSection", label: "What's New", description: "Latest news and announcements" } },
+  {
+    id: genId(),
+    type: "hero-slider",
+    content: {
+      slides: [
+        { id: genId(), image: "/img/pictures/2/001.jpg", headline: "Welcome to TMHT Presbyterian Church", subline: "A community of faith, hope, and love in Lashibi", accent: "Sunday Service 9:00 AM" },
+        { id: genId(), image: "/img/pictures/2/002.jpg", headline: "Growing Together in Faith", subline: "Join us for worship, fellowship, and spiritual growth", accent: "Bible Study Wednesdays" },
+        { id: genId(), image: "/img/pictures/2/003.jpg", headline: "Serving Our Community", subline: "Making a difference through love and action", accent: "Get Involved Today" },
+      ],
+      autoplaySpeed: 6000,
+      height: "600px",
+    },
+  },
+  {
+    id: genId(),
+    type: "quick-links",
+    content: {
+      links: [
+        { id: genId(), icon: "Church", title: "Our Church", description: "Discover our rich history and vibrant community.", href: "/about", variant: "white" },
+        { id: genId(), icon: "LayoutGrid", title: "Ministries", description: "Find your place to serve and grow.", href: "/ministries", variant: "red" },
+        { id: genId(), icon: "Calendar", title: "Events", description: "Stay connected with upcoming events.", href: "/events", variant: "white" },
+      ],
+    },
+  },
+  {
+    id: genId(),
+    type: "about-section",
+    content: {
+      label: "About Our Church",
+      heading: "A Community Built on Faith, Love & Purpose",
+      description: "We believe in the transformative power of God's love. For over 25 years, we've been nurturing faith, building community, and serving with compassion and purpose.",
+      image: "/img/about/3.png",
+      stats: [{ value: "1500+", label: "Church Members" }, { value: "25+", label: "Years of Faith" }],
+      features: [
+        { icon: "Heart", title: "Compassionate Community", description: "A welcoming family where everyone belongs." },
+        { icon: "Users", title: "Strong Fellowship", description: "Building lasting relationships through shared faith." },
+        { icon: "BookOpen", title: "Biblical Teaching", description: "Grounded in Scripture, equipping believers." },
+        { icon: "Church", title: "Vibrant Worship", description: "Encountering God's presence through praise." },
+      ],
+      contactPhone: "+233 24 683 9756",
+      contactLabel: "Speak with our Pastor",
+    },
+  },
+  {
+    id: genId(),
+    type: "live-stream",
+    content: {
+      label: "LIVE & ON-DEMAND",
+      heading: "Watch Our Services",
+      description: "Join us live every Sunday or catch up on past services, sermons, and special events.",
+      featuredVideo: { videoId: "jhloSMM-y0c", title: "Sunday Worship Service", date: "Nov 30, 2025" },
+      youtubeChannel: "https://www.youtube.com/@tmhtpresby",
+    },
+  },
+  {
+    id: genId(),
+    type: "ministries-preview",
+    content: {
+      label: "OUR MINISTRIES",
+      heading: "Find Your Place to Serve",
+      description: "Discover the many ways you can get involved and make a difference.",
+      showCount: 6,
+      ctaUrl: "/ministries",
+    },
+  },
+  {
+    id: genId(),
+    type: "prayer-request",
+    content: {
+      title: "Submit a Prayer Request",
+      description: "Share your prayer needs with our prayer team. We believe in the power of prayer.",
+    },
+  },
+  {
+    id: genId(),
+    type: "testimonials-section",
+    content: {
+      label: "TESTIMONIALS",
+      heading: "What Our Congregation Say",
+      testimonials: [
+        { id: genId(), quote: "This church has transformed my life. The warmth and genuine love I've experienced here is unlike anything I've known before.", name: "Akua Mensah", role: "Member since 2018", image: "/img/pictures/2/016.jpg", rating: 5 },
+        { id: genId(), quote: "The youth ministry has been a blessing for my children. They've grown so much in their faith.", name: "Kofi Asante", role: "Member since 2015", image: "/img/pictures/2/018.jpg", rating: 5 },
+      ],
+    },
+  },
+  {
+    id: genId(),
+    type: "cta-banner",
+    content: {
+      heading: "Ready to Join Us?",
+      description: "We'd love to welcome you to our church family. Visit us this Sunday!",
+      buttonText: "Plan Your Visit",
+      buttonUrl: "/contact",
+      backgroundColor: "var(--accent)",
+    },
+  },
+];
+
+// Standard page sections with editable hero
+const createStandardPageSections = (title: string, subtitle: string) => [
+  {
+    id: genId(),
+    type: "page-hero",
+    content: {
+      title,
+      subtitle,
+      backgroundImage: "/img/pictures/2/001.jpg",
+      overlayColor: "rgba(12, 21, 41, 0.85)",
+      height: "400px",
+      alignment: "center",
+    },
+  },
 ];
 
 const aboutPageSections = [
-  { id: genId(), type: "core-section", content: { name: "PageHeroWithBackground", label: "Page Hero", description: "Hero section with background image" } },
-  { id: genId(), type: "core-section", content: { name: "AboutLinksGrid", label: "About Links", description: "Grid of links to about sub-pages (Our Story, Beliefs, Leadership, Vision)" } },
+  ...createStandardPageSections("About Us", "Learn about our church, our beliefs, and our mission"),
+  {
+    id: genId(),
+    type: "quick-links",
+    content: {
+      links: [
+        { id: genId(), icon: "Church", title: "Our Story", description: "Learn about our history and journey", href: "/about/church", variant: "white" },
+        { id: genId(), icon: "BookOpen", title: "Our Beliefs", description: "What we believe and stand for", href: "/about/beliefs", variant: "red" },
+        { id: genId(), icon: "Users", title: "Leadership", description: "Meet our church leaders", href: "/about/leadership", variant: "white" },
+      ],
+    },
+  },
 ];
 
 const ministriesPageSections = [
-  { id: genId(), type: "core-section", content: { name: "PageHeroWithBackground", label: "Page Hero", description: "Hero section with background image" } },
-  { id: genId(), type: "core-section", content: { name: "MinistriesGrid", label: "Ministries Grid", description: "Grid of all church ministries (pulled from database)" } },
+  ...createStandardPageSections("Our Ministries", "Find your place to serve and grow in faith"),
+  { id: genId(), type: "ministries-preview", content: { label: "", heading: "", showCount: 12, ctaUrl: "" } },
 ];
 
 const eventsPageSections = [
-  { id: genId(), type: "core-section", content: { name: "PageHeroWithBackground", label: "Page Hero", description: "Hero section with background image" } },
-  { id: genId(), type: "core-section", content: { name: "EventsList", label: "Events List", description: "List of upcoming and past events (pulled from database)" } },
+  ...createStandardPageSections("Events", "Stay connected with upcoming church events"),
+  { id: genId(), type: "events-list", content: { count: 10, showPast: false } },
 ];
 
 const sermonsPageSections = [
-  { id: genId(), type: "core-section", content: { name: "PageHeroWithBackground", label: "Page Hero", description: "Hero section with background image" } },
-  { id: genId(), type: "core-section", content: { name: "SermonsGrid", label: "Sermons Grid", description: "Grid of sermons with filters (pulled from database)" } },
+  ...createStandardPageSections("Sermons", "Watch and listen to our messages"),
+  { id: genId(), type: "sermons-list", content: { count: 12, showVideo: true } },
 ];
 
 const blogPageSections = [
-  { id: genId(), type: "core-section", content: { name: "PageHeroWithBackground", label: "Page Hero", description: "Hero section with background image" } },
-  { id: genId(), type: "core-section", content: { name: "BlogGrid", label: "Blog Posts", description: "Grid of blog posts with categories (pulled from database)" } },
+  ...createStandardPageSections("Blog & News", "Stay updated with church news and articles"),
+  { id: genId(), type: "blog-posts", content: { count: 9 } },
 ];
 
 const galleryPageSections = [
-  { id: genId(), type: "core-section", content: { name: "PageHeroWithBackground", label: "Page Hero", description: "Hero section with background image" } },
-  { id: genId(), type: "core-section", content: { name: "GalleryGrid", label: "Photo Gallery", description: "Photo gallery with albums (pulled from database)" } },
+  ...createStandardPageSections("Photo Gallery", "Memories from our church family"),
 ];
 
 const contactPageSections = [
-  { id: genId(), type: "core-section", content: { name: "PageHeroWithBackground", label: "Page Hero", description: "Hero section with background image" } },
-  { id: genId(), type: "core-section", content: { name: "ContactInfo", label: "Contact Information", description: "Church address, phone, email, and hours" } },
-  { id: genId(), type: "core-section", content: { name: "ContactForm", label: "Contact Form", description: "Message submission form" } },
-  { id: genId(), type: "core-section", content: { name: "LocationMap", label: "Location Map", description: "Google Maps embed showing church location" } },
+  ...createStandardPageSections("Contact Us", "We'd love to hear from you"),
+  { id: genId(), type: "contact-form", content: { title: "Send us a Message", fields: ["name", "email", "phone", "message"] } },
+  { id: genId(), type: "map", content: { address: "TMHT Presbyterian Church, Lashibi, Accra, Ghana", zoom: 15 } },
 ];
 
 const givePageSections = [
-  { id: genId(), type: "core-section", content: { name: "PageHeroWithBackground", label: "Page Hero", description: "Hero section with background image" } },
-  { id: genId(), type: "core-section", content: { name: "GivingOptions", label: "Giving Options", description: "Different ways to give (online, mobile money, bank)" } },
-  { id: genId(), type: "core-section", content: { name: "GivingForm", label: "Online Giving", description: "Online donation form" } },
+  ...createStandardPageSections("Give", "Support our church and its mission"),
+  {
+    id: genId(),
+    type: "paragraph",
+    content: {
+      text: "Your generous giving helps us continue our mission of spreading the Gospel, serving our community, and building God's kingdom. Thank you for your faithful support.",
+      align: "center",
+    },
+  },
 ];
 
 const devotionalsPageSections = [
-  { id: genId(), type: "core-section", content: { name: "PageHeroWithBackground", label: "Page Hero", description: "Hero section with background image" } },
-  { id: genId(), type: "core-section", content: { name: "DevotionalsList", label: "Devotionals List", description: "List of daily devotionals (pulled from database)" } },
+  ...createStandardPageSections("Devotionals", "Daily inspiration and spiritual growth"),
 ];
 
 const livePageSections = [
-  { id: genId(), type: "core-section", content: { name: "LiveStreamPlayer", label: "Live Stream Player", description: "YouTube/Video live stream embed" } },
-  { id: genId(), type: "core-section", content: { name: "ServiceSchedule", label: "Service Schedule", description: "Upcoming service times" } },
+  ...createStandardPageSections("Live Stream", "Join us for live worship"),
+  {
+    id: genId(),
+    type: "live-stream",
+    content: {
+      label: "LIVE NOW",
+      heading: "Watch Live",
+      description: "Join us for our live service broadcast",
+      featuredVideo: { videoId: "", title: "Live Service", date: "" },
+      youtubeChannel: "https://www.youtube.com/@tmhtpresby",
+    },
+  },
 ];
 
 const shopPageSections = [
-  { id: genId(), type: "core-section", content: { name: "PageHeroWithBackground", label: "Page Hero", description: "Hero section with background image" } },
-  { id: genId(), type: "core-section", content: { name: "ProductsGrid", label: "Products Grid", description: "Grid of shop products (pulled from database)" } },
+  ...createStandardPageSections("Church Shop", "Books, merchandise, and more"),
 ];
 
-const genericPageSections = [
-  { id: genId(), type: "core-section", content: { name: "PageHeroWithBackground", label: "Page Hero", description: "Hero section with background image" } },
-  { id: genId(), type: "core-section", content: { name: "PageContent", label: "Page Content", description: "Main page content area" } },
+const genericPageSections = (title: string, subtitle: string) => [
+  ...createStandardPageSections(title, subtitle),
+  { id: genId(), type: "paragraph", content: { text: "Page content goes here. Edit this section to add your content.", align: "left" } },
 ];
 
 const corePages = [
   { title: "Home", slug: "home", description: "Welcome to TMHT Presbyterian Church", content: homePageSections },
   { title: "About", slug: "about", description: "Learn about our church", content: aboutPageSections },
-  { title: "About - Our Church", slug: "about/church", description: "Our church history and mission", content: genericPageSections },
-  { title: "About - Our Beliefs", slug: "about/beliefs", description: "What we believe", content: genericPageSections },
-  { title: "About - Leadership", slug: "about/leadership", description: "Our church leadership", content: genericPageSections },
-  { title: "About - History", slug: "about/history", description: "Our church history", content: genericPageSections },
+  { title: "About - Our Church", slug: "about/church", description: "Our church history and mission", content: genericPageSections("Our Church", "Our history and mission") },
+  { title: "About - Our Beliefs", slug: "about/beliefs", description: "What we believe", content: genericPageSections("Our Beliefs", "What we believe and stand for") },
+  { title: "About - Leadership", slug: "about/leadership", description: "Our church leadership", content: genericPageSections("Leadership", "Meet our church leaders") },
+  { title: "About - History", slug: "about/history", description: "Our church history", content: genericPageSections("Our History", "The journey of our church") },
   { title: "Ministries", slug: "ministries", description: "Our church ministries", content: ministriesPageSections },
   { title: "Events", slug: "events", description: "Upcoming church events", content: eventsPageSections },
   { title: "Sermons", slug: "sermons", description: "Watch and listen to sermons", content: sermonsPageSections },
@@ -97,19 +221,19 @@ const corePages = [
   { title: "Contact", slug: "contact", description: "Get in touch with us", content: contactPageSections },
   { title: "Give", slug: "give", description: "Support our church", content: givePageSections },
   { title: "Devotionals", slug: "devotionals", description: "Daily devotionals", content: devotionalsPageSections },
-  { title: "Daily Word", slug: "daily-word", description: "Daily word and inspiration", content: devotionalsPageSections },
-  { title: "Announcements", slug: "announcements", description: "Church announcements", content: genericPageSections },
-  { title: "Community", slug: "community", description: "Church community", content: genericPageSections },
-  { title: "Community Impact", slug: "community-impact", description: "Our community impact", content: genericPageSections },
-  { title: "Projects", slug: "projects", description: "Church projects", content: genericPageSections },
-  { title: "Volunteers", slug: "volunteers", description: "Volunteer opportunities", content: genericPageSections },
+  { title: "Daily Word", slug: "daily-word", description: "Daily word and inspiration", content: genericPageSections("Daily Word", "Daily inspiration and encouragement") },
+  { title: "Announcements", slug: "announcements", description: "Church announcements", content: genericPageSections("Announcements", "Stay updated with church news") },
+  { title: "Community", slug: "community", description: "Church community", content: genericPageSections("Community", "Our church community") },
+  { title: "Community Impact", slug: "community-impact", description: "Our community impact", content: genericPageSections("Community Impact", "Making a difference together") },
+  { title: "Projects", slug: "projects", description: "Church projects", content: genericPageSections("Projects", "Our ongoing projects") },
+  { title: "Volunteers", slug: "volunteers", description: "Volunteer opportunities", content: genericPageSections("Volunteers", "Join our volunteer team") },
   { title: "Live", slug: "live", description: "Live streaming", content: livePageSections },
   { title: "Shop", slug: "shop", description: "Church shop", content: shopPageSections },
-  { title: "Services", slug: "services", description: "Our services", content: genericPageSections },
-  { title: "Resources", slug: "resources", description: "Church resources", content: genericPageSections },
-  { title: "Directory", slug: "directory", description: "Church directory", content: genericPageSections },
-  { title: "Videos", slug: "videos", description: "Video content", content: genericPageSections },
-  { title: "Media", slug: "media", description: "Media content", content: genericPageSections },
+  { title: "Services", slug: "services", description: "Our services", content: genericPageSections("Services", "Our worship services") },
+  { title: "Resources", slug: "resources", description: "Church resources", content: genericPageSections("Resources", "Helpful resources for your faith journey") },
+  { title: "Directory", slug: "directory", description: "Church directory", content: genericPageSections("Directory", "Church directory") },
+  { title: "Videos", slug: "videos", description: "Video content", content: genericPageSections("Videos", "Watch our video content") },
+  { title: "Media", slug: "media", description: "Media content", content: genericPageSections("Media", "Photos, videos, and more") },
 ];
 
 export async function POST() {
