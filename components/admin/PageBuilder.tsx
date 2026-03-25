@@ -266,6 +266,7 @@ export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilde
   const [previewMode, setPreviewMode] = useState(false);
   const [widgetSearch, setWidgetSearch] = useState("");
   const [dragActiveId, setDragActiveId] = useState<string | null>(null);
+  const [insertPickerAt, setInsertPickerAt] = useState<number | null>(null);
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
@@ -302,6 +303,8 @@ export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilde
     updateBlocks(newBlocks);
     setSelectedBlock(newBlock.id);
     setSidebarPanel("settings");
+    setSidebarOpen(true);
+    setInsertPickerAt(null);
   };
 
   const duplicateBlock = (id: string) => {
@@ -462,16 +465,36 @@ export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilde
                   <div className="space-y-3">
                     {blocks.map((block, index) => (
                       <div key={block.id}>
-                        {/* Add block button between blocks */}
+                        {/* Inline add-widget zone between blocks */}
                         {!previewMode && (
-                          <div className="flex justify-center py-1 opacity-0 hover:opacity-100 transition-opacity">
-                            <button onClick={() => addBlock("paragraph", index)} className="flex items-center gap-1 px-3 py-1 bg-[var(--accent)] text-white rounded-full text-xs font-medium shadow-sm hover:shadow-md transition-shadow">
-                              <Plus size={12} /> Add Widget
+                          <div className="relative flex justify-center py-1 group/add">
+                            <div className="absolute left-0 right-0 top-1/2 h-px bg-transparent group-hover/add:bg-[var(--accent)]/30 transition-colors" />
+                            <button onClick={() => setInsertPickerAt(insertPickerAt === index ? null : index)} className="relative z-10 p-1 bg-white border border-gray-200 rounded-full shadow-sm opacity-0 group-hover/add:opacity-100 hover:border-[var(--accent)] hover:bg-[var(--accent)] hover:text-white transition-all text-gray-400">
+                              <Plus size={14} />
                             </button>
+                            {/* Inline widget picker popup */}
+                            {insertPickerAt === index && (
+                              <div className="absolute top-8 left-1/2 -translate-x-1/2 z-30 w-[420px] bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden" onClick={(e) => e.stopPropagation()}>
+                                <div className="p-3 border-b border-gray-100 flex items-center justify-between">
+                                  <span className="text-sm font-semibold text-gray-700">Add Widget</span>
+                                  <button onClick={() => setInsertPickerAt(null)} className="p-0.5 hover:bg-gray-100 rounded"><X size={14} className="text-gray-400" /></button>
+                                </div>
+                                <div className="p-3 max-h-[300px] overflow-auto">
+                                  <div className="grid grid-cols-4 gap-1.5">
+                                    {BLOCK_TYPES.map((bt) => (
+                                      <button key={bt.type} onClick={() => addBlock(bt.type, index)} className="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-[var(--accent)]/5 border border-transparent hover:border-[var(--accent)] transition-all text-center group/w">
+                                        <bt.icon size={18} className="text-gray-400 group-hover/w:text-[var(--accent)]" />
+                                        <span className="text-[9px] text-gray-500 group-hover/w:text-gray-700 leading-tight">{bt.label}</span>
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         )}
                         <SortableBlock id={block.id} isSelected={selectedBlock === block.id} isPreview={previewMode} onClick={() => {
-                          if (!previewMode) { setSelectedBlock(block.id); setSidebarPanel("settings"); setSidebarOpen(true); }
+                          if (!previewMode) { setSelectedBlock(block.id); setSidebarPanel("settings"); setSidebarOpen(true); setInsertPickerAt(null); }
                         }}>
                           {/* Block toolbar */}
                           {!previewMode && selectedBlock === block.id && (
@@ -488,10 +511,29 @@ export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilde
                     ))}
                     {/* Add block at end */}
                     {!previewMode && (
-                      <div className="flex justify-center py-3 opacity-0 hover:opacity-100 transition-opacity">
-                        <button onClick={() => addBlock("paragraph")} className="flex items-center gap-1 px-3 py-1 bg-[var(--accent)] text-white rounded-full text-xs font-medium shadow-sm">
-                          <Plus size={12} /> Add Widget
+                      <div className="relative flex justify-center py-3 group/add">
+                        <div className="absolute left-0 right-0 top-1/2 h-px bg-transparent group-hover/add:bg-[var(--accent)]/30 transition-colors" />
+                        <button onClick={() => setInsertPickerAt(insertPickerAt === blocks.length ? null : blocks.length)} className="relative z-10 p-1.5 bg-white border border-gray-200 rounded-full shadow-sm opacity-0 group-hover/add:opacity-100 hover:border-[var(--accent)] hover:bg-[var(--accent)] hover:text-white transition-all text-gray-400">
+                          <Plus size={16} />
                         </button>
+                        {insertPickerAt === blocks.length && (
+                          <div className="absolute top-10 left-1/2 -translate-x-1/2 z-30 w-[420px] bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden" onClick={(e) => e.stopPropagation()}>
+                            <div className="p-3 border-b border-gray-100 flex items-center justify-between">
+                              <span className="text-sm font-semibold text-gray-700">Add Widget</span>
+                              <button onClick={() => setInsertPickerAt(null)} className="p-0.5 hover:bg-gray-100 rounded"><X size={14} className="text-gray-400" /></button>
+                            </div>
+                            <div className="p-3 max-h-[300px] overflow-auto">
+                              <div className="grid grid-cols-4 gap-1.5">
+                                {BLOCK_TYPES.map((bt) => (
+                                  <button key={bt.type} onClick={() => addBlock(bt.type, blocks.length)} className="flex flex-col items-center gap-1 p-2 rounded-lg hover:bg-[var(--accent)]/5 border border-transparent hover:border-[var(--accent)] transition-all text-center group/w">
+                                    <bt.icon size={18} className="text-gray-400 group-hover/w:text-[var(--accent)]" />
+                                    <span className="text-[9px] text-gray-500 group-hover/w:text-gray-700 leading-tight">{bt.label}</span>
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
