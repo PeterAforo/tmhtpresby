@@ -60,6 +60,7 @@ import {
   DragEndEvent,
   DragStartEvent,
   DragOverlay,
+  useDraggable,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -260,6 +261,16 @@ function SortableBlock({ id, isSelected, isPreview, onClick, children }: {
   );
 }
 
+/* ─── Draggable Widget (sidebar) ─── */
+function DraggableWidget({ type, children }: { type: string; children: React.ReactNode }) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ id: `widget-${type}` });
+  return (
+    <div ref={setNodeRef} {...listeners} {...attributes} style={{ opacity: isDragging ? 0.4 : 1, cursor: 'grab' }}>
+      {children}
+    </div>
+  );
+}
+
 /* ─── Main PageBuilder (Elementor-like) ─── */
 export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilderProps) {
   const { current: blocks, push, undo, redo, canUndo, canRedo } = useHistory(initialBlocks);
@@ -368,7 +379,22 @@ export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilde
   const handleDragStart = (event: DragStartEvent) => setDragActiveId(event.active.id as string);
 
   const handleDragEnd = (event: DragEndEvent) => {
+    const activeId = event.active.id as string;
     setDragActiveId(null);
+
+    // Drag from sidebar → create new block
+    if (activeId.startsWith('widget-')) {
+      const type = activeId.replace('widget-', '');
+      if (event.over) {
+        const overIdx = blocks.findIndex((b) => b.id === event.over!.id);
+        addBlock(type, overIdx >= 0 ? overIdx + 1 : undefined);
+      } else {
+        addBlock(type);
+      }
+      return;
+    }
+
+    // Reorder existing blocks
     const { active, over } = event;
     if (over && active.id !== over.id) {
       const oldIndex = blocks.findIndex((b) => b.id === active.id);
@@ -386,7 +412,11 @@ export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilde
     ? BLOCK_TYPES.filter((b) => b.label.toLowerCase().includes(widgetSearch.toLowerCase()) || b.category.toLowerCase().includes(widgetSearch.toLowerCase()))
     : BLOCK_TYPES;
 
+  const dragActiveWidgetType = dragActiveId?.startsWith('widget-') ? dragActiveId.replace('widget-', '') : null;
+  const dragActiveWidgetInfo = dragActiveWidgetType ? BLOCK_TYPES.find((b) => b.type === dragActiveWidgetType) : null;
+
   return (
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
     <div className="flex h-[calc(100vh-140px)] min-h-[600px] bg-[#f0f0f0]">
       {/* ─── Left Sidebar Panel ─── */}
       {sidebarOpen && !previewMode && (
@@ -449,10 +479,12 @@ export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilde
                       <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 px-1">{category}</h4>
                       <div className="grid grid-cols-3 gap-1.5">
                         {catBlocks.map((bt) => (
-                          <button key={bt.type} onClick={() => addBlock(bt.type)} className="flex flex-col items-center gap-1 p-2.5 rounded-lg bg-[#383838] hover:bg-[#484848] border border-transparent hover:border-[var(--accent)] transition-all text-center group">
-                            <bt.icon size={20} className="text-gray-300 group-hover:text-[var(--accent)] transition-colors" />
-                            <span className="text-[10px] text-gray-400 group-hover:text-white leading-tight">{bt.label}</span>
-                          </button>
+                          <DraggableWidget key={bt.type} type={bt.type}>
+                            <button onClick={() => addBlock(bt.type)} className="w-full flex flex-col items-center gap-1 p-2.5 rounded-lg bg-[#383838] hover:bg-[#484848] border border-transparent hover:border-[var(--accent)] transition-all text-center group">
+                              <bt.icon size={20} className="text-gray-300 group-hover:text-[var(--accent)] transition-colors" />
+                              <span className="text-[10px] text-gray-400 group-hover:text-white leading-tight">{bt.label}</span>
+                            </button>
+                          </DraggableWidget>
                         ))}
                       </div>
                     </div>
@@ -515,7 +547,6 @@ export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilde
         {/* Canvas */}
         <div className="flex-1 overflow-auto p-6 flex justify-center">
           <div style={{ width: canvasWidth, maxWidth: "100%", transition: "width 0.3s ease" }}>
-            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
               <SortableContext items={blocks.map((b) => b.id)} strategy={verticalListSortingStrategy}>
                 {blocks.length === 0 ? (
                   <div className="bg-white rounded-xl border-2 border-dashed border-gray-300 p-12 text-center hover:border-[var(--accent)] transition-colors">
@@ -616,14 +647,6 @@ export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilde
                   </div>
                 )}
               </SortableContext>
-              <DragOverlay>
-                {dragActiveBlock && (
-                  <div className="bg-white rounded-lg shadow-2xl ring-2 ring-[var(--accent)] opacity-80 p-4 max-w-md">
-                    <BlockRenderer block={dragActiveBlock} />
-                  </div>
-                )}
-              </DragOverlay>
-            </DndContext>
           </div>
         </div>
 
@@ -652,6 +675,20 @@ export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilde
         )}
       </div>
     </div>
+    <DragOverlay>
+      {dragActiveBlock && (
+        <div className="bg-white rounded-lg shadow-2xl ring-2 ring-[var(--accent)] opacity-80 p-4 max-w-md">
+          <BlockRenderer block={dragActiveBlock} />
+        </div>
+      )}
+      {dragActiveWidgetInfo && (
+        <div className="bg-white rounded-lg shadow-2xl ring-2 ring-[var(--accent)] px-4 py-3 flex items-center gap-2 min-w-[160px]">
+          <dragActiveWidgetInfo.icon size={18} className="text-[var(--accent)]" />
+          <span className="text-sm font-medium">{dragActiveWidgetInfo.label}</span>
+        </div>
+      )}
+    </DragOverlay>
+    </DndContext>
   );
 }
 
