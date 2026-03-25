@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Mail, Heart, Users, BookOpen, Church } from "lucide-react";
@@ -325,24 +325,76 @@ export function AboutSection(props: AboutSectionProps = {}) {
               </div>
 
               {/* Email signup section */}
-              <div className="py-6 sm:py-8 px-6 sm:px-8 lg:px-10 flex-1">
-                <p className="text-white text-sm font-semibold mb-3">Receive Daily Devotions</p>
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-0">
-                  <input
-                    type="email"
-                    placeholder="Enter your email address"
-                    className="flex-1 px-4 py-3 bg-white/10 text-white placeholder-white/50 text-sm rounded-lg sm:rounded-r-none focus:outline-none focus:ring-2 focus:ring-white/30 border border-white/10"
-                  />
-                  <button className="px-6 py-3 bg-crimson text-white font-semibold text-sm rounded-lg sm:rounded-l-none hover:bg-crimson/90 transition-colors flex items-center justify-center gap-2">
-                    <span className="sm:hidden lg:inline">Subscribe</span>
-                    <Mail size={18} />
-                  </button>
-                </div>
-              </div>
+              <DevotionSubscribeForm />
             </div>
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function DevotionSubscribeForm() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [message, setMessage] = useState("");
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+
+    setStatus("loading");
+    setMessage("");
+
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setStatus("success");
+        setMessage(data.message || "Successfully subscribed!");
+        setEmail("");
+      } else {
+        setStatus("error");
+        setMessage(data.error || "Something went wrong.");
+      }
+    } catch {
+      setStatus("error");
+      setMessage("Network error. Please try again.");
+    }
+  };
+
+  return (
+    <div className="py-6 sm:py-8 px-6 sm:px-8 lg:px-10 flex-1">
+      <p className="text-white text-sm font-semibold mb-3">Receive Daily Devotions</p>
+      {status === "success" ? (
+        <p className="text-green-300 text-sm py-3">{message}</p>
+      ) : (
+        <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2 sm:gap-0">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => { setEmail(e.target.value); setStatus("idle"); setMessage(""); }}
+            placeholder="Enter your email address"
+            required
+            className="flex-1 px-4 py-3 bg-white/10 text-white placeholder-white/50 text-sm rounded-lg sm:rounded-r-none focus:outline-none focus:ring-2 focus:ring-white/30 border border-white/10"
+          />
+          <button
+            type="submit"
+            disabled={status === "loading"}
+            className="px-6 py-3 bg-crimson text-white font-semibold text-sm rounded-lg sm:rounded-l-none hover:bg-crimson/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
+          >
+            <span className="sm:hidden lg:inline">{status === "loading" ? "Subscribing..." : "Subscribe"}</span>
+            <Mail size={18} />
+          </button>
+        </form>
+      )}
+      {status === "error" && <p className="text-red-300 text-xs mt-2">{message}</p>}
+    </div>
   );
 }
