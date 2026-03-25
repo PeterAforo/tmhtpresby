@@ -926,7 +926,7 @@ function BlockSettings({ block, onChange }: { block: BlockData; onChange: (conte
           {slides.map((slide, i) => (
             <div key={slide.id} className="bg-gray-50 rounded-lg p-3 border">
               <div className="flex justify-between mb-2"><span className="text-xs font-medium text-gray-500">Slide {i + 1}</span><button onClick={() => onChange({ slides: slides.filter((_, idx) => idx !== i) })} className="text-red-500"><Trash2 size={12} /></button></div>
-              <input type="text" value={slide.image} onChange={(e) => { const s = [...slides]; s[i] = { ...slide, image: e.target.value }; onChange({ slides: s }); }} placeholder="Image URL" className="w-full px-2 py-1 border rounded text-xs mb-1" />
+              <ImagePicker label="Slide Image" value={slide.image} onChange={(url) => { const s = [...slides]; s[i] = { ...slide, image: url }; onChange({ slides: s }); }} />
               <input type="text" value={slide.headline} onChange={(e) => { const s = [...slides]; s[i] = { ...slide, headline: e.target.value }; onChange({ slides: s }); }} placeholder="Headline" className="w-full px-2 py-1 border rounded text-xs mb-1" />
               <input type="text" value={slide.subline} onChange={(e) => { const s = [...slides]; s[i] = { ...slide, subline: e.target.value }; onChange({ slides: s }); }} placeholder="Subline" className="w-full px-2 py-1 border rounded text-xs mb-1" />
               <input type="text" value={slide.accent} onChange={(e) => { const s = [...slides]; s[i] = { ...slide, accent: e.target.value }; onChange({ slides: s }); }} placeholder="Accent badge" className="w-full px-2 py-1 border rounded text-xs" />
@@ -942,7 +942,7 @@ function BlockSettings({ block, onChange }: { block: BlockData; onChange: (conte
         <div>
           <TextInput label="Title" field="title" />
           <TextInput label="Subtitle" field="subtitle" />
-          <TextInput label="Background Image" field="backgroundImage" placeholder="URL" />
+          <ImagePicker label="Background Image" value={(content.backgroundImage as string) || ""} onChange={(url) => onChange({ backgroundImage: url })} />
           <TextInput label="Overlay Color" field="overlayColor" placeholder="rgba(12,21,41,0.85)" />
           <SelectInput label="Alignment" field="alignment" options={[{ value: "left", label: "Left" }, { value: "center", label: "Center" }, { value: "right", label: "Right" }]} />
         </div>
@@ -981,7 +981,7 @@ function BlockSettings({ block, onChange }: { block: BlockData; onChange: (conte
           <TextInput label="Label" field="label" />
           <TextInput label="Heading" field="heading" />
           <TextInput label="Description" field="description" multiline />
-          <TextInput label="Image URL" field="image" />
+          <ImagePicker label="Image" value={(content.image as string) || ""} onChange={(url) => onChange({ image: url })} />
           <TextInput label="Contact Phone" field="contactPhone" />
           <TextInput label="Contact Label" field="contactLabel" />
 
@@ -1036,7 +1036,7 @@ function BlockSettings({ block, onChange }: { block: BlockData; onChange: (conte
               <textarea value={t.quote} onChange={(e) => { const ts = [...testimonials]; ts[i] = { ...t, quote: e.target.value }; onChange({ testimonials: ts }); }} placeholder="Quote" rows={2} className="w-full px-2 py-1 border rounded text-xs mb-1" />
               <input type="text" value={t.name} onChange={(e) => { const ts = [...testimonials]; ts[i] = { ...t, name: e.target.value }; onChange({ testimonials: ts }); }} placeholder="Name" className="w-full px-2 py-1 border rounded text-xs mb-1" />
               <input type="text" value={t.role} onChange={(e) => { const ts = [...testimonials]; ts[i] = { ...t, role: e.target.value }; onChange({ testimonials: ts }); }} placeholder="Role" className="w-full px-2 py-1 border rounded text-xs mb-1" />
-              <input type="text" value={t.image} onChange={(e) => { const ts = [...testimonials]; ts[i] = { ...t, image: e.target.value }; onChange({ testimonials: ts }); }} placeholder="Image URL" className="w-full px-2 py-1 border rounded text-xs mb-1" />
+              <ImagePicker label="Photo" value={t.image} onChange={(url) => { const ts = [...testimonials]; ts[i] = { ...t, image: url }; onChange({ testimonials: ts }); }} />
               <select value={t.rating} onChange={(e) => { const ts = [...testimonials]; ts[i] = { ...t, rating: parseInt(e.target.value) }; onChange({ testimonials: ts }); }} className="w-full px-2 py-1 border rounded text-xs">
                 {[1,2,3,4,5].map((r) => <option key={r} value={r}>{r} Stars</option>)}
               </select>
@@ -1101,7 +1101,7 @@ function BlockSettings({ block, onChange }: { block: BlockData; onChange: (conte
     case "image":
       return (
         <div>
-          <TextInput label="Image URL" field="url" />
+          <ImagePicker label="Image" value={(content.url as string) || ""} onChange={(url) => onChange({ url })} />
           <TextInput label="Alt Text" field="alt" />
           <TextInput label="Caption" field="caption" />
           <SelectInput label="Width" field="width" options={[{ value: "full", label: "Full" }, { value: "medium", label: "Medium" }, { value: "small", label: "Small" }]} />
@@ -1216,6 +1216,60 @@ function BlockSettings({ block, onChange }: { block: BlockData; onChange: (conte
     default:
       return <p className="text-sm text-gray-500">No settings available.</p>;
   }
+}
+
+/* ─── Image Picker with Upload ─── */
+function ImagePicker({ value, onChange, label = "Image" }: { value: string; onChange: (url: string) => void; label?: string }) {
+  const [uploading, setUploading] = useState(false);
+  const [showUrl, setShowUrl] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const handleUpload = async (file: File) => {
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("folder", "page-builder");
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const data = await res.json();
+      if (data.success && data.file?.url) { onChange(data.file.url); }
+      else { alert(data.error || "Upload failed"); }
+    } catch { alert("Upload failed"); }
+    finally { setUploading(false); }
+  };
+
+  return (
+    <div className="mb-4">
+      <label className="block text-sm font-medium mb-1">{label}</label>
+      {value ? (
+        <div className="relative group rounded-lg overflow-hidden border border-[#505050] mb-2">
+          <img src={value} alt="" className="w-full h-32 object-cover" />
+          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+            <button onClick={() => fileRef.current?.click()} className="px-2 py-1 bg-white/20 text-white rounded text-xs hover:bg-white/30">Replace</button>
+            <button onClick={() => onChange("")} className="px-2 py-1 bg-red-500/60 text-white rounded text-xs hover:bg-red-500/80">Remove</button>
+          </div>
+        </div>
+      ) : (
+        <div className="border-2 border-dashed border-[#505050] rounded-lg p-4 text-center hover:border-[var(--accent)] transition-colors cursor-pointer mb-2" onClick={() => fileRef.current?.click()}>
+          {uploading ? (
+            <p className="text-xs text-gray-400">Uploading...</p>
+          ) : (
+            <>
+              <Upload size={20} className="mx-auto text-gray-400 mb-1" />
+              <p className="text-xs text-gray-400">Click to upload</p>
+            </>
+          )}
+        </div>
+      )}
+      <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleUpload(f); e.target.value = ""; }} />
+      <div className="flex gap-1">
+        <button onClick={() => setShowUrl(!showUrl)} className="text-[10px] text-gray-400 hover:text-white transition-colors">{showUrl ? "Hide URL" : "Enter URL"}</button>
+      </div>
+      {showUrl && (
+        <input type="text" value={value} onChange={(e) => onChange(e.target.value)} placeholder="https://..." className="w-full mt-1 px-2 py-1 bg-[#383838] border border-[#505050] rounded text-xs text-white" />
+      )}
+    </div>
+  );
 }
 
 const STYLE_PRESETS: { name: string; style: Record<string, string> }[] = [
