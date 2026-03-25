@@ -570,16 +570,19 @@ function BlockSettings({ block, onChange }: { block: BlockData; onChange: (conte
       );
 
     case "quick-links":
-      const links = (content.links as Array<{ id: string; title: string; description: string; href: string; variant: string }>) || [];
+      const links = (content.links as Array<{ id: string; icon?: string; title: string; description: string; href: string; variant: string }>) || [];
       return (
         <div>
           <div className="flex items-center justify-between mb-2">
             <label className="text-sm font-medium text-gray-700">Links</label>
-            <button onClick={() => onChange({ links: [...links, { id: generateId(), title: "New", description: "", href: "/", variant: "white" }] })} className="text-xs text-[var(--accent)] font-medium">+ Add</button>
+            <button onClick={() => onChange({ links: [...links, { id: generateId(), icon: "Church", title: "New", description: "", href: "/", variant: "white" }] })} className="text-xs text-[var(--accent)] font-medium">+ Add</button>
           </div>
           {links.map((link, i) => (
             <div key={link.id} className="bg-gray-50 rounded-lg p-3 border mb-2">
               <div className="flex justify-between mb-2"><span className="text-xs text-gray-500">Link {i + 1}</span><button onClick={() => onChange({ links: links.filter((_, idx) => idx !== i) })} className="text-red-500"><Trash2 size={12} /></button></div>
+              <select value={link.icon || "Church"} onChange={(e) => { const l = [...links]; l[i] = { ...link, icon: e.target.value }; onChange({ links: l }); }} className="w-full px-2 py-1 border rounded text-xs mb-1">
+                <option value="Church">Church</option><option value="LayoutGrid">Grid</option><option value="Calendar">Calendar</option><option value="Heart">Heart</option><option value="Users">Users</option><option value="BookOpen">Book</option>
+              </select>
               <input type="text" value={link.title} onChange={(e) => { const l = [...links]; l[i] = { ...link, title: e.target.value }; onChange({ links: l }); }} placeholder="Title" className="w-full px-2 py-1 border rounded text-xs mb-1" />
               <input type="text" value={link.description} onChange={(e) => { const l = [...links]; l[i] = { ...link, description: e.target.value }; onChange({ links: l }); }} placeholder="Description" className="w-full px-2 py-1 border rounded text-xs mb-1" />
               <input type="text" value={link.href} onChange={(e) => { const l = [...links]; l[i] = { ...link, href: e.target.value }; onChange({ links: l }); }} placeholder="URL" className="w-full px-2 py-1 border rounded text-xs mb-1" />
@@ -592,6 +595,8 @@ function BlockSettings({ block, onChange }: { block: BlockData; onChange: (conte
       );
 
     case "about-section":
+      const aboutStats = (content.stats as Array<{ value: string; label: string }>) || [];
+      const aboutFeatures = (content.features as Array<{ icon: string; title: string; description: string }>) || [];
       return (
         <div>
           <TextInput label="Label" field="label" />
@@ -600,6 +605,39 @@ function BlockSettings({ block, onChange }: { block: BlockData; onChange: (conte
           <TextInput label="Image URL" field="image" />
           <TextInput label="Contact Phone" field="contactPhone" />
           <TextInput label="Contact Label" field="contactLabel" />
+
+          <div className="mt-4 border-t pt-4">
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-sm font-medium text-gray-700">Stats Badges</label>
+              <button onClick={() => onChange({ stats: [...aboutStats, { value: "0+", label: "New Stat" }] })} className="text-xs text-[var(--accent)] font-medium">+ Add</button>
+            </div>
+            {aboutStats.map((stat, i) => (
+              <div key={i} className="flex gap-2 mb-2 items-start">
+                <div className="flex-1 space-y-1">
+                  <input type="text" value={stat.value} onChange={(e) => { const s = [...aboutStats]; s[i] = { ...stat, value: e.target.value }; onChange({ stats: s }); }} placeholder="e.g. 1500+" className="w-full px-2 py-1 border rounded text-xs" />
+                  <input type="text" value={stat.label} onChange={(e) => { const s = [...aboutStats]; s[i] = { ...stat, label: e.target.value }; onChange({ stats: s }); }} placeholder="Label" className="w-full px-2 py-1 border rounded text-xs" />
+                </div>
+                <button onClick={() => onChange({ stats: aboutStats.filter((_, idx) => idx !== i) })} className="text-red-500 mt-1"><Trash2 size={12} /></button>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-4 border-t pt-4">
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-sm font-medium text-gray-700">Features</label>
+              <button onClick={() => onChange({ features: [...aboutFeatures, { icon: "Heart", title: "New Feature", description: "" }] })} className="text-xs text-[var(--accent)] font-medium">+ Add</button>
+            </div>
+            {aboutFeatures.map((feat, i) => (
+              <div key={i} className="bg-gray-50 rounded-lg p-3 border mb-2">
+                <div className="flex justify-between mb-2"><span className="text-xs text-gray-500">Feature {i + 1}</span><button onClick={() => onChange({ features: aboutFeatures.filter((_, idx) => idx !== i) })} className="text-red-500"><Trash2 size={12} /></button></div>
+                <select value={feat.icon} onChange={(e) => { const f = [...aboutFeatures]; f[i] = { ...feat, icon: e.target.value }; onChange({ features: f }); }} className="w-full px-2 py-1 border rounded text-xs mb-1">
+                  <option value="Heart">Heart</option><option value="Users">Users</option><option value="BookOpen">Book</option><option value="Church">Church</option><option value="Star">Star</option>
+                </select>
+                <input type="text" value={feat.title} onChange={(e) => { const f = [...aboutFeatures]; f[i] = { ...feat, title: e.target.value }; onChange({ features: f }); }} placeholder="Title" className="w-full px-2 py-1 border rounded text-xs mb-1" />
+                <input type="text" value={feat.description} onChange={(e) => { const f = [...aboutFeatures]; f[i] = { ...feat, description: e.target.value }; onChange({ features: f }); }} placeholder="Description" className="w-full px-2 py-1 border rounded text-xs" />
+              </div>
+            ))}
+          </div>
         </div>
       );
 
