@@ -78,7 +78,7 @@ interface PageBuilderProps {
   pageType?: "home" | "standard";
 }
 
-type SidebarPanel = "widgets" | "settings" | "style";
+type SidebarPanel = "widgets" | "settings" | "style" | "navigator";
 type DevicePreview = "desktop" | "tablet" | "mobile";
 
 const CATEGORIES = ["Page Sections", "Content", "Layout", "Dynamic", "Forms", "Embed"] as const;
@@ -278,23 +278,20 @@ export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilde
       if (e.key === "Escape") { setSelectedBlock(null); setInsertPickerAt(null); }
       if (e.key === "Delete" && selectedBlock) {
         e.preventDefault();
-        const newBlocks = blocks.filter((b) => b.id !== selectedBlock);
-        push(newBlocks);
-        onChange(newBlocks);
+        push(blocks.filter((b) => b.id !== selectedBlock));
         setSelectedBlock(null);
       }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [undo, redo, selectedBlock, blocks, push, onChange]);
+  }, [undo, redo, selectedBlock, blocks, push]);
 
   // Sync history to parent
   useEffect(() => { onChange(blocks); }, [blocks, onChange]);
 
   const updateBlocks = useCallback((newBlocks: BlockData[]) => {
     push(newBlocks);
-    onChange(newBlocks);
-  }, [push, onChange]);
+  }, [push]);
 
   const addBlock = (type: string, index?: number) => {
     const newBlock: BlockData = { id: generateId(), type, content: getDefaultContent(type) };
@@ -358,8 +355,15 @@ export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilde
         <div className="w-[320px] flex-shrink-0 bg-[#2c2c2c] text-white flex flex-col border-r border-[#404040]">
           {/* Sidebar Header */}
           <div className="h-12 flex items-center justify-between px-3 border-b border-[#404040] bg-[#242424]">
-            {sidebarPanel === "widgets" ? (
-              <span className="text-sm font-semibold flex items-center gap-2"><LayoutGrid size={16} /> Widgets</span>
+            {sidebarPanel === "widgets" || sidebarPanel === "navigator" ? (
+              <div className="flex items-center gap-1">
+                <button onClick={() => setSidebarPanel("widgets")} className={`px-2.5 py-1 text-xs font-semibold rounded-md flex items-center gap-1.5 transition-colors ${sidebarPanel === "widgets" ? "bg-white/10 text-white" : "text-gray-400 hover:text-white"}`}>
+                  <LayoutGrid size={14} /> Widgets
+                </button>
+                <button onClick={() => setSidebarPanel("navigator")} className={`px-2.5 py-1 text-xs font-semibold rounded-md flex items-center gap-1.5 transition-colors ${sidebarPanel === "navigator" ? "bg-white/10 text-white" : "text-gray-400 hover:text-white"}`}>
+                  <List size={14} /> Navigator
+                </button>
+              </div>
             ) : (
               <button onClick={() => { setSidebarPanel("widgets"); setSelectedBlock(null); }} className="text-sm font-semibold flex items-center gap-1 hover:text-[var(--accent)] transition-colors">
                 <ArrowLeft size={14} />
@@ -371,7 +375,27 @@ export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilde
 
           {/* Sidebar Content */}
           <div className="flex-1 overflow-auto">
-            {sidebarPanel === "widgets" ? (
+            {sidebarPanel === "navigator" ? (
+              <div className="p-2">
+                {blocks.length === 0 ? (
+                  <p className="text-center text-gray-500 text-xs py-8">No widgets yet</p>
+                ) : (
+                  <div className="space-y-0.5">
+                    {blocks.map((block, index) => {
+                      const bt = BLOCK_TYPES.find((t) => t.type === block.type);
+                      const BlockIcon = bt?.icon || Layout;
+                      return (
+                        <button key={block.id} onClick={() => { setSelectedBlock(block.id); setSidebarPanel("settings"); }} className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-left transition-colors ${selectedBlock === block.id ? "bg-[var(--accent)]/20 text-white" : "text-gray-300 hover:bg-white/5"}`}>
+                          <BlockIcon size={14} className="text-gray-400 flex-shrink-0" />
+                          <span className="text-xs font-medium truncate flex-1">{bt?.label || block.type}</span>
+                          <span className="text-[10px] text-gray-500">{index + 1}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            ) : sidebarPanel === "widgets" ? (
               <div className="p-3">
                 {/* Search */}
                 <div className="relative mb-3">
