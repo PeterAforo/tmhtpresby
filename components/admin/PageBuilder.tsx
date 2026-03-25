@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import Image from "next/image";
 import {
   Type,
@@ -32,12 +32,44 @@ import {
   Church,
   BookOpen,
   Star,
+  Undo2,
+  Redo2,
+  Monitor,
+  Tablet,
+  Smartphone,
+  Paintbrush,
+  Settings,
+  LayoutGrid,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Copy,
+  ArrowLeft,
+  Search,
+  Grip,
 } from "lucide-react";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+  DragStartEvent,
+  DragOverlay,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 export interface BlockData {
   id: string;
   type: string;
   content: Record<string, unknown>;
+  style?: Record<string, string>;
 }
 
 interface PageBuilderProps {
@@ -45,6 +77,11 @@ interface PageBuilderProps {
   onChange: (blocks: BlockData[]) => void;
   pageType?: "home" | "standard";
 }
+
+type SidebarPanel = "widgets" | "settings" | "style";
+type DevicePreview = "desktop" | "tablet" | "mobile";
+
+const CATEGORIES = ["Page Sections", "Content", "Layout", "Dynamic", "Forms", "Embed"] as const;
 
 const BLOCK_TYPES = [
   { type: "hero-slider", label: "Hero Slider", icon: Sliders, category: "Page Sections", description: "Full-width hero with slides" },
@@ -63,6 +100,7 @@ const BLOCK_TYPES = [
   { type: "list", label: "List", icon: List, category: "Content" },
   { type: "spacer", label: "Spacer", icon: Layout, category: "Layout" },
   { type: "divider", label: "Divider", icon: Layout, category: "Layout" },
+  { type: "columns", label: "Columns", icon: Columns, category: "Layout", description: "Multi-column section" },
   { type: "events-list", label: "Events", icon: Calendar, category: "Dynamic" },
   { type: "sermons-list", label: "Sermons", icon: Play, category: "Dynamic" },
   { type: "blog-posts", label: "Blog Posts", icon: BookOpen, category: "Dynamic" },
@@ -152,6 +190,8 @@ function getDefaultContent(type: string): Record<string, unknown> {
       return { title: "Prayer Request", description: "Share your prayer needs" };
     case "map":
       return { address: "Lashibi, Accra, Ghana", zoom: 15 };
+    case "columns":
+      return { columns: 2, gap: "16px" };
     case "html":
       return { html: "" };
     default:
@@ -159,17 +199,101 @@ function getDefaultContent(type: string): Record<string, unknown> {
   }
 }
 
+/* ─── Undo / Redo Hook ─── */
+function useHistory(initial: BlockData[]) {
+  const [history, setHistory] = useState<BlockData[][]>([initial]);
+  const [pointer, setPointer] = useState(0);
+
+  const current = history[pointer];
+
+  const push = useCallback((blocks: BlockData[]) => {
+    setHistory((h) => {
+      const newH = h.slice(0, pointer + 1);
+      newH.push(blocks);
+      if (newH.length > 50) newH.shift();
+      return newH;
+    });
+    setPointer((p) => Math.min(p + 1, 50));
+  }, [pointer]);
+
+  const undo = useCallback(() => {
+    if (pointer > 0) setPointer((p) => p - 1);
+  }, [pointer]);
+
+  const redo = useCallback(() => {
+    if (pointer < history.length - 1) setPointer((p) => p + 1);
+  }, [pointer, history.length]);
+
+  const canUndo = pointer > 0;
+  const canRedo = pointer < history.length - 1;
+
+  return { current, push, undo, redo, canUndo, canRedo };
+}
+
+/* ─── Sortable Block Wrapper ─── */
+function SortableBlock({ id, isSelected, isPreview, onClick, children }: {
+  id: string; isSelected: boolean; isPreview: boolean; onClick: () => void; children: React.ReactNode;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+  const style = { transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.4 : 1 };
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} className={`group relative ${isPreview ? "" : "cursor-pointer"}`} onClick={onClick}>
+      {!isPreview && (
+        <div className={`absolute -left-1 top-0 bottom-0 w-1 rounded-full transition-all ${isSelected ? "bg-[var(--accent)]" : "bg-transparent group-hover:bg-gray-300"}`} />
+      )}
+      {!isPreview && (
+        <div className={`absolute -left-10 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing z-20`} {...listeners}>
+          <div className="p-1.5 bg-white border border-gray-200 rounded-lg shadow-sm">
+            <Grip size={14} className="text-gray-400" />
+          </div>
+        </div>
+      )}
+      <div className={`rounded-lg transition-all ${isPreview ? "" : isSelected ? "ring-2 ring-[var(--accent)] ring-offset-2" : "hover:ring-1 hover:ring-gray-300 hover:ring-offset-1"}`}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Main PageBuilder (Elementor-like) ─── */
 export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilderProps) {
-  const [blocks, setBlocks] = useState<BlockData[]>(initialBlocks);
+  const { current: blocks, push, undo, redo, canUndo, canRedo } = useHistory(initialBlocks);
   const [selectedBlock, setSelectedBlock] = useState<string | null>(null);
-  const [showBlockPicker, setShowBlockPicker] = useState(false);
-  const [insertIndex, setInsertIndex] = useState<number | null>(null);
+  const [sidebarPanel, setSidebarPanel] = useState<SidebarPanel>("widgets");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [devicePreview, setDevicePreview] = useState<DevicePreview>("desktop");
   const [previewMode, setPreviewMode] = useState(false);
+  const [widgetSearch, setWidgetSearch] = useState("");
+  const [dragActiveId, setDragActiveId] = useState<string | null>(null);
+
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "z" && !e.shiftKey) { e.preventDefault(); undo(); }
+      if ((e.ctrlKey || e.metaKey) && (e.key === "y" || (e.key === "z" && e.shiftKey))) { e.preventDefault(); redo(); }
+      if (e.key === "Escape") setSelectedBlock(null);
+      if (e.key === "Delete" && selectedBlock) {
+        e.preventDefault();
+        const newBlocks = blocks.filter((b) => b.id !== selectedBlock);
+        push(newBlocks);
+        onChange(newBlocks);
+        setSelectedBlock(null);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [undo, redo, selectedBlock, blocks, push, onChange]);
+
+  // Sync history to parent
+  useEffect(() => { onChange(blocks); }, [blocks, onChange]);
 
   const updateBlocks = useCallback((newBlocks: BlockData[]) => {
-    setBlocks(newBlocks);
+    push(newBlocks);
     onChange(newBlocks);
-  }, [onChange]);
+  }, [push, onChange]);
 
   const addBlock = (type: string, index?: number) => {
     const newBlock: BlockData = { id: generateId(), type, content: getDefaultContent(type) };
@@ -177,126 +301,213 @@ export default function PageBuilder({ initialBlocks = [], onChange }: PageBuilde
     newBlocks.splice(index ?? blocks.length, 0, newBlock);
     updateBlocks(newBlocks);
     setSelectedBlock(newBlock.id);
-    setShowBlockPicker(false);
-    setInsertIndex(null);
+    setSidebarPanel("settings");
+  };
+
+  const duplicateBlock = (id: string) => {
+    const idx = blocks.findIndex((b) => b.id === id);
+    if (idx === -1) return;
+    const clone: BlockData = { ...blocks[idx], id: generateId(), content: { ...blocks[idx].content } };
+    const newBlocks = [...blocks];
+    newBlocks.splice(idx + 1, 0, clone);
+    updateBlocks(newBlocks);
+    setSelectedBlock(clone.id);
   };
 
   const removeBlock = (id: string) => {
     updateBlocks(blocks.filter((b) => b.id !== id));
-    if (selectedBlock === id) setSelectedBlock(null);
-  };
-
-  const moveBlock = (id: string, direction: "up" | "down") => {
-    const index = blocks.findIndex((b) => b.id === id);
-    if (index === -1) return;
-    if (direction === "up" && index === 0) return;
-    if (direction === "down" && index === blocks.length - 1) return;
-    const newBlocks = [...blocks];
-    const newIndex = direction === "up" ? index - 1 : index + 1;
-    [newBlocks[index], newBlocks[newIndex]] = [newBlocks[newIndex], newBlocks[index]];
-    updateBlocks(newBlocks);
+    if (selectedBlock === id) { setSelectedBlock(null); setSidebarPanel("widgets"); }
   };
 
   const updateBlockContent = (id: string, content: Record<string, unknown>) => {
     updateBlocks(blocks.map((b) => (b.id === id ? { ...b, content: { ...b.content, ...content } } : b)));
   };
 
+  const updateBlockStyle = (id: string, style: Record<string, string>) => {
+    updateBlocks(blocks.map((b) => (b.id === id ? { ...b, style: { ...b.style, ...style } } : b)));
+  };
+
+  const handleDragStart = (event: DragStartEvent) => setDragActiveId(event.active.id as string);
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    setDragActiveId(null);
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      const oldIndex = blocks.findIndex((b) => b.id === active.id);
+      const newIndex = blocks.findIndex((b) => b.id === over.id);
+      updateBlocks(arrayMove(blocks, oldIndex, newIndex));
+    }
+  };
+
   const selectedBlockData = blocks.find((b) => b.id === selectedBlock);
+  const dragActiveBlock = blocks.find((b) => b.id === dragActiveId);
+
+  const canvasWidth = devicePreview === "desktop" ? "100%" : devicePreview === "tablet" ? "768px" : "375px";
+
+  const filteredBlockTypes = widgetSearch
+    ? BLOCK_TYPES.filter((b) => b.label.toLowerCase().includes(widgetSearch.toLowerCase()) || b.category.toLowerCase().includes(widgetSearch.toLowerCase()))
+    : BLOCK_TYPES;
 
   return (
-    <div className="flex h-[calc(100vh-200px)] min-h-[600px]">
-      <div className="flex-1 overflow-auto bg-gray-100 p-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex justify-end mb-4">
-            <button onClick={() => setPreviewMode(!previewMode)} className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium ${previewMode ? "bg-[var(--accent)] text-white" : "bg-white text-gray-700 border border-gray-200"}`}>
-              <Eye size={16} />
+    <div className="flex h-[calc(100vh-140px)] min-h-[600px] bg-[#f0f0f0]">
+      {/* ─── Left Sidebar Panel ─── */}
+      {sidebarOpen && !previewMode && (
+        <div className="w-[320px] flex-shrink-0 bg-[#2c2c2c] text-white flex flex-col border-r border-[#404040]">
+          {/* Sidebar Header */}
+          <div className="h-12 flex items-center justify-between px-3 border-b border-[#404040] bg-[#242424]">
+            {sidebarPanel === "widgets" ? (
+              <span className="text-sm font-semibold flex items-center gap-2"><LayoutGrid size={16} /> Widgets</span>
+            ) : (
+              <button onClick={() => { setSidebarPanel("widgets"); setSelectedBlock(null); }} className="text-sm font-semibold flex items-center gap-1 hover:text-[var(--accent)] transition-colors">
+                <ArrowLeft size={14} />
+                <span>{BLOCK_TYPES.find((t) => t.type === selectedBlockData?.type)?.label || "Block"}</span>
+              </button>
+            )}
+            <button onClick={() => setSidebarOpen(false)} className="p-1 hover:bg-white/10 rounded"><PanelLeftClose size={16} /></button>
+          </div>
+
+          {/* Sidebar Content */}
+          <div className="flex-1 overflow-auto">
+            {sidebarPanel === "widgets" ? (
+              <div className="p-3">
+                {/* Search */}
+                <div className="relative mb-3">
+                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <input type="text" value={widgetSearch} onChange={(e) => setWidgetSearch(e.target.value)} placeholder="Search widgets..." className="w-full pl-9 pr-3 py-2 bg-[#383838] border border-[#505050] rounded-lg text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-[var(--accent)]" />
+                </div>
+                {/* Widget categories */}
+                {CATEGORIES.map((category) => {
+                  const catBlocks = filteredBlockTypes.filter((b) => b.category === category);
+                  if (catBlocks.length === 0) return null;
+                  return (
+                    <div key={category} className="mb-4">
+                      <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 px-1">{category}</h4>
+                      <div className="grid grid-cols-3 gap-1.5">
+                        {catBlocks.map((bt) => (
+                          <button key={bt.type} onClick={() => addBlock(bt.type)} className="flex flex-col items-center gap-1 p-2.5 rounded-lg bg-[#383838] hover:bg-[#484848] border border-transparent hover:border-[var(--accent)] transition-all text-center group">
+                            <bt.icon size={20} className="text-gray-300 group-hover:text-[var(--accent)] transition-colors" />
+                            <span className="text-[10px] text-gray-400 group-hover:text-white leading-tight">{bt.label}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : selectedBlockData ? (
+              <div>
+                {/* Settings / Style tabs */}
+                <div className="flex border-b border-[#404040]">
+                  <button onClick={() => setSidebarPanel("settings")} className={`flex-1 py-2.5 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors ${sidebarPanel === "settings" ? "bg-[#383838] text-white border-b-2 border-[var(--accent)]" : "text-gray-400 hover:text-white"}`}>
+                    <Settings size={13} /> Content
+                  </button>
+                  <button onClick={() => setSidebarPanel("style")} className={`flex-1 py-2.5 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors ${sidebarPanel === "style" ? "bg-[#383838] text-white border-b-2 border-[var(--accent)]" : "text-gray-400 hover:text-white"}`}>
+                    <Paintbrush size={13} /> Style
+                  </button>
+                </div>
+                <div className="p-4 [&_label]:text-gray-300 [&_input]:bg-[#383838] [&_input]:border-[#505050] [&_input]:text-white [&_select]:bg-[#383838] [&_select]:border-[#505050] [&_select]:text-white [&_textarea]:bg-[#383838] [&_textarea]:border-[#505050] [&_textarea]:text-white">
+                  {sidebarPanel === "settings" ? (
+                    <BlockSettings block={selectedBlockData} onChange={(c) => updateBlockContent(selectedBlockData.id, c)} />
+                  ) : (
+                    <StyleSettings block={selectedBlockData} onChange={(s) => updateBlockStyle(selectedBlockData.id, s)} />
+                  )}
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      )}
+
+      {/* ─── Canvas Area ─── */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Top toolbar */}
+        <div className="h-12 bg-white border-b border-gray-200 flex items-center justify-between px-4 flex-shrink-0">
+          <div className="flex items-center gap-2">
+            {!sidebarOpen && !previewMode && (
+              <button onClick={() => setSidebarOpen(true)} className="p-1.5 hover:bg-gray-100 rounded-lg" title="Open panel"><PanelLeftOpen size={18} className="text-gray-600" /></button>
+            )}
+            <button onClick={undo} disabled={!canUndo} className="p-1.5 hover:bg-gray-100 rounded-lg disabled:opacity-30" title="Undo (Ctrl+Z)"><Undo2 size={18} className="text-gray-600" /></button>
+            <button onClick={redo} disabled={!canRedo} className="p-1.5 hover:bg-gray-100 rounded-lg disabled:opacity-30" title="Redo (Ctrl+Y)"><Redo2 size={18} className="text-gray-600" /></button>
+          </div>
+
+          <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+            {([["desktop", Monitor], ["tablet", Tablet], ["mobile", Smartphone]] as const).map(([device, Icon]) => (
+              <button key={device} onClick={() => setDevicePreview(device)} className={`p-1.5 rounded-md transition-colors ${devicePreview === device ? "bg-white shadow-sm text-[var(--accent)]" : "text-gray-500 hover:text-gray-700"}`} title={device}>
+                <Icon size={16} />
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-500">{blocks.length} block{blocks.length !== 1 ? "s" : ""}</span>
+            <button onClick={() => setPreviewMode(!previewMode)} className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${previewMode ? "bg-[var(--accent)] text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}>
+              <Eye size={14} />
               {previewMode ? "Exit Preview" : "Preview"}
             </button>
           </div>
+        </div>
 
-          {blocks.length === 0 ? (
-            <div className="bg-white rounded-xl border-2 border-dashed border-gray-300 p-12 text-center cursor-pointer hover:border-[var(--accent)]" onClick={() => { setInsertIndex(0); setShowBlockPicker(true); }}>
-              <Plus size={32} className="mx-auto text-gray-400 mb-3" />
-              <p className="text-gray-500">Click to add your first block</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {blocks.map((block, index) => (
-                <div key={block.id}>
-                  {!previewMode && (
-                    <div className="flex justify-center -mb-2 relative z-10">
-                      <button onClick={() => { setInsertIndex(index); setShowBlockPicker(true); }} className="p-1 bg-white border border-gray-200 rounded-full shadow-sm hover:border-[var(--accent)] opacity-0 hover:opacity-100">
-                        <Plus size={16} className="text-gray-400" />
-                      </button>
-                    </div>
-                  )}
-                  <div className={`relative bg-white rounded-xl border ${previewMode ? "border-transparent" : selectedBlock === block.id ? "border-[var(--accent)] ring-2 ring-[var(--accent)]/20" : "border-gray-200 hover:border-gray-300"}`} onClick={() => !previewMode && setSelectedBlock(block.id)}>
-                    {!previewMode && selectedBlock === block.id && (
-                      <div className="absolute -top-3 left-4 flex items-center gap-1 bg-white border border-gray-200 rounded-lg shadow-sm px-1 py-0.5 z-10">
-                        <button onClick={(e) => { e.stopPropagation(); moveBlock(block.id, "up"); }} disabled={index === 0} className="p-1 hover:bg-gray-100 rounded disabled:opacity-30"><ChevronUp size={14} /></button>
-                        <button onClick={(e) => { e.stopPropagation(); moveBlock(block.id, "down"); }} disabled={index === blocks.length - 1} className="p-1 hover:bg-gray-100 rounded disabled:opacity-30"><ChevronDown size={14} /></button>
-                        <div className="w-px h-4 bg-gray-200 mx-1" />
-                        <button onClick={(e) => { e.stopPropagation(); removeBlock(block.id); }} className="p-1 hover:bg-red-50 rounded text-red-500"><Trash2 size={14} /></button>
+        {/* Canvas */}
+        <div className="flex-1 overflow-auto p-6 flex justify-center">
+          <div style={{ width: canvasWidth, maxWidth: "100%", transition: "width 0.3s ease" }}>
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+              <SortableContext items={blocks.map((b) => b.id)} strategy={verticalListSortingStrategy}>
+                {blocks.length === 0 ? (
+                  <div className="bg-white rounded-xl border-2 border-dashed border-gray-300 p-16 text-center cursor-pointer hover:border-[var(--accent)] transition-colors" onClick={() => addBlock("heading")}>
+                    <Plus size={40} className="mx-auto text-gray-300 mb-3" />
+                    <p className="text-gray-400 font-medium">Click to add your first widget</p>
+                    <p className="text-xs text-gray-300 mt-1">Or drag a widget from the left panel</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {blocks.map((block, index) => (
+                      <div key={block.id}>
+                        {/* Add block button between blocks */}
+                        {!previewMode && (
+                          <div className="flex justify-center py-1 opacity-0 hover:opacity-100 transition-opacity">
+                            <button onClick={() => addBlock("paragraph", index)} className="flex items-center gap-1 px-3 py-1 bg-[var(--accent)] text-white rounded-full text-xs font-medium shadow-sm hover:shadow-md transition-shadow">
+                              <Plus size={12} /> Add Widget
+                            </button>
+                          </div>
+                        )}
+                        <SortableBlock id={block.id} isSelected={selectedBlock === block.id} isPreview={previewMode} onClick={() => {
+                          if (!previewMode) { setSelectedBlock(block.id); setSidebarPanel("settings"); setSidebarOpen(true); }
+                        }}>
+                          {/* Block toolbar */}
+                          {!previewMode && selectedBlock === block.id && (
+                            <div className="absolute -top-3 right-4 flex items-center gap-0.5 bg-[var(--accent)] rounded-lg shadow-lg px-1 py-0.5 z-20">
+                              <button onClick={(e) => { e.stopPropagation(); duplicateBlock(block.id); }} className="p-1 hover:bg-white/20 rounded text-white" title="Duplicate"><Copy size={13} /></button>
+                              <button onClick={(e) => { e.stopPropagation(); removeBlock(block.id); }} className="p-1 hover:bg-white/20 rounded text-white" title="Delete"><Trash2 size={13} /></button>
+                            </div>
+                          )}
+                          <div className="bg-white rounded-lg overflow-hidden" style={block.style ? { padding: block.style.padding, margin: block.style.margin, background: block.style.background } : undefined}>
+                            <BlockRenderer block={block} />
+                          </div>
+                        </SortableBlock>
+                      </div>
+                    ))}
+                    {/* Add block at end */}
+                    {!previewMode && (
+                      <div className="flex justify-center py-3 opacity-0 hover:opacity-100 transition-opacity">
+                        <button onClick={() => addBlock("paragraph")} className="flex items-center gap-1 px-3 py-1 bg-[var(--accent)] text-white rounded-full text-xs font-medium shadow-sm">
+                          <Plus size={12} /> Add Widget
+                        </button>
                       </div>
                     )}
-                    <div className="p-4"><BlockRenderer block={block} /></div>
                   </div>
-                </div>
-              ))}
-              {!previewMode && (
-                <div className="flex justify-center pt-2">
-                  <button onClick={() => { setInsertIndex(blocks.length); setShowBlockPicker(true); }} className="p-2 bg-white border border-gray-200 rounded-full shadow-sm hover:border-[var(--accent)]">
-                    <Plus size={20} className="text-gray-400" />
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
+                )}
+              </SortableContext>
+              <DragOverlay>
+                {dragActiveBlock && (
+                  <div className="bg-white rounded-lg shadow-2xl ring-2 ring-[var(--accent)] opacity-80 p-4 max-w-md">
+                    <BlockRenderer block={dragActiveBlock} />
+                  </div>
+                )}
+              </DragOverlay>
+            </DndContext>
+          </div>
         </div>
       </div>
-
-      {!previewMode && selectedBlockData && (
-        <div className="w-96 bg-white border-l border-gray-200 overflow-auto">
-          <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-            <h3 className="font-semibold text-gray-900">{BLOCK_TYPES.find((t) => t.type === selectedBlockData.type)?.label || "Block"} Settings</h3>
-            <button onClick={() => setSelectedBlock(null)} className="p-1 hover:bg-gray-100 rounded"><X size={18} className="text-gray-500" /></button>
-          </div>
-          <div className="p-4"><BlockSettings block={selectedBlockData} onChange={(content) => updateBlockContent(selectedBlockData.id, content)} /></div>
-        </div>
-      )}
-
-      {showBlockPicker && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowBlockPicker(false)}>
-          <div className="bg-white rounded-xl w-full max-w-3xl max-h-[80vh] overflow-hidden mx-4" onClick={(e) => e.stopPropagation()}>
-            <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-              <h3 className="font-semibold text-gray-900">Add Block</h3>
-              <button onClick={() => setShowBlockPicker(false)} className="p-1 hover:bg-gray-100 rounded"><X size={18} className="text-gray-500" /></button>
-            </div>
-            <div className="p-4 overflow-auto max-h-[60vh]">
-              {["Page Sections", "Content", "Layout", "Dynamic", "Forms", "Embed"].map((category) => {
-                const categoryBlocks = BLOCK_TYPES.filter((b) => b.category === category);
-                if (categoryBlocks.length === 0) return null;
-                return (
-                  <div key={category} className="mb-6">
-                    <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">{category}</h4>
-                    <div className="grid grid-cols-3 gap-2">
-                      {categoryBlocks.map((blockType) => (
-                        <button key={blockType.type} onClick={() => addBlock(blockType.type, insertIndex ?? undefined)} className="flex flex-col items-start gap-1 p-3 rounded-lg border border-gray-200 hover:border-[var(--accent)] hover:bg-[var(--accent)]/5 text-left">
-                          <div className="flex items-center gap-2">
-                            <blockType.icon size={18} className="text-gray-600" />
-                            <span className="text-sm font-medium text-gray-700">{blockType.label}</span>
-                          </div>
-                          {blockType.description && <span className="text-xs text-gray-500">{blockType.description}</span>}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
@@ -496,6 +707,19 @@ function BlockRenderer({ block }: { block: BlockData }) {
 
     case "map":
       return <div className="bg-gray-200 rounded-lg aspect-video flex items-center justify-center"><MapPin size={24} className="text-gray-500 mr-2" /><span className="text-sm text-gray-500">{content.address as string}</span></div>;
+
+    case "columns":
+      const cols = (content.columns as number) || 2;
+      return (
+        <div className="grid gap-3 p-4" style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
+          {Array.from({ length: cols }).map((_, i) => (
+            <div key={i} className="bg-gray-50 border-2 border-dashed border-gray-200 rounded-lg p-6 text-center">
+              <Plus size={16} className="mx-auto text-gray-300 mb-1" />
+              <span className="text-xs text-gray-400">Column {i + 1}</span>
+            </div>
+          ))}
+        </div>
+      );
 
     case "html":
       return <div className="bg-gray-50 rounded-lg p-4 border border-dashed border-gray-300"><Code size={16} className="text-gray-500 mb-1" /><span className="text-sm text-gray-500">Custom HTML</span></div>;
@@ -823,10 +1047,68 @@ function BlockSettings({ block, onChange }: { block: BlockData; onChange: (conte
         </div>
       );
 
+    case "columns":
+      return (
+        <div>
+          <SelectInput label="Columns" field="columns" options={[{ value: "2", label: "2 Columns" }, { value: "3", label: "3 Columns" }, { value: "4", label: "4 Columns" }]} />
+          <TextInput label="Gap" field="gap" placeholder="16px" />
+        </div>
+      );
+
     case "html":
       return <TextInput label="HTML Code" field="html" multiline />;
 
     default:
       return <p className="text-sm text-gray-500">No settings available.</p>;
   }
+}
+
+/* ─── Style Settings (per-block styling) ─── */
+function StyleSettings({ block, onChange }: { block: BlockData; onChange: (style: Record<string, string>) => void }) {
+  const style = block.style || {};
+
+  const StyleInput = ({ label, field, placeholder = "" }: { label: string; field: string; placeholder?: string }) => (
+    <div className="mb-4">
+      <label className="block text-sm font-medium mb-1">{label}</label>
+      <input type="text" value={style[field] || ""} onChange={(e) => onChange({ [field]: e.target.value })} placeholder={placeholder} className="w-full px-3 py-2 border rounded-lg text-sm" />
+    </div>
+  );
+
+  return (
+    <div>
+      <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Spacing</h4>
+      <div className="grid grid-cols-2 gap-2 mb-4">
+        <StyleInput label="Padding" field="padding" placeholder="e.g. 20px" />
+        <StyleInput label="Margin" field="margin" placeholder="e.g. 0 auto" />
+      </div>
+      <div className="grid grid-cols-2 gap-2 mb-4">
+        <StyleInput label="Padding Top" field="paddingTop" placeholder="e.g. 40px" />
+        <StyleInput label="Padding Bottom" field="paddingBottom" placeholder="e.g. 40px" />
+      </div>
+
+      <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 mt-6">Background</h4>
+      <StyleInput label="Background" field="background" placeholder="e.g. #fff or linear-gradient(...)" />
+      <StyleInput label="Background Image" field="backgroundImage" placeholder="url(/img/...)" />
+
+      <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 mt-6">Border</h4>
+      <StyleInput label="Border" field="border" placeholder="e.g. 1px solid #ddd" />
+      <StyleInput label="Border Radius" field="borderRadius" placeholder="e.g. 12px" />
+
+      <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 mt-6">Size</h4>
+      <div className="grid grid-cols-2 gap-2">
+        <StyleInput label="Min Height" field="minHeight" placeholder="e.g. 200px" />
+        <StyleInput label="Max Width" field="maxWidth" placeholder="e.g. 1200px" />
+      </div>
+
+      {Object.keys(style).length > 0 && (
+        <button onClick={() => {
+          const empty: Record<string, string> = {};
+          Object.keys(style).forEach((k) => { empty[k] = ""; });
+          onChange(empty);
+        }} className="mt-4 w-full py-2 text-xs font-medium text-red-400 hover:text-red-300 border border-[#505050] rounded-lg hover:border-red-400 transition-colors">
+          Reset All Styles
+        </button>
+      )}
+    </div>
+  );
 }
