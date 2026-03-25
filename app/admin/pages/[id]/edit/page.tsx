@@ -219,47 +219,19 @@ export default function EditPagePage({ params }: { params: Promise<{ id: string 
       {/* Content */}
       {activeTab === "content" ? (
         <div className="flex-1 overflow-hidden">
-          {page.isCore ? (
-            <div className="flex-1 flex items-center justify-center p-8">
-              <div className="max-w-lg text-center">
-                <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-blue-100 flex items-center justify-center">
-                  <Info size={32} className="text-blue-600" />
-                </div>
-                <h2 className="text-xl font-bold text-gray-900 mb-3">Core Page</h2>
-                <p className="text-gray-600 mb-6">
-                  This is a core website page. Its content is managed through code components, 
-                  not the page builder. You can edit the page hero, SEO settings, and other metadata.
+          {page.isCore && (
+            <div className="bg-blue-50 border-b border-blue-200 px-6 py-3">
+              <div className="flex items-center gap-3">
+                <Info size={18} className="text-blue-600 flex-shrink-0" />
+                <p className="text-sm text-blue-800">
+                  <strong>Core Page:</strong> These sections are managed through code components. 
+                  You can reorder them, but content is edited via{" "}
+                  <Link href="/admin/page-heroes" className="underline font-medium">Page Heroes</Link> and other admin sections.
                 </p>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                  <Link
-                    href="/admin/page-heroes"
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--accent)] text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
-                  >
-                    <Settings size={18} />
-                    Edit Page Heroes
-                  </Link>
-                  <Link
-                    href={`/${slug === "home" ? "" : slug}`}
-                    target="_blank"
-                    className="inline-flex items-center gap-2 px-4 py-2 border border-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
-                  >
-                    <ExternalLink size={18} />
-                    View Page
-                  </Link>
-                </div>
-                <div className="mt-8 p-4 bg-gray-50 rounded-lg text-left">
-                  <h3 className="text-sm font-semibold text-gray-700 mb-2">What you can edit:</h3>
-                  <ul className="text-sm text-gray-600 space-y-1">
-                    <li>• <strong>Page Heroes</strong> - Hero images, titles, and subtitles</li>
-                    <li>• <strong>Settings tab</strong> - Page title, description, and SEO metadata</li>
-                    <li>• <strong>Published status</strong> - Show/hide the page</li>
-                  </ul>
-                </div>
               </div>
             </div>
-          ) : (
-            <PageBuilder initialBlocks={blocks} onChange={setBlocks} />
           )}
+          <PageBuilder initialBlocks={blocks} onChange={setBlocks} />
         </div>
       ) : (
         <div className="flex-1 overflow-auto p-6">

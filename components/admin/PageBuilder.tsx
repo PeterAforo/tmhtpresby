@@ -537,6 +537,30 @@ function BlockRenderer({ block, previewMode }: { block: BlockData; previewMode: 
         </div>
       );
 
+    case "core-section":
+      const sectionContent = content as { name: string; label: string; description: string };
+      return (
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+              <Layout size={24} className="text-blue-600" />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="font-semibold text-gray-900">{sectionContent.label}</h3>
+                <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-blue-100 text-blue-700">
+                  Core Component
+                </span>
+              </div>
+              <p className="text-sm text-gray-600 mb-2">{sectionContent.description}</p>
+              <code className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-600">
+                &lt;{sectionContent.name} /&gt;
+              </code>
+            </div>
+          </div>
+        </div>
+      );
+
     default:
       return (
         <div className="bg-gray-100 rounded-lg p-4 text-center text-gray-500">
@@ -833,6 +857,24 @@ function BlockSettings({
             />
             <span className="text-sm text-gray-700">Dark Overlay</span>
           </label>
+        </div>
+      );
+
+    case "core-section":
+      const sectionData = content as { name: string; label: string; description: string };
+      return (
+        <div className="space-y-4">
+          <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <h4 className="font-medium text-blue-900 mb-1">{sectionData.label}</h4>
+            <p className="text-sm text-blue-700 mb-2">{sectionData.description}</p>
+            <p className="text-xs text-blue-600">
+              This is a core component managed through code. To customize its content, 
+              use the relevant admin sections (e.g., Page Heroes, Sermons, Events, etc.)
+            </p>
+          </div>
+          <div className="text-xs text-gray-500">
+            <strong>Component:</strong> <code className="bg-gray-100 px-1 rounded">{sectionData.name}</code>
+          </div>
         </div>
       );
 
