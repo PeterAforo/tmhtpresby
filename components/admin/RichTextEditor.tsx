@@ -59,7 +59,11 @@ export default function RichTextEditor({
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
-      Underline,
+      Underline.configure({
+        HTMLAttributes: {
+          class: "underline",
+        },
+      }),
     ],
     content: value,
     editorProps: {
