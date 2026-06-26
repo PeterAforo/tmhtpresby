@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
 import { BookOpen, Heart, Users, Shield, Cross, Flame } from "lucide-react";
+import { prisma } from "@/lib/db";
+import { HomePageClient } from "@/components/home/HomePageClient";
 
 export const metadata: Metadata = {
   title: "Our Beliefs",
@@ -53,7 +55,45 @@ const BELIEFS = [
   },
 ];
 
-export default function BeliefsPage() {
+interface BlockData {
+  id: string;
+  type: string;
+  content: Record<string, unknown>;
+}
+
+async function getPageContent(): Promise<BlockData[] | null> {
+  try {
+    const page = await prisma.page.findUnique({
+      where: { slug: "about-beliefs" },
+      select: { content: true, published: true },
+    });
+
+    if (!page?.published || !page.content) return null;
+    return page.content as unknown as BlockData[];
+  } catch {
+    return null;
+  }
+}
+
+export default async function BeliefsPage() {
+  const blocks = await getPageContent();
+
+  // If page builder content exists, use it
+  if (blocks && blocks.length > 0) {
+    return (
+      <>
+        <PageHeroWithBackground
+          pageSlug="about-beliefs"
+          overline="About"
+          title="What We Believe"
+          subtitle="The doctrinal foundation we stand on — rooted in Scripture, expressed in love."
+        />
+        <HomePageClient blocks={blocks} />
+      </>
+    );
+  }
+
+  // Fallback to hardcoded content
   return (
     <>
       <PageHeroWithBackground

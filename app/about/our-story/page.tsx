@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { PageHeroWithBackground } from "@/components/layout/PageHeroWithBackground";
+import { prisma } from "@/lib/db";
+import { HomePageClient } from "@/components/home/HomePageClient";
 
 export const metadata: Metadata = {
   title: "Our Story",
@@ -7,7 +9,45 @@ export const metadata: Metadata = {
     "Learn about the history and journey of The Most Holy Trinity Presbyterian Church in Accra, Ghana.",
 };
 
-export default function OurStoryPage() {
+interface BlockData {
+  id: string;
+  type: string;
+  content: Record<string, unknown>;
+}
+
+async function getPageContent(): Promise<BlockData[] | null> {
+  try {
+    const page = await prisma.page.findUnique({
+      where: { slug: "about-our-story" },
+      select: { content: true, published: true },
+    });
+
+    if (!page?.published || !page.content) return null;
+    return page.content as unknown as BlockData[];
+  } catch {
+    return null;
+  }
+}
+
+export default async function OurStoryPage() {
+  const blocks = await getPageContent();
+
+  // If page builder content exists, use it
+  if (blocks && blocks.length > 0) {
+    return (
+      <>
+        <PageHeroWithBackground
+          pageSlug="about-our-story"
+          overline="About"
+          title="Our Story"
+          subtitle="How we started and where we are going — a journey of faith rooted in Accra."
+        />
+        <HomePageClient blocks={blocks} />
+      </>
+    );
+  }
+
+  // Fallback to hardcoded content
   return (
     <>
       <PageHeroWithBackground
