@@ -648,7 +648,7 @@ Phase 3 (Interior): January - June 2027<br/>
 Phase 4 (Completion): July - December 2027</p>
 
 <p>Your generous donations will help make this vision a reality. Every contribution, no matter the size, brings us closer to our goal.</p>`,
-      imageUrl: "/img/pictures/2/001.jpg",
+      imageUrl: null,
       goalAmount: 500000,
       raisedAmount: 125750,
       startDate: new Date("2025-01-15"),
@@ -819,7 +819,7 @@ Phase 4 (Completion): July - December 2027</p>
       slug: "aged",
       type: "ministry",
       description: "A fellowship for our senior members, providing spiritual support, health awareness, and community engagement for those 60 years and above.",
-      imageUrl: "/img/pictures/2/001.jpg",
+      imageUrl: null,
       order: 1,
     },
     {
@@ -828,7 +828,7 @@ Phase 4 (Completion): July - December 2027</p>
       slug: "men",
       type: "ministry",
       description: "The Presby Men's Fellowship builds godly men through discipleship, brotherhood, and service to the church and community.",
-      imageUrl: "/img/pictures/2/020.jpg",
+      imageUrl: null,
       order: 2,
     },
     {
@@ -837,7 +837,7 @@ Phase 4 (Completion): July - December 2027</p>
       slug: "women",
       type: "ministry",
       description: "Empowering women to grow in faith, fellowship, and service through Bible study, prayer, and community outreach.",
-      imageUrl: "/img/pictures/2/030.jpg",
+      imageUrl: null,
       order: 3,
     },
     {
@@ -846,7 +846,7 @@ Phase 4 (Completion): July - December 2027</p>
       slug: "ypg",
       type: "ministry",
       description: "Nurturing the next generation in faith and Christian values through fellowship, leadership development, and service.",
-      imageUrl: "/img/pictures/2/050.jpg",
+      imageUrl: null,
       order: 4,
     },
     {
@@ -855,7 +855,7 @@ Phase 4 (Completion): July - December 2027</p>
       slug: "choir",
       type: "ministry",
       description: "Leading the congregation in worship through song and instruments, glorifying God with musical excellence.",
-      imageUrl: "/img/pictures/2/040.jpg",
+      imageUrl: null,
       order: 5,
     },
     {
@@ -864,7 +864,7 @@ Phase 4 (Completion): July - December 2027</p>
       slug: "children",
       type: "ministry",
       description: "Nurturing young hearts in God's word through engaging Bible lessons, worship, and activities for ages 2-12.",
-      imageUrl: "/img/pictures/2/010.jpg",
+      imageUrl: null,
       order: 6,
     },
   ];
@@ -917,8 +917,8 @@ Phase 4 (Completion): July - December 2027</p>
   // ── Leadership Members ──────────────────────────────────────────
   const leadershipMembers = [
     // Aged Ministry - Current
-    { id: "lm_aged_1", firstName: "Kofi", lastName: "Asante", title: "Elder", positionId: "pos_aged_president", startDate: new Date("2023-01-01"), isCurrent: true, imageUrl: "/img/pictures/2/001.jpg" },
-    { id: "lm_aged_2", firstName: "Akua", lastName: "Mensah", title: "Mrs.", positionId: "pos_aged_vice", startDate: new Date("2023-01-01"), isCurrent: true, imageUrl: "/img/pictures/2/002.jpg" },
+    { id: "lm_aged_1", firstName: "Kofi", lastName: "Asante", title: "Elder", positionId: "pos_aged_president", startDate: new Date("2023-01-01"), isCurrent: true, imageUrl: null },
+    { id: "lm_aged_2", firstName: "Akua", lastName: "Mensah", title: "Mrs.", positionId: "pos_aged_vice", startDate: new Date("2023-01-01"), isCurrent: true, imageUrl: null },
     { id: "lm_aged_3", firstName: "Kwame", lastName: "Owusu", title: "Elder", positionId: "pos_aged_secretary", startDate: new Date("2023-01-01"), isCurrent: true },
     { id: "lm_aged_4", firstName: "Ama", lastName: "Darko", title: "Mrs.", positionId: "pos_aged_treasurer", startDate: new Date("2023-01-01"), isCurrent: true },
     // Aged Ministry - Past
@@ -926,26 +926,26 @@ Phase 4 (Completion): July - December 2027</p>
     { id: "lm_aged_6", firstName: "Grace", lastName: "Amponsah", title: "Mrs.", positionId: "pos_aged_vice", startDate: new Date("2019-01-01"), endDate: new Date("2022-12-31"), isCurrent: false },
     
     // Men's Fellowship - Current
-    { id: "lm_men_1", firstName: "James", lastName: "Owusu", title: "Elder", positionId: "pos_men_president", startDate: new Date("2024-01-01"), isCurrent: true, imageUrl: "/img/pictures/2/020.jpg" },
-    { id: "lm_men_2", firstName: "Daniel", lastName: "Adjei", title: "Mr.", positionId: "pos_men_vice", startDate: new Date("2024-01-01"), isCurrent: true, imageUrl: "/img/pictures/2/021.jpg" },
+    { id: "lm_men_1", firstName: "James", lastName: "Owusu", title: "Elder", positionId: "pos_men_president", startDate: new Date("2024-01-01"), isCurrent: true, imageUrl: null },
+    { id: "lm_men_2", firstName: "Daniel", lastName: "Adjei", title: "Mr.", positionId: "pos_men_vice", startDate: new Date("2024-01-01"), isCurrent: true, imageUrl: null },
     { id: "lm_men_3", firstName: "Emmanuel", lastName: "Tetteh", title: "Mr.", positionId: "pos_men_secretary", startDate: new Date("2024-01-01"), isCurrent: true },
     { id: "lm_men_4", firstName: "Joseph", lastName: "Ankrah", title: "Mr.", positionId: "pos_men_treasurer", startDate: new Date("2024-01-01"), isCurrent: true },
     
     // Women's Fellowship - Current
-    { id: "lm_women_1", firstName: "Abena", lastName: "Mensah", title: "Rev. Mrs.", positionId: "pos_women_president", startDate: new Date("2023-06-01"), isCurrent: true, imageUrl: "/img/pictures/2/010.jpg" },
-    { id: "lm_women_2", firstName: "Comfort", lastName: "Asare", title: "Mrs.", positionId: "pos_women_vice", startDate: new Date("2023-06-01"), isCurrent: true, imageUrl: "/img/pictures/2/011.jpg" },
+    { id: "lm_women_1", firstName: "Abena", lastName: "Mensah", title: "Rev. Mrs.", positionId: "pos_women_president", startDate: new Date("2023-06-01"), isCurrent: true, imageUrl: null },
+    { id: "lm_women_2", firstName: "Comfort", lastName: "Asare", title: "Mrs.", positionId: "pos_women_vice", startDate: new Date("2023-06-01"), isCurrent: true, imageUrl: null },
     { id: "lm_women_3", firstName: "Patience", lastName: "Osei", title: "Mrs.", positionId: "pos_women_secretary", startDate: new Date("2023-06-01"), isCurrent: true },
     { id: "lm_women_4", firstName: "Felicia", lastName: "Boadu", title: "Mrs.", positionId: "pos_women_treasurer", startDate: new Date("2023-06-01"), isCurrent: true },
     
     // YPG - Current
-    { id: "lm_ypg_1", firstName: "Kwame", lastName: "Boateng", title: "Pastor", positionId: "pos_ypg_president", startDate: new Date("2024-01-01"), isCurrent: true, imageUrl: "/img/pictures/2/050.jpg" },
-    { id: "lm_ypg_2", firstName: "Nana", lastName: "Agyemang", title: "Mr.", positionId: "pos_ypg_vice", startDate: new Date("2024-01-01"), isCurrent: true, imageUrl: "/img/pictures/2/051.jpg" },
+    { id: "lm_ypg_1", firstName: "Kwame", lastName: "Boateng", title: "Pastor", positionId: "pos_ypg_president", startDate: new Date("2024-01-01"), isCurrent: true, imageUrl: null },
+    { id: "lm_ypg_2", firstName: "Nana", lastName: "Agyemang", title: "Mr.", positionId: "pos_ypg_vice", startDate: new Date("2024-01-01"), isCurrent: true, imageUrl: null },
     { id: "lm_ypg_3", firstName: "Priscilla", lastName: "Amoah", title: "Miss", positionId: "pos_ypg_secretary", startDate: new Date("2024-01-01"), isCurrent: true },
     { id: "lm_ypg_4", firstName: "Michael", lastName: "Asiedu", title: "Mr.", positionId: "pos_ypg_treasurer", startDate: new Date("2024-01-01"), isCurrent: true },
     
     // Choir - Current
-    { id: "lm_choir_1", firstName: "Daniel", lastName: "Adjei", title: "Mr.", positionId: "pos_choir_master", startDate: new Date("2022-01-01"), isCurrent: true, imageUrl: "/img/pictures/2/030.jpg" },
-    { id: "lm_choir_2", firstName: "Esther", lastName: "Nyarko", title: "Miss", positionId: "pos_choir_asst", startDate: new Date("2022-01-01"), isCurrent: true, imageUrl: "/img/pictures/2/031.jpg" },
+    { id: "lm_choir_1", firstName: "Daniel", lastName: "Adjei", title: "Mr.", positionId: "pos_choir_master", startDate: new Date("2022-01-01"), isCurrent: true, imageUrl: null },
+    { id: "lm_choir_2", firstName: "Esther", lastName: "Nyarko", title: "Miss", positionId: "pos_choir_asst", startDate: new Date("2022-01-01"), isCurrent: true, imageUrl: null },
     { id: "lm_choir_3", firstName: "Benjamin", lastName: "Kumi", title: "Mr.", positionId: "pos_choir_secretary", startDate: new Date("2022-01-01"), isCurrent: true },
     { id: "lm_choir_4", firstName: "Victoria", lastName: "Ofosu", title: "Miss", positionId: "pos_choir_organist", startDate: new Date("2022-01-01"), isCurrent: true },
   ];

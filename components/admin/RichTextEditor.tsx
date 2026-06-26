@@ -47,6 +47,8 @@ export default function RichTextEditor({
         heading: {
           levels: [1, 2, 3],
         },
+        // Exclude built-in Link and Underline to avoid duplicates
+        link: false,
       }),
       Link.configure({
         openOnClick: false,
